@@ -1,5 +1,13 @@
 # Changelog
 
+## Sprint 0.2A - Pacote 05
+
+- Criados contratos de dominio para repository e Unit of Work.
+- Adicionados objetos comuns de aplicacao para paginacao, filtros e ordenacao.
+- Criada infraestrutura SQLAlchemy definitiva com repository base, session context,
+  transaction manager e Unit of Work.
+- Adicionados testes unitarios e de integracao para persistencia transacional.
+
 ## Sprint 0.2A - Pacote 04
 
 - Criado o Shared Kernel da aplicacao com Entity, AggregateRoot, ValueObject e Identity.
