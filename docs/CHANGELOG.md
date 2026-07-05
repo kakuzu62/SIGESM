@@ -1,5 +1,13 @@
 # Changelog
 
+## Sprint 0.2A - Pacote 06
+
+- Criado o contexto de dominio militar inicial.
+- Adicionado o agregado `MilitaryPerson` com ciclo de vida, contato e troca de posto/graduacao.
+- Criados value objects para identificacao militar, CPF, telefone, nome completo, status e rank.
+- Adicionado evento `MilitaryRegistered` e contrato `IMilitaryRepository`.
+- Criados testes unitarios para registro, validacoes e eventos do dominio militar.
+
 ## Sprint 0.2A - Pacote 05
 
 - Criados contratos de dominio para repository e Unit of Work.

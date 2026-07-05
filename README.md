@@ -17,3 +17,10 @@ com adapters SQLAlchemy em `src/infrastructure/persistence/sqlalchemy`. A camada
 oferece repository base, session context, transaction manager com savepoints e
 Unit of Work transacional, usando as configuracoes centralizadas em
 `core.config.settings`.
+
+## Dominio Militar
+
+O contexto militar inicial esta em `src/domain/military`. Ele modela o agregado
+`MilitaryPerson`, value objects para identificacao militar, CPF, telefone,
+nome completo, posto/graduacao e status operacional, alem do evento de dominio
+`MilitaryRegistered`.
