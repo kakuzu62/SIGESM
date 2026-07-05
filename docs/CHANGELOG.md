@@ -1,5 +1,14 @@
 # Changelog
 
+## Sprint 0.2A - Pacote 08
+
+- Criado o bounded context `domain.service_scale`.
+- Adicionados agregados e entidades para escala, funcao de servico e designacao.
+- Criadas regras de descanso minimo de 78 horas e excecao controlada 1x1.
+- Adicionadas specifications de descanso e disponibilidade militar.
+- Criado desempate deterministico preparado para auditoria.
+- Criados eventos `ServiceAssignmentCreated` e `ServiceAssignmentCancelled`.
+
 ## Sprint 0.2A - Pacote 07
 
 - Criado o bounded context `domain.organization`.

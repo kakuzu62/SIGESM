@@ -31,3 +31,10 @@ O contexto `src/domain/organization` modela organizacoes militares como bounded
 context separado. Ele contem o agregado `Organization`, value objects de codigo,
 nome, abreviatura e localizacao, evento `OrganizationCreated`, contrato de
 repositorio e specification para verificar duplicidade de codigo.
+
+## Escalas de Servico
+
+O contexto `src/domain/service_scale` modela escalas PRETA e VERMELHA, funcoes
+de servico, designacoes de militares e politicas de descanso. As regras iniciais
+consideram servicos de 24 horas, descanso minimo padrao de 78 horas e excecao
+controlada para escala 1x1.

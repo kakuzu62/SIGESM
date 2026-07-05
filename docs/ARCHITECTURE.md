@@ -16,3 +16,11 @@ de identidade institucional. `Organization` e um AggregateRoot com codigo,
 nome, abreviatura e localizacao. O contexto publica `OrganizationCreated` e
 define `IOrganizationRepository` para consultas por codigo sem acoplar dominio a
 SQLAlchemy.
+
+## Contexto Service Scale
+
+O contexto `domain.service_scale` concentra as regras de escala de servico.
+`ServiceScale` e o AggregateRoot responsavel por funcoes de servico e
+designacoes. `ServiceAssignment` representa uma designacao de militar para um
+servico de 24 horas. O contexto possui policies e specifications para descanso
+minimo, disponibilidade e desempate deterministico auditavel.
