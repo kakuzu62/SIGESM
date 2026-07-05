@@ -12,19 +12,19 @@ SRC_DIR = ROOT_DIR / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
-from sigesm.config.settings import get_settings
-from sigesm.infrastructure.database.metadata import mapper_registry
+from core.config.settings import settings
+from core.database.metadata import metadata
 
 config = context.config
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-target_metadata = mapper_registry.metadata
+target_metadata = metadata
 
 
 def _database_url() -> str:
-    return get_settings().database.url
+    return settings.database.url
 
 
 def run_migrations_offline() -> None:
