@@ -7,7 +7,8 @@ import pytest
 from domain.service_scale.entities import ServiceScale
 from domain.service_scale.events import ServiceAssignmentCancelled, ServiceAssignmentCreated
 from domain.service_scale.exceptions import InvalidAssignmentOperationException
-from domain.service_scale.policies import MinimumRestPolicy, TieBreakCandidate, TieBreakPolicy
+from domain.service_scale.policies.minimum_rest_policy import MinimumRestPolicy
+from domain.service_scale.policies.tie_break_policy import TieBreakCandidate, TieBreakPolicy
 from domain.service_scale.specifications.military_available_for_scale import (
     MilitaryAvailableForScaleSpecification,
     MilitaryScaleAvailability,

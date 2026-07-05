@@ -38,3 +38,8 @@ O contexto `src/domain/service_scale` modela escalas PRETA e VERMELHA, funcoes
 de servico, designacoes de militares e politicas de descanso. As regras iniciais
 consideram servicos de 24 horas, descanso minimo padrao de 78 horas e excecao
 controlada para escala 1x1.
+
+O pacote tambem inclui um motor de elegibilidade desacoplado da infraestrutura.
+Ele avalia militares por pipeline de specifications, retornando todos os motivos
+de inelegibilidade e emitindo eventos de dominio para decisoes elegiveis ou
+inelegiveis.

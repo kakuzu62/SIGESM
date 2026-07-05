@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from domain.service_scale.policies import MinimumRestPolicy
+from domain.service_scale.policies.minimum_rest_policy import MinimumRestPolicy
 from domain.service_scale.value_objects import RestPeriod
 from shared.kernel.specification import Specification
 

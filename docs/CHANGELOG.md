@@ -1,5 +1,14 @@
 # Changelog
 
+## Sprint 0.2A - Pacote 09
+
+- Criado o motor de elegibilidade reutilizavel de escalas de servico.
+- Adicionado pipeline de specifications para descanso, status, compatibilidade, conflitos e bloqueios.
+- Criados `EligibilityResult` e `EligibilityReason`.
+- Adicionada `EligibilityPolicy` configuravel.
+- Criados eventos `MilitaryDeclaredEligible` e `MilitaryDeclaredIneligible`.
+- Criados testes unitarios do motor de decisao.
+
 ## Sprint 0.2A - Pacote 08
 
 - Criado o bounded context `domain.service_scale`.

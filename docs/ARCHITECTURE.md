@@ -24,3 +24,8 @@ O contexto `domain.service_scale` concentra as regras de escala de servico.
 designacoes. `ServiceAssignment` representa uma designacao de militar para um
 servico de 24 horas. O contexto possui policies e specifications para descanso
 minimo, disponibilidade e desempate deterministico auditavel.
+
+O `EligibilityEngine` e um domain service puro. Ele recebe militar, escala,
+funcao, historico e data, executa uma `EligibilityPolicy` com specifications em
+pipeline e retorna `EligibilityResult` imutavel com todos os motivos encontrados.
+O motor registra logs de decisao e emite eventos sem depender de UI ou banco.
