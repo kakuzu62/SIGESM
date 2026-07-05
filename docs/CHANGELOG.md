@@ -1,5 +1,13 @@
 # Changelog
 
+## Sprint 0.2A - Pacote 07
+
+- Criado o bounded context `domain.organization`.
+- Adicionado agregado `Organization` com evento `OrganizationCreated`.
+- Criados value objects de codigo, nome, abreviatura, cidade, estado e pais.
+- Adicionado contrato `IOrganizationRepository` e specification `OrganizationCodeAlreadyExists`.
+- Criados testes unitarios completos do contexto Organization.
+
 ## Sprint 0.2A - Pacote 06
 
 - Criado o contexto de dominio militar inicial.

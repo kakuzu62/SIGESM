@@ -24,3 +24,10 @@ O contexto militar inicial esta em `src/domain/military`. Ele modela o agregado
 `MilitaryPerson`, value objects para identificacao militar, CPF, telefone,
 nome completo, posto/graduacao e status operacional, alem do evento de dominio
 `MilitaryRegistered`.
+
+## Organizacao Militar
+
+O contexto `src/domain/organization` modela organizacoes militares como bounded
+context separado. Ele contem o agregado `Organization`, value objects de codigo,
+nome, abreviatura e localizacao, evento `OrganizationCreated`, contrato de
+repositorio e specification para verificar duplicidade de codigo.
