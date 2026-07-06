@@ -1,5 +1,14 @@
 # Changelog
 
+## Sprint 0.2A - Pacote 10
+
+- Criado `ScaleGenerationEngine` para geracao automatica de escalas.
+- Adicionados contextos, resultados e estatisticas de geracao.
+- Criados services de selecao de candidatos, fairness e calculo de descanso.
+- Criadas policies e strategies PRETA/VERMELHA.
+- Adicionados eventos `ScaleGenerated`, `MilitarySelected` e `MilitarySkipped`.
+- Criados testes unitarios do motor de geracao.
+
 ## Sprint 0.2A - Pacote 09
 
 - Criado o motor de elegibilidade reutilizavel de escalas de servico.

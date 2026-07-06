@@ -43,3 +43,8 @@ O pacote tambem inclui um motor de elegibilidade desacoplado da infraestrutura.
 Ele avalia militares por pipeline de specifications, retornando todos os motivos
 de inelegibilidade e emitindo eventos de dominio para decisoes elegiveis ou
 inelegiveis.
+
+O `ScaleGenerationEngine` gera automaticamente escalas a partir de strategies por
+tipo de escala, policy de geracao, fairness, calculo de descanso e motor de
+elegibilidade. Ele retorna estatisticas, descartes, selecionados e eventos de
+dominio sem depender de interface ou infraestrutura.

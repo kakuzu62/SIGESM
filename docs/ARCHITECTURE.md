@@ -29,3 +29,8 @@ O `EligibilityEngine` e um domain service puro. Ele recebe militar, escala,
 funcao, historico e data, executa uma `EligibilityPolicy` com specifications em
 pipeline e retorna `EligibilityResult` imutavel com todos os motivos encontrados.
 O motor registra logs de decisao e emite eventos sem depender de UI ou banco.
+
+O `ScaleGenerationEngine` orquestra a geracao automatica usando Strategy Pattern
+para regras por tipo de escala, Policy Pattern para o fluxo de geracao,
+services de fairness e descanso, e o Eligibility Engine para validar candidatos.
+O resultado da geracao e imutavel e contem estatisticas, eventos e descartes.
