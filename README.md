@@ -48,3 +48,10 @@ O `ScaleGenerationEngine` gera automaticamente escalas a partir de strategies po
 tipo de escala, policy de geracao, fairness, calculo de descanso e motor de
 elegibilidade. Ele retorna estatisticas, descartes, selecionados e eventos de
 dominio sem depender de interface ou infraestrutura.
+
+## Trocas e Vendas de Servico
+
+O contexto `src/domain/service_exchange` modela troca oficial e venda de
+servico. A troca oficial valida os dois militares nos novos dias assumidos. A
+venda registra servico extraordinario do comprador, preserva o contador base do
+comprador e zera normalmente o vendedor, com decisoes auditaveis.

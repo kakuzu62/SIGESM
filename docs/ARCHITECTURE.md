@@ -34,3 +34,12 @@ O `ScaleGenerationEngine` orquestra a geracao automatica usando Strategy Pattern
 para regras por tipo de escala, Policy Pattern para o fluxo de geracao,
 services de fairness e descanso, e o Eligibility Engine para validar candidatos.
 O resultado da geracao e imutavel e contem estatisticas, eventos e descartes.
+
+## Contexto Service Exchange
+
+O contexto `domain.service_exchange` separa troca oficial de venda de servico.
+`OfficialSwap` representa troca real entre dois militares e valida elegibilidade
+dos dois nos dias assumidos. `ServiceSale` representa servico extraordinario
+assumido pelo comprador, preservando seu contador original e registrando a
+zeragem normal do vendedor. Ambos usam engines e policies de dominio, sem UI ou
+infraestrutura.

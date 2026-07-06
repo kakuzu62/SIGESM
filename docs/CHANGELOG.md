@@ -1,5 +1,14 @@
 # Changelog
 
+## Sprint 0.2A - Pacote 11
+
+- Criado o bounded context `domain.service_exchange`.
+- Adicionadas entidades `OfficialSwap` e `ServiceSale`.
+- Criados motores de validacao para troca oficial e venda de servico.
+- Adicionadas policies de decisao auditavel e eventos de aprovacao/rejeicao.
+- Criado contrato `IServiceExchangeRepository`.
+- Criados testes unitarios para troca oficial, excecao formal e venda de servico.
+
 ## Sprint 0.2A - Pacote 10
 
 - Criado `ScaleGenerationEngine` para geracao automatica de escalas.
