@@ -25,6 +25,20 @@ como base, com especializacoes para `ApplicationException`, `DomainException`,
 O projeto e validado por MyPy strict, Ruff, Black e pytest. A formatacao e a
 tipagem fazem parte da definicao de pronto da base arquitetural.
 
+## Preparacao Enterprise da Sprint 1.0
+
+A Sprint 1.0 adiciona governanca e operacao de engenharia sobre a base existente:
+
+- ADRs formais em `docs/adr/`.
+- Diagramas de contexto, camadas, dominio, infraestrutura, banco e modulos em
+  `docs/diagrams/`.
+- GitHub Actions para Black, Ruff, MyPy e PyTest.
+- Documentos de contribuicao, conduta, seguranca e ownership.
+- Build PyInstaller versionado em `build/` e `scripts/`.
+
+Nenhuma nova funcionalidade de negocio foi adicionada. A mudanca consolida
+estrutura, padroes e capacidade de evolucao.
+
 ## Contexto Militar
 
 O contexto `domain.military` concentra o nucleo militar do SIGESM Enterprise.

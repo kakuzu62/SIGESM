@@ -29,6 +29,9 @@ dev = [
 [project.scripts]
 sigesm = "sigesm.main:main"
 
+[tool.setuptools]
+include-package-data = true
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
@@ -50,3 +53,4 @@ strict = true
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
+addopts = ["-ra"]

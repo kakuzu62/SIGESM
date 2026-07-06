@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Callable, Mapping
 from types import TracebackType
-from typing import Any, TypeVar
+from typing import Any, TypeVar, cast
 
 from sqlalchemy import Executable, Result
 from sqlalchemy.orm import Session
@@ -92,7 +92,7 @@ class SqlAlchemyUnitOfWork(IUnitOfWork):
         if key not in self.repositories:
             self.repositories[key] = factory(self._require_session())
 
-        return self.repositories[key]  # type: ignore[return-value]
+        return cast(RepositoryT, self.repositories[key])
 
     def _require_session(self) -> Session:
         """Return the active session or raise when closed."""

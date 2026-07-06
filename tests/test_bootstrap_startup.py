@@ -6,7 +6,7 @@ from bootstrap.startup import Startup
 from pytest import CaptureFixture, MonkeyPatch
 
 
-def test_startup_prints_environment_and_database(
+def test_startup_initializes_environment_and_logging(
     capsys: CaptureFixture[str],
     tmp_path: Path,
     monkeypatch: MonkeyPatch,
@@ -16,7 +16,8 @@ def test_startup_prints_environment_and_database(
     Startup().initialize()
 
     output = capsys.readouterr().out
-    assert "SIGESM Enterprise" in output
-    assert "Environment : Development" in output
-    assert "Database    : sqlite" in output
+    assert output == ""
     assert (tmp_path / "logs" / "sigesm.log").exists()
+    assert "SIGESM Enterprise initialized" in (tmp_path / "logs" / "sigesm.log").read_text(
+        encoding="utf-8"
+    )

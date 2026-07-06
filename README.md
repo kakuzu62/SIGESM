@@ -1,6 +1,40 @@
 # SIGESM Enterprise
 
-Projeto corporativo em Python 3.12 com PySide6, SQLAlchemy 2 e Clean Architecture.
+SIGESM Enterprise e um sistema corporativo em Python 3.12 para gestao militar,
+construido com PySide6, SQLAlchemy 2, Alembic, Clean Architecture e DDD.
+
+## Estado da Fundacao
+
+A Sprint 1.0 consolidou a base para crescimento de longo prazo. O projeto agora
+possui governanca de contribuicao, ADRs, diagramas de arquitetura, pipeline de
+CI, scripts de build PyInstaller e validacao automatizada por Black, Ruff, MyPy
+strict e PyTest.
+
+## Qualidade
+
+Comandos padrao:
+
+```powershell
+.\.venv\Scripts\python.exe -m black --check src tests migrations
+.\.venv\Scripts\python.exe -m ruff check src tests migrations
+.\.venv\Scripts\python.exe -m mypy src tests migrations
+.\.venv\Scripts\python.exe -m pytest
+```
+
+O pipeline em `.github/workflows/quality.yml` executa as mesmas verificacoes em
+pull requests e pushes para `main`.
+
+## Build
+
+O empacotamento inicial com PyInstaller esta preparado em `build/` e `scripts/`.
+
+```powershell
+.\scripts\build.ps1
+```
+
+```bash
+./scripts/build.sh
+```
 
 ## Sprint 0.3 - Consolidacao Arquitetural
 
@@ -10,6 +44,8 @@ infraestrutura e interface, os contratos de persistencia nao dependem de
 SQLAlchemy e a hierarquia de excecoes foi estabilizada para uso corporativo.
 
 As decisoes arquitetonicas estao registradas em `docs/DECISIONS.md`.
+
+As ADRs formais da Sprint 1.0 estao em `docs/adr/`.
 
 ## Kernel compartilhado
 

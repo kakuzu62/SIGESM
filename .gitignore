@@ -10,5 +10,8 @@ __pycache__/
 dist/
 build/
 *.spec
+!build/
+!build/build.py
+!build/build.spec
 logs/*.log
 database/*.db

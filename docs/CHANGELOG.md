@@ -1,5 +1,17 @@
 # Changelog
 
+## Sprint 1.0 - Enterprise Foundation
+
+- Realizada revisao geral da fundacao arquitetural existente.
+- Padronizado bootstrap para usar logging em vez de saida direta no console.
+- Criados ADRs formais em `docs/adr/`.
+- Criados diagramas arquitetonicos em `docs/diagrams/`.
+- Criado pipeline de CI com Black, Ruff, MyPy e PyTest.
+- Criados documentos `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md` e
+  `.github/CODEOWNERS`.
+- Criada estrutura inicial de build PyInstaller em `build/` e `scripts/`.
+- Atualizados README, ARCHITECTURE e relatorio de implementacao.
+
 ## Sprint 0.3 - Consolidacao da Arquitetura
 
 - Realizada auditoria de dependencias entre `domain`, `application`,
