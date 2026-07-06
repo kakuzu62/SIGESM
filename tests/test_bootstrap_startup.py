@@ -1,9 +1,16 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from bootstrap.startup import Startup
+from pytest import CaptureFixture, MonkeyPatch
 
 
-def test_startup_prints_environment_and_database(capsys, tmp_path, monkeypatch) -> None:
+def test_startup_prints_environment_and_database(
+    capsys: CaptureFixture[str],
+    tmp_path: Path,
+    monkeypatch: MonkeyPatch,
+) -> None:
     monkeypatch.chdir(tmp_path)
 
     Startup().initialize()

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from types import TracebackType
 from typing import Any, TypeVar
 
@@ -76,8 +76,15 @@ class SqlAlchemyUnitOfWork(IUnitOfWork):
         """Flush pending changes to the database."""
         self._require_session().flush()
 
-    def execute(self, statement: Executable, parameters: dict[str, Any] | None = None) -> Result[Any]:
+    def execute(
+        self,
+        statement: object,
+        parameters: Mapping[str, object] | None = None,
+    ) -> Result[Any]:
         """Execute a SQLAlchemy statement inside the active session."""
+        if not isinstance(statement, Executable):
+            raise TypeError("SqlAlchemyUnitOfWork requires a SQLAlchemy executable statement.")
+
         return self._require_session().execute(statement, parameters)
 
     def repository(self, key: str, factory: Callable[[Session], RepositoryT]) -> RepositoryT:

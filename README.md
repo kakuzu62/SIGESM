@@ -2,6 +2,15 @@
 
 Projeto corporativo em Python 3.12 com PySide6, SQLAlchemy 2 e Clean Architecture.
 
+## Sprint 0.3 - Consolidacao Arquitetural
+
+A base da Sprint 0 foi consolidada com auditoria entre camadas, MyPy strict,
+Ruff, Black e testes automatizados. O dominio permanece desacoplado de
+infraestrutura e interface, os contratos de persistencia nao dependem de
+SQLAlchemy e a hierarquia de excecoes foi estabilizada para uso corporativo.
+
+As decisoes arquitetonicas estao registradas em `docs/DECISIONS.md`.
+
 ## Kernel compartilhado
 
 O projeto possui um Shared Kernel em `src/shared/kernel` com as bases para DDD:
@@ -17,6 +26,10 @@ com adapters SQLAlchemy em `src/infrastructure/persistence/sqlalchemy`. A camada
 oferece repository base, session context, transaction manager com savepoints e
 Unit of Work transacional, usando as configuracoes centralizadas em
 `core.config.settings`.
+
+O contrato `IUnitOfWork` do dominio usa tipos neutros de infraestrutura. A
+implementacao SQLAlchemy fica isolada em `infrastructure`, preservando Clean
+Architecture e facilitando a troca futura do mecanismo de persistencia.
 
 ## Dominio Militar
 

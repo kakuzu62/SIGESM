@@ -16,7 +16,9 @@ class OrganizationName(ValueObject):
     def __init__(self, value: str) -> None:
         normalized = re.sub(r"\s+", " ", value).strip()
         if len(normalized) < 3 or len(normalized) > 150:
-            raise InvalidOrganizationNameException("Organization name must have 3 to 150 characters.")
+            raise InvalidOrganizationNameException(
+                "Organization name must have 3 to 150 characters."
+            )
 
         object.__setattr__(self, "_value", normalized)
         super().__init__()

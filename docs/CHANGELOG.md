@@ -1,5 +1,16 @@
 # Changelog
 
+## Sprint 0.3 - Consolidacao da Arquitetura
+
+- Realizada auditoria de dependencias entre `domain`, `application`,
+  `infrastructure`, `presentation` e `shared`.
+- Removida dependencia de SQLAlchemy do contrato de Unit of Work do dominio.
+- Consolidada a hierarquia de excecoes corporativas em `core.exceptions`.
+- Aplicados Ruff, Black e MyPy strict em todo o codigo do projeto.
+- Corrigidas tipagens em testes e no modulo legado `sigesm`.
+- Registradas decisoes arquitetonicas em `docs/DECISIONS.md`.
+- Validada a base com a suite completa de testes automatizados.
+
 ## Sprint 0.2A - Pacote 11
 
 - Criado o bounded context `domain.service_exchange`.

@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any
-
-from sqlalchemy import Executable, Result
+from collections.abc import Mapping
 
 
 class IUnitOfWork(ABC):
@@ -35,6 +33,10 @@ class IUnitOfWork(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def execute(self, statement: Executable, parameters: dict[str, Any] | None = None) -> Result[Any]:
-        """Execute a SQLAlchemy statement inside this unit of work."""
+    def execute(
+        self,
+        statement: object,
+        parameters: Mapping[str, object] | None = None,
+    ) -> object:
+        """Execute an implementation-specific statement inside this unit of work."""
         raise NotImplementedError

@@ -19,8 +19,12 @@ from domain.service_scale.specifications.is_not_manually_blocked import (
 )
 from domain.service_scale.specifications.is_not_on_leave import MilitaryNotOnLeaveSpecification
 from domain.service_scale.specifications.is_not_restricted import MilitaryNotRestrictedSpecification
-from domain.service_scale.specifications.is_role_qualified import MilitaryQualifiedForRoleSpecification
-from domain.service_scale.specifications.is_scale_compatible import MilitaryCompatibleScaleSpecification
+from domain.service_scale.specifications.is_role_qualified import (
+    MilitaryQualifiedForRoleSpecification,
+)
+from domain.service_scale.specifications.is_scale_compatible import (
+    MilitaryCompatibleScaleSpecification,
+)
 
 __all__ = [
     "HasMinimumRestSpecification",

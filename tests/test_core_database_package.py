@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from sqlalchemy import Column, Integer, String, select
 
 from core.config.settings import DatabaseSettings
@@ -26,7 +28,7 @@ class PersistenceSmokeRepository(SqlAlchemyRepository[PersistenceSmokeModel, int
     entity_type = PersistenceSmokeModel
 
 
-def test_database_healthcheck_validates_engine_session_and_connection(tmp_path) -> None:
+def test_database_healthcheck_validates_engine_session_and_connection(tmp_path: Path) -> None:
     database_settings = DatabaseSettings(database=str(tmp_path / "healthcheck.db"))
     session_factory = DatabaseSessionFactory.from_engine_factory(
         DatabaseEngineFactory(database_settings)
@@ -37,7 +39,7 @@ def test_database_healthcheck_validates_engine_session_and_connection(tmp_path) 
     assert status.healthy is True
 
 
-def test_unit_of_work_commits_repository_changes(tmp_path) -> None:
+def test_unit_of_work_commits_repository_changes(tmp_path: Path) -> None:
     database_settings = DatabaseSettings(database=str(tmp_path / "repository.db"))
     session_factory = DatabaseSessionFactory.from_engine_factory(
         DatabaseEngineFactory(database_settings)
@@ -45,6 +47,7 @@ def test_unit_of_work_commits_repository_changes(tmp_path) -> None:
     Base.metadata.create_all(session_factory.engine)
 
     with UnitOfWork(session_factory) as unit_of_work:
+        assert unit_of_work.session is not None
         repository = PersistenceSmokeRepository(unit_of_work.session)
         repository.add(PersistenceSmokeModel(id=1, name="SIGESM"))
 

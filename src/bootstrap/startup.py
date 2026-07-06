@@ -11,8 +11,7 @@ class Startup:
 
         configure_logging()
 
-        print(
-            f"""
+        print(f"""
 ========================================
 
 SIGESM Enterprise
@@ -21,5 +20,4 @@ Environment : {settings.environment}
 Database    : {settings.database.provider}
 
 ========================================
-"""
-        )
+""")

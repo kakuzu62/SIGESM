@@ -16,7 +16,9 @@ class Abbreviation(ValueObject):
     def __init__(self, value: str) -> None:
         normalized = re.sub(r"\s+", "", value).upper()
         if not normalized or len(normalized) > 20:
-            raise InvalidAbbreviationException("Abbreviation must have 1 to 20 non-empty characters.")
+            raise InvalidAbbreviationException(
+                "Abbreviation must have 1 to 20 non-empty characters."
+            )
 
         object.__setattr__(self, "_value", normalized)
         super().__init__()

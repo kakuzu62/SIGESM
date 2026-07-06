@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from core.exceptions.base import SIGESMException
+from core.exceptions.infrastructure import InfrastructureException
 
 
-class ConfigurationException(SIGESMException):
-    pass
+class ConfigurationException(InfrastructureException):
+    """Raised when application configuration is invalid or incomplete."""

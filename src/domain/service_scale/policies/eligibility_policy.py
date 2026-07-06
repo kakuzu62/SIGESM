@@ -7,7 +7,9 @@ from typing import Protocol
 from domain.service_scale.services.eligibility_reason import EligibilityReason
 from domain.service_scale.specifications.eligibility_context import EligibilityContext
 from domain.service_scale.specifications.has_minimum_rest import HasMinimumRestSpecification
-from domain.service_scale.specifications.has_no_service_conflict import HasNoServiceConflictSpecification
+from domain.service_scale.specifications.has_no_service_conflict import (
+    HasNoServiceConflictSpecification,
+)
 from domain.service_scale.specifications.is_active import MilitaryActiveSpecification
 from domain.service_scale.specifications.is_not_already_assigned import (
     MilitaryNotAlreadyAssignedSpecification,
@@ -17,8 +19,12 @@ from domain.service_scale.specifications.is_not_manually_blocked import (
 )
 from domain.service_scale.specifications.is_not_on_leave import MilitaryNotOnLeaveSpecification
 from domain.service_scale.specifications.is_not_restricted import MilitaryNotRestrictedSpecification
-from domain.service_scale.specifications.is_role_qualified import MilitaryQualifiedForRoleSpecification
-from domain.service_scale.specifications.is_scale_compatible import MilitaryCompatibleScaleSpecification
+from domain.service_scale.specifications.is_role_qualified import (
+    MilitaryQualifiedForRoleSpecification,
+)
+from domain.service_scale.specifications.is_scale_compatible import (
+    MilitaryCompatibleScaleSpecification,
+)
 from shared.kernel.identity import Identity
 
 

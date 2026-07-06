@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Generic, Protocol, TypeVar
 
 EntityT = TypeVar("EntityT")
-EntityIdT = TypeVar("EntityIdT")
+EntityIdT = TypeVar("EntityIdT", contravariant=True)
 
 
 class Repository(Protocol, Generic[EntityT, EntityIdT]):

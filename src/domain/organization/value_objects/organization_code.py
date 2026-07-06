@@ -16,7 +16,9 @@ class OrganizationCode(ValueObject):
     def __init__(self, value: str) -> None:
         normalized = re.sub(r"\s+", "", value).upper()
         if not normalized or not re.fullmatch(r"[A-Z0-9\-]{2,20}", normalized):
-            raise InvalidOrganizationCodeException("Organization code must have 2 to 20 letters, digits or hyphens.")
+            raise InvalidOrganizationCodeException(
+                "Organization code must have 2 to 20 letters, digits or hyphens."
+            )
 
         object.__setattr__(self, "_value", normalized)
         super().__init__()

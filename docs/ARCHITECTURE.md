@@ -1,5 +1,30 @@
 # Arquitetura do Dominio
 
+## Consolidacao da Sprint 0.3
+
+A arquitetura do SIGESM Enterprise esta organizada em camadas independentes:
+
+- `domain`: regras de negocio, entidades, value objects, eventos, policies,
+  specifications e contratos puros.
+- `application`: objetos de aplicacao e orquestracao sem dependencia de UI.
+- `infrastructure`: adapters concretos, persistencia SQLAlchemy, sessoes,
+  transacoes e integracoes externas.
+- `presentation`: interface grafica e adaptadores de entrada.
+- `shared`: kernel compartilhado com primitives de DDD e suporte transversal.
+
+A auditoria da Sprint 0.3 removeu dependencia de SQLAlchemy do contrato
+`domain.contracts.IUnitOfWork`. Tipos e detalhes do banco ficam restritos a
+`infrastructure.persistence`, enquanto o dominio continua expressando apenas os
+contratos necessarios para regras e casos de uso.
+
+As excecoes seguem uma hierarquia unica em `core.exceptions`: `SIGESMException`
+como base, com especializacoes para `ApplicationException`, `DomainException`,
+`InfrastructureException`, `ValidationException`, `SecurityException` e
+`ConfigurationException`.
+
+O projeto e validado por MyPy strict, Ruff, Black e pytest. A formatacao e a
+tipagem fazem parte da definicao de pronto da base arquitetural.
+
 ## Contexto Militar
 
 O contexto `domain.military` concentra o nucleo militar do SIGESM Enterprise.

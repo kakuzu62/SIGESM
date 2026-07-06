@@ -28,13 +28,14 @@ class HasMinimumRestSpecification:
         if not previous_assignments:
             return True
 
-        latest_assignment = max(previous_assignments, key=lambda assignment: assignment.service_date.value)
-        rest_start = datetime.combine(latest_assignment.service_date.value, time.min) + timedelta(hours=24)
+        latest_assignment = max(
+            previous_assignments, key=lambda assignment: assignment.service_date.value
+        )
+        rest_start = datetime.combine(latest_assignment.service_date.value, time.min) + timedelta(
+            hours=24
+        )
         rest_hours = int(
-            (
-                datetime.combine(candidate.service_date.value, time.min)
-                - rest_start
-            ).total_seconds()
+            (datetime.combine(candidate.service_date.value, time.min) - rest_start).total_seconds()
             // 3600
         )
         return self._policy.is_satisfied(

@@ -15,7 +15,9 @@ class EventDispatcher:
     """Synchronous in-process dispatcher for domain events."""
 
     def __init__(self) -> None:
-        self._handlers: dict[type[DomainEvent], list[Callable[[DomainEvent], None]]] = defaultdict(list)
+        self._handlers: dict[type[DomainEvent], list[Callable[[DomainEvent], None]]] = defaultdict(
+            list
+        )
 
     def register(self, event_type: type[EventT], handler: Callable[[EventT], None]) -> None:
         """Register a handler for a domain event type."""

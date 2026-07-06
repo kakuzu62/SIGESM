@@ -3,12 +3,33 @@ from __future__ import annotations
 from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
+from typing import Protocol
 
 from sqlalchemy import Engine, create_engine, event
 from sqlalchemy.engine import make_url
 from sqlalchemy.orm import Session, sessionmaker
 
 from sigesm.config.settings import Settings
+
+
+class _DatabaseCursor(Protocol):
+    """Minimal DB-API cursor contract used for SQLite initialization."""
+
+    def execute(self, statement: str) -> object:
+        """Execute a database statement."""
+        raise NotImplementedError
+
+    def close(self) -> None:
+        """Close the cursor."""
+        raise NotImplementedError
+
+
+class _DatabaseConnection(Protocol):
+    """Minimal DB-API connection contract used by SQLAlchemy events."""
+
+    def cursor(self) -> _DatabaseCursor:
+        """Return a DB-API cursor."""
+        raise NotImplementedError
 
 
 class DatabaseSessionFactory:
@@ -19,8 +40,13 @@ class DatabaseSessionFactory:
     @classmethod
     def from_settings(cls, settings: Settings) -> DatabaseSessionFactory:
         url = make_url(settings.database.url)
-        if url.get_backend_name() == "sqlite" and url.database not in (None, "", ":memory:"):
-            Path(url.database).parent.mkdir(parents=True, exist_ok=True)
+        database_path = url.database
+        if (
+            url.get_backend_name() == "sqlite"
+            and isinstance(database_path, str)
+            and database_path not in ("", ":memory:")
+        ):
+            Path(database_path).parent.mkdir(parents=True, exist_ok=True)
 
         connect_args: dict[str, object] = {}
         if url.get_backend_name() == "sqlite":
@@ -57,7 +83,10 @@ class DatabaseSessionFactory:
 
 def _enable_sqlite_foreign_keys(engine: Engine) -> None:
     @event.listens_for(engine, "connect")
-    def set_sqlite_pragma(dbapi_connection: object, _connection_record: object) -> None:
+    def set_sqlite_pragma(
+        dbapi_connection: _DatabaseConnection,
+        _connection_record: object,
+    ) -> None:
         cursor = dbapi_connection.cursor()
         try:
             cursor.execute("PRAGMA foreign_keys=ON")

@@ -53,7 +53,9 @@ class SqlAlchemyBaseRepository(IRepository[ModelT, EntityIdT], Generic[ModelT, E
     def exists(self, entity_id: EntityIdT) -> bool:
         """Return whether an entity exists for the given identifier."""
         primary_key = self._primary_key_attribute()
-        statement = select(func.count()).select_from(self.model_type).where(primary_key == entity_id)
+        statement = (
+            select(func.count()).select_from(self.model_type).where(primary_key == entity_id)
+        )
         return self._session.execute(statement).scalar_one() > 0
 
     def get_by_id(self, entity_id: EntityIdT) -> ModelT | None:
@@ -114,7 +116,9 @@ class SqlAlchemyBaseRepository(IRepository[ModelT, EntityIdT], Generic[ModelT, E
         statement = self._apply_filters(select(func.count()).select_from(self.model_type), filters)
         return int(self._session.execute(statement).scalar_one())
 
-    def _apply_filters(self, statement: Select[tuple[Any, ...]], filters: FilterGroup | None) -> Select[tuple[Any, ...]]:
+    def _apply_filters(
+        self, statement: Select[tuple[Any, ...]], filters: FilterGroup | None
+    ) -> Select[tuple[Any, ...]]:
         """Apply filter expressions to a SQLAlchemy select statement."""
         if filters is None:
             return statement

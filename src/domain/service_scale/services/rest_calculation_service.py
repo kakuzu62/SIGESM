@@ -33,7 +33,9 @@ class RestCalculationService:
 
         latest = max(previous, key=lambda assignment: assignment.service_date.value)
         rest_start = datetime.combine(latest.service_date.value, time.min) + timedelta(hours=24)
-        rest_hours = int((datetime.combine(service_date.value, time.min) - rest_start).total_seconds() // 3600)
+        rest_hours = int(
+            (datetime.combine(service_date.value, time.min) - rest_start).total_seconds() // 3600
+        )
         return RestPeriod(max(rest_hours, 0))
 
     def has_minimum_rest(
@@ -55,5 +57,7 @@ class RestCalculationService:
             if allow_one_by_one_exception
             else self._policy.minimum_hours
         )
-        next_datetime = datetime.combine(service_date.value, time.min) + timedelta(hours=24 + rest_hours)
+        next_datetime = datetime.combine(service_date.value, time.min) + timedelta(
+            hours=24 + rest_hours
+        )
         return ServiceDate(next_datetime.date())

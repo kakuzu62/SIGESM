@@ -44,6 +44,8 @@ class Phone(ValueObject):
         area_code = digits[2:4]
         subscriber_number = digits[4:]
         if area_code == "00" or subscriber_number.startswith("0"):
-            raise InvalidPhoneException("Phone must contain a valid area code and subscriber number.")
+            raise InvalidPhoneException(
+                "Phone must contain a valid area code and subscriber number."
+            )
 
         return f"+{digits}"

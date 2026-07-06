@@ -9,7 +9,9 @@ class ServiceAssignmentCreated(DomainEvent):
 
     __slots__ = ("assignment_id", "military_id", "service_scale_id")
 
-    def __init__(self, assignment_id: Identity, military_id: Identity, service_scale_id: Identity) -> None:
+    def __init__(
+        self, assignment_id: Identity, military_id: Identity, service_scale_id: Identity
+    ) -> None:
         super().__init__()
         self.assignment_id = assignment_id
         self.military_id = military_id

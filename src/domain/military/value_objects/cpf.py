@@ -51,6 +51,8 @@ class CPF(ValueObject):
 
     @staticmethod
     def _calculate_digit(base_digits: str, initial_weight: int) -> int:
-        total = sum(int(digit) * weight for digit, weight in zip(base_digits, range(initial_weight, 1, -1)))
+        total = sum(
+            int(digit) * weight for digit, weight in zip(base_digits, range(initial_weight, 1, -1))
+        )
         remainder = (total * 10) % 11
         return 0 if remainder == 10 else remainder

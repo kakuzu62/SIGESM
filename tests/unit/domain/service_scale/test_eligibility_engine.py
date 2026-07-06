@@ -177,6 +177,8 @@ def test_service_conflict_is_reported_from_history() -> None:
     current_date = ServiceDate(datetime(2026, 7, 10, tzinfo=UTC).date())
     conflict = _assignment_for(military, current_date)
 
-    _, result = _evaluate(military, service_scale, role, history=(conflict,), service_date=current_date)
+    _, result = _evaluate(
+        military, service_scale, role, history=(conflict,), service_date=current_date
+    )
 
     assert EligibilityReason.SERVICE_CONFLICT in result.reasons

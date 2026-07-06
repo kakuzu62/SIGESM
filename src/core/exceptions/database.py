@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from core.exceptions.base import SIGESMException
+from core.exceptions.infrastructure import InfrastructureException
 
 
-class DatabaseException(SIGESMException):
-    pass
+class DatabaseException(InfrastructureException):
+    """Raised when persistence infrastructure cannot complete an operation."""

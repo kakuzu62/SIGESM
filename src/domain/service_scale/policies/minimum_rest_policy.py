@@ -20,7 +20,9 @@ class MinimumRestPolicy:
         """Return minimum hours allowed by the controlled 1x1 exception."""
         return self._one_by_one_minimum_hours
 
-    def is_satisfied(self, rest_period: RestPeriod, allow_one_by_one_exception: bool = False) -> bool:
+    def is_satisfied(
+        self, rest_period: RestPeriod, allow_one_by_one_exception: bool = False
+    ) -> bool:
         """Return whether rest period satisfies the policy."""
         if rest_period.hours >= self._minimum_hours:
             return True

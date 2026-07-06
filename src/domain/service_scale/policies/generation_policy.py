@@ -49,7 +49,9 @@ class GenerationPolicy:
             ScaleType.VERMELHA: RedScaleStrategy(),
         }
 
-    def generate(self, generation_id: Identity, context: GenerationContext) -> GenerationPolicyResult:
+    def generate(
+        self, generation_id: Identity, context: GenerationContext
+    ) -> GenerationPolicyResult:
         """Execute candidate search, eligibility, fairness ordering and selection."""
         started_at = perf_counter()
         logger.info(
@@ -62,14 +64,20 @@ class GenerationPolicy:
         )
         eligibility_policy = EligibilityPolicy(
             configuration=EligibilityPolicyConfiguration(
-                allowed_role_ids_by_military=context.restrictions.get("allowed_role_ids_by_military", {}),
-                allowed_scale_ids_by_military=context.restrictions.get("allowed_scale_ids_by_military", {}),
+                allowed_role_ids_by_military=context.restrictions.get(
+                    "allowed_role_ids_by_military", {}
+                ),
+                allowed_scale_ids_by_military=context.restrictions.get(
+                    "allowed_scale_ids_by_military", {}
+                ),
                 manually_blocked_military_ids=context.blocked_military_ids,
                 allow_one_by_one_exception=context.allow_one_by_one_exception,
             )
         )
         selection = self._candidate_selector.select(context, eligibility_policy)
-        fair_order = self._fairness_policy.order(selection.eligible, context.service_date, context.history)
+        fair_order = self._fairness_policy.order(
+            selection.eligible, context.service_date, context.history
+        )
         strategy = self._strategies[context.scale_type]
         ordered = strategy.apply(context, fair_order)
         selected = ordered[: context.selection_limit]

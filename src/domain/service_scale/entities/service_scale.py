@@ -6,7 +6,12 @@ from domain.service_scale.entities.service_assignment import ServiceAssignment
 from domain.service_scale.entities.service_role import ServiceRole
 from domain.service_scale.events import ServiceAssignmentCancelled, ServiceAssignmentCreated
 from domain.service_scale.exceptions import ServiceScaleDomainException
-from domain.service_scale.value_objects import AssignmentStatus, ScaleType, ServiceDate, ServiceRoleName
+from domain.service_scale.value_objects import (
+    AssignmentStatus,
+    ScaleType,
+    ServiceDate,
+    ServiceRoleName,
+)
 from shared.kernel.aggregate_root import AggregateRoot
 from shared.kernel.identity import Identity
 
@@ -126,7 +131,8 @@ class ServiceScale(AggregateRoot[Identity]):
         return tuple(
             assignment
             for assignment in self._assignments
-            if assignment.military_id == military_id and assignment.status == AssignmentStatus.SCHEDULED
+            if assignment.military_id == military_id
+            and assignment.status == AssignmentStatus.SCHEDULED
         )
 
     def _ensure_role_exists(self, role_id: Identity) -> None:

@@ -25,7 +25,9 @@ class CandidateSelector:
         """Return candidates approved by eligibility evaluation."""
         eligible: list[MilitaryPerson] = []
         skipped: list[SkippedCandidate] = []
-        ordered_candidates = tuple(sorted(context.eligible_military, key=lambda candidate: str(candidate.id)))
+        ordered_candidates = tuple(
+            sorted(context.eligible_military, key=lambda candidate: str(candidate.id))
+        )
         for military in ordered_candidates:
             if military.id in context.blocked_military_ids:
                 continue

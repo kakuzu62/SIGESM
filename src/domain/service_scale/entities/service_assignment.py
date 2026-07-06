@@ -108,7 +108,9 @@ class ServiceAssignment(Entity[Identity]):
     def cancel(self, reason: str) -> None:
         """Cancel a scheduled assignment with a required reason."""
         if self._status != AssignmentStatus.SCHEDULED:
-            raise InvalidAssignmentOperationException("Only scheduled assignments can be cancelled.")
+            raise InvalidAssignmentOperationException(
+                "Only scheduled assignments can be cancelled."
+            )
         normalized_reason = reason.strip()
         if not normalized_reason:
             raise InvalidAssignmentOperationException("Cancellation reason is required.")
@@ -119,7 +121,9 @@ class ServiceAssignment(Entity[Identity]):
     def complete(self) -> None:
         """Mark a scheduled assignment as completed."""
         if self._status != AssignmentStatus.SCHEDULED:
-            raise InvalidAssignmentOperationException("Only scheduled assignments can be completed.")
+            raise InvalidAssignmentOperationException(
+                "Only scheduled assignments can be completed."
+            )
         self._status = AssignmentStatus.COMPLETED
         self._touch()
 
