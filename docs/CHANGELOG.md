@@ -1,5 +1,16 @@
 # Changelog
 
+## Release 0.4 - Enterprise Blueprint
+
+- Criada documentacao executiva e arquitetural oficial da fundacao Enterprise.
+- Adicionados documentos de dominio, eventos, regras de negocio, casos de uso,
+  UI, banco, API, nomes, codigo, seguranca, testes, deployment, backlog e
+  roadmap.
+- Criados diagramas oficiais em Mermaid com nomes padronizados em
+  `docs/diagrams/`.
+- Atualizado `docs/IMPLEMENTATION_REPORT.md` com o resumo da Release 0.4.
+- Nenhuma funcionalidade de negocio foi implementada ou alterada.
+
 ## Sprint 1.0 - Enterprise Foundation
 
 - Realizada revisao geral da fundacao arquitetural existente.

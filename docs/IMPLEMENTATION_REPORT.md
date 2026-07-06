@@ -1,60 +1,57 @@
-# Relatorio de Implementacao - Sprint 1.0
+# Relatorio de Implementacao - Release 0.4
 
 ## Objetivo
 
-Consolidar a fundacao Enterprise do SIGESM sem criar novas funcionalidades de
-negocio, preparando o projeto para crescimento sustentavel.
+Criar o Enterprise Blueprint do SIGESM Enterprise: a documentacao executiva e
+arquitetural que servira como referencia oficial para o desenvolvimento das
+proximas releases.
 
-## Auditoria Realizada
+## Escopo
 
-- Estrutura de camadas revisada.
-- Imports e dependencias entre camadas verificados.
-- Qualidade validada com Black, Ruff, MyPy strict e PyTest.
-- Dependencias do `pyproject.toml` revisadas e mantidas por uso atual ou preparo
-  operacional ja existente.
-- Duplicacoes e artefatos estruturais avaliados sem remover compatibilidade
-  existente.
+Esta release nao implementou novas funcionalidades de negocio, nao alterou o
+comportamento existente e nao removeu codigo. O trabalho ficou restrito a
+documentacao, diagramas e registro arquitetural.
 
 ## Alteracoes Realizadas
 
-- Bootstrap passou a usar logging padronizado em vez de saida direta no console.
-- Criado CI em `.github/workflows/quality.yml`.
-- Criado `.github/CODEOWNERS`.
-- Criados `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` e `SECURITY.md`.
-- Criados ADRs:
-  - `ADR-0001-clean-architecture.md`
-  - `ADR-0002-bounded-contexts-ddd.md`
-  - `ADR-0003-quality-gates.md`
-- Criados diagramas:
-  - `Context.md`
-  - `Layers.md`
-  - `Domain.md`
-  - `Infrastructure.md`
-  - `Database.md`
-  - `Modules.md`
-- Criada base de build PyInstaller:
-  - `build/build.py`
-  - `build/build.spec`
-  - `scripts/build.ps1`
-  - `scripts/build.sh`
-- Atualizados README, ARCHITECTURE e CHANGELOG.
+- Criado `docs/DOMAIN_MODEL.md` com bounded contexts, entidades, aggregate
+  roots, value objects, repositorios, servicos, engines, policies,
+  specifications, eventos e context map.
+- Criado `docs/EVENT_CATALOG.md` com eventos existentes e previstos.
+- Criado `docs/BUSINESS_RULES.md` com regras operacionais de escala, descanso,
+  troca oficial, venda de servico, restricoes e auditoria.
+- Criado `docs/USE_CASES.md` com casos de uso iniciais.
+- Criado `docs/UI_GUIDELINES.md` com diretrizes para PySide6.
+- Criado `docs/DATABASE_MODEL.md` com diretrizes SQLite/PostgreSQL e Alembic.
+- Criado `docs/API_GUIDELINES.md` para uma futura API FastAPI.
+- Criado `docs/NAMING_CONVENTIONS.md`.
+- Criado `docs/CODING_GUIDELINES.md`.
+- Criado `docs/SECURITY_GUIDELINES.md`.
+- Criado `docs/TESTING_GUIDELINES.md`.
+- Criado `docs/DEPLOYMENT_GUIDELINES.md`.
+- Criado `docs/PRODUCT_BACKLOG.md`.
+- Criado `docs/ROADMAP.md`.
+- Criados diagramas oficiais em `docs/diagrams/CONTEXT.md`,
+  `docs/diagrams/LAYERS.md`, `docs/diagrams/DOMAIN.md`,
+  `docs/diagrams/INFRASTRUCTURE.md`, `docs/diagrams/DATABASE.md` e
+  `docs/diagrams/MODULES.md`.
+- Atualizado `docs/CHANGELOG.md`.
 
 ## Validacoes
 
-Validacoes executadas ao final da Sprint 1.0:
+As validacoes executadas ao final da release devem confirmar que a documentacao
+nao quebrou o projeto existente:
 
-- Black: aprovado.
-- Ruff: aprovado.
-- MyPy strict: aprovado em 234 arquivos.
-- PyTest: 70 testes aprovados.
+- Black.
+- Ruff.
+- MyPy strict.
+- PyTest.
 
 ## Sugestoes de Melhoria
 
-- Consolidar gradualmente o pacote legado `src/sigesm` com os pacotes raiz
-  quando a interface grafica amadurecer.
-- Adicionar cobertura de testes para futuros use cases de application.
-- Criar matriz de compatibilidade SQLite/PostgreSQL em CI quando houver servico
-  PostgreSQL de teste.
-- Adicionar empacotamento assinado para distribuicao Windows.
-- Definir convencoes de versionamento e release notes antes da primeira entrega
-  operacional.
+- Transformar casos de uso priorizados em issues ou milestones no GitHub.
+- Definir matriz de permissoes antes da Release 1.x Identity.
+- Criar modelos de tela PySide6 baseados em `UI_GUIDELINES.md`.
+- Criar migrations iniciais quando o modelo persistido dos modulos de negocio
+  for formalizado.
+- Criar rastreabilidade entre backlog, roadmap, ADRs e casos de teste.
