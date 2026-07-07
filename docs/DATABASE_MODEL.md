@@ -81,3 +81,20 @@ migrations.
 - Revisoes devem ser pequenas e ordenadas.
 - Downgrade deve ser implementado quando seguro.
 - Seeds operacionais devem ficar separados de schema.
+
+## Identity - Modelo Fisico Inicial
+
+A Release 1.0 prepara os models SQLAlchemy do contexto Identity, ainda sem
+criar migration versionada. As tabelas planejadas para o contexto sao:
+
+- `identity_users`: usuarios, username, email, hash de senha, status ativo,
+  tentativas falhas, bloqueio e timestamps.
+- `identity_roles`: perfis de acesso.
+- `identity_permissions`: permissoes atomicas.
+- `identity_user_roles`: associacao muitos-para-muitos entre usuarios e roles.
+- `identity_role_permissions`: associacao muitos-para-muitos entre roles e
+  permissoes.
+- `identity_user_sessions`: sessoes de usuario e status de sessao.
+
+Senhas nunca devem ser armazenadas em texto puro. O campo `password_hash` deve
+conter apenas o hash codificado produzido pelo servico de senha do dominio.

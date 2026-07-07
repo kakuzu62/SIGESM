@@ -1,38 +1,73 @@
-# Relatorio de Implementacao - Release 0.5
+# Relatorio de Implementacao - Release 1.0
 
 ## Objetivo
 
-Projetar a arquitetura de dados completa do SIGESM Enterprise antes da
-implementacao funcional da Release 1.0, sem criar tabelas, migrations ou novas
-funcionalidades de negocio.
+Criar o contexto inicial de Identidade e Seguranca do SIGESM Enterprise, sem
+interface grafica, mantendo Clean Architecture, DDD, Repository Pattern,
+Dependency Injection preparada, SQLAlchemy 2, MyPy strict e testes automatizados.
 
-## Escopo
+## Escopo Implementado
 
-Esta release foi exclusivamente documental e arquitetural. O comportamento do
-sistema existente nao foi alterado.
+- Dominio `domain.identity`.
+- Application `application.identity`.
+- Infraestrutura SQLAlchemy `infrastructure.persistence.sqlalchemy.identity`.
+- Testes unitarios e de integracao.
+- Documentacao da release.
 
-## Alteracoes Realizadas
+## Dominio
 
-- Criado `docs/DATA_ARCHITECTURE.md` com modelo conceitual, modelo logico por
-  bounded context, modelo fisico, estrategia de migrations, auditoria, soft
-  delete, historico, riscos e decisoes pendentes.
-- Atualizado `docs/DATABASE_MODEL.md` com convencoes oficiais para tabelas,
-  colunas, constraints, indices, tipos portaveis, Alembic e historico.
-- Criado `docs/RULE_ENGINE.md` com catalogo inicial de regras automaticas,
-  pipeline recomendado, auditoria de decisao e pendencias.
-- Criado `docs/EVENT_STORMING.md` com comandos, agregados, eventos e policies
-  por contexto.
-- Criado `docs/diagrams/DATABASE_ER.md` com ER conceitual em Mermaid.
-- Criado `docs/diagrams/EVENT_FLOW.md` com fluxo conceitual de eventos em
-  Mermaid.
-- Atualizado `docs/CHANGELOG.md`.
+Foram criados:
 
-## Nao Realizado por Criterio da Release
+- `User` como AggregateRoot.
+- `Role`, `Permission` e `UserSession` como entidades.
+- Value objects `Username`, `Email`, `PasswordHash`, `PermissionCode` e
+  `SessionStatus`.
+- Eventos `UserCreated`, `UserActivated`, `UserDeactivated`,
+  `PasswordChanged` e `LoginFailed`.
+- Contratos `IUserRepository`, `IRoleRepository` e `IPermissionRepository`.
+- `PasswordPolicy` com minimo de 8 caracteres, letra maiuscula, letra
+  minuscula, numero e caractere especial.
+- `LoginAttemptPolicy` preparada para bloqueio futuro.
+- `PasswordService` com PBKDF2-SHA256, salt seguro e comparacao constante.
+- `PermissionService` para avaliacao de permissoes por role.
 
-- Nenhuma tabela foi criada.
-- Nenhuma migration Alembic foi criada.
-- Nenhum comportamento existente foi alterado.
-- Nenhuma funcionalidade de negocio foi implementada.
+## Application
+
+Foram criados commands e handlers para:
+
+- criar usuario;
+- ativar usuario;
+- desativar usuario;
+- alterar senha.
+
+Tambem foram criadas queries para:
+
+- buscar usuario por id;
+- listar usuarios.
+
+`UserDTO` representa a saida da application layer sem expor entidades de dominio.
+
+## Infraestrutura
+
+Foram criados models SQLAlchemy para:
+
+- `identity_users`;
+- `identity_roles`;
+- `identity_permissions`;
+- `identity_user_roles`;
+- `identity_role_permissions`;
+- `identity_user_sessions`.
+
+Tambem foram criados repositories SQLAlchemy e mapper explicito entre models e
+objetos de dominio.
+
+## Garantias Arquiteturais
+
+- Dominio nao depende de SQLAlchemy.
+- Application nao depende de Presentation.
+- Infraestrutura nao contem regra de negocio.
+- Senha em texto puro nao e persistida.
+- Regras de senha ficam no dominio.
 
 ## Validacoes
 
@@ -43,19 +78,7 @@ Validacoes executadas ao final da release:
 - MyPy strict.
 - PyTest.
 
-## Riscos Tecnicos Identificados
+## Observacoes
 
-- Diferencas entre SQLite e PostgreSQL para UUID, JSON, constraints e
-  concorrencia.
-- Crescimento de tabelas de auditoria e decisoes automaticas.
-- Relatorios potencialmente pesados sobre dados operacionais.
-- Necessidade de separar audit trail, historico de negocio e outbox
-  transacional.
-
-## Decisoes Pendentes
-
-- Definir estrategia final de UUID em PostgreSQL.
-- Definir retencao e compactacao de auditoria.
-- Definir criptografia local para dados sensiveis.
-- Definir quando usar read models ou relatorios materializados.
-- Definir formato final de versionamento das regras automaticas.
+Nenhuma interface grafica foi criada nesta release. Nenhuma migration Alembic foi
+criada; os models foram preparados para a futura etapa de migrations.

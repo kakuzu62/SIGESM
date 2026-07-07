@@ -67,6 +67,14 @@ O contrato `IUnitOfWork` do dominio usa tipos neutros de infraestrutura. A
 implementacao SQLAlchemy fica isolada em `infrastructure`, preservando Clean
 Architecture e facilitando a troca futura do mecanismo de persistencia.
 
+## Identidade e Seguranca
+
+O contexto `src/domain/identity` implementa a base inicial de identidade sem
+interface grafica. Ele modela usuarios como aggregate roots, roles, permissions,
+sessoes, politicas de senha e tentativa de login, servico de hash seguro de
+senha e contratos de repositorio. A infraestrutura SQLAlchemy correspondente
+fica em `src/infrastructure/persistence/sqlalchemy/identity`.
+
 ## Dominio Militar
 
 O contexto militar inicial esta em `src/domain/military`. Ele modela o agregado

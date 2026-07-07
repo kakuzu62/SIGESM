@@ -39,6 +39,19 @@ A Sprint 1.0 adiciona governanca e operacao de engenharia sobre a base existente
 Nenhuma nova funcionalidade de negocio foi adicionada. A mudanca consolida
 estrutura, padroes e capacidade de evolucao.
 
+## Contexto Identity
+
+O contexto `domain.identity` e o primeiro modulo funcional da Release 1.0. Ele
+segue DDD com `User` como AggregateRoot e `Role`, `Permission` e `UserSession`
+como entidades. Value objects normalizam username, email, hash de senha, codigo
+de permissao e status de sessao.
+
+As regras de senha e tentativa de login ficam em policies de dominio. O hash e a
+verificacao de senha ficam em `PasswordService`, usando PBKDF2-SHA256 com salt.
+Application define commands, queries e DTOs sem depender de UI. A persistencia
+SQLAlchemy fica isolada em `infrastructure.persistence.sqlalchemy.identity`, com
+models, repositories e mapper explicito entre dominio e banco.
+
 ## Contexto Militar
 
 O contexto `domain.military` concentra o nucleo militar do SIGESM Enterprise.

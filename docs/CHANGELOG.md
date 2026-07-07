@@ -1,5 +1,20 @@
 # Changelog
 
+## Release 1.0 - Identity Context
+
+- Criado o bounded context `domain.identity`.
+- Adicionados agregados e entidades `User`, `Role`, `Permission` e
+  `UserSession`.
+- Criados value objects para username, email, hash de senha, codigo de permissao
+  e status de sessao.
+- Criados eventos de dominio para criacao, ativacao, desativacao, troca de senha
+  e falha de login.
+- Criadas policies de senha e tentativa de login.
+- Criados services de senha e permissao.
+- Criados commands, queries e DTOs de application para Identity.
+- Criados models, mappers e repositories SQLAlchemy para Identity.
+- Criados testes unitarios e de integracao do contexto.
+
 ## Release 0.5 - Data Architecture
 
 - Criada arquitetura de dados completa em `docs/DATA_ARCHITECTURE.md`.
