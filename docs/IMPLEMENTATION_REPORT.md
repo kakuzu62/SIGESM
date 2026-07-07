@@ -1,57 +1,61 @@
-# Relatorio de Implementacao - Release 0.4
+# Relatorio de Implementacao - Release 0.5
 
 ## Objetivo
 
-Criar o Enterprise Blueprint do SIGESM Enterprise: a documentacao executiva e
-arquitetural que servira como referencia oficial para o desenvolvimento das
-proximas releases.
+Projetar a arquitetura de dados completa do SIGESM Enterprise antes da
+implementacao funcional da Release 1.0, sem criar tabelas, migrations ou novas
+funcionalidades de negocio.
 
 ## Escopo
 
-Esta release nao implementou novas funcionalidades de negocio, nao alterou o
-comportamento existente e nao removeu codigo. O trabalho ficou restrito a
-documentacao, diagramas e registro arquitetural.
+Esta release foi exclusivamente documental e arquitetural. O comportamento do
+sistema existente nao foi alterado.
 
 ## Alteracoes Realizadas
 
-- Criado `docs/DOMAIN_MODEL.md` com bounded contexts, entidades, aggregate
-  roots, value objects, repositorios, servicos, engines, policies,
-  specifications, eventos e context map.
-- Criado `docs/EVENT_CATALOG.md` com eventos existentes e previstos.
-- Criado `docs/BUSINESS_RULES.md` com regras operacionais de escala, descanso,
-  troca oficial, venda de servico, restricoes e auditoria.
-- Criado `docs/USE_CASES.md` com casos de uso iniciais.
-- Criado `docs/UI_GUIDELINES.md` com diretrizes para PySide6.
-- Criado `docs/DATABASE_MODEL.md` com diretrizes SQLite/PostgreSQL e Alembic.
-- Criado `docs/API_GUIDELINES.md` para uma futura API FastAPI.
-- Criado `docs/NAMING_CONVENTIONS.md`.
-- Criado `docs/CODING_GUIDELINES.md`.
-- Criado `docs/SECURITY_GUIDELINES.md`.
-- Criado `docs/TESTING_GUIDELINES.md`.
-- Criado `docs/DEPLOYMENT_GUIDELINES.md`.
-- Criado `docs/PRODUCT_BACKLOG.md`.
-- Criado `docs/ROADMAP.md`.
-- Criados diagramas oficiais em `docs/diagrams/CONTEXT.md`,
-  `docs/diagrams/LAYERS.md`, `docs/diagrams/DOMAIN.md`,
-  `docs/diagrams/INFRASTRUCTURE.md`, `docs/diagrams/DATABASE.md` e
-  `docs/diagrams/MODULES.md`.
+- Criado `docs/DATA_ARCHITECTURE.md` com modelo conceitual, modelo logico por
+  bounded context, modelo fisico, estrategia de migrations, auditoria, soft
+  delete, historico, riscos e decisoes pendentes.
+- Atualizado `docs/DATABASE_MODEL.md` com convencoes oficiais para tabelas,
+  colunas, constraints, indices, tipos portaveis, Alembic e historico.
+- Criado `docs/RULE_ENGINE.md` com catalogo inicial de regras automaticas,
+  pipeline recomendado, auditoria de decisao e pendencias.
+- Criado `docs/EVENT_STORMING.md` com comandos, agregados, eventos e policies
+  por contexto.
+- Criado `docs/diagrams/DATABASE_ER.md` com ER conceitual em Mermaid.
+- Criado `docs/diagrams/EVENT_FLOW.md` com fluxo conceitual de eventos em
+  Mermaid.
 - Atualizado `docs/CHANGELOG.md`.
+
+## Nao Realizado por Criterio da Release
+
+- Nenhuma tabela foi criada.
+- Nenhuma migration Alembic foi criada.
+- Nenhum comportamento existente foi alterado.
+- Nenhuma funcionalidade de negocio foi implementada.
 
 ## Validacoes
 
-As validacoes executadas ao final da release devem confirmar que a documentacao
-nao quebrou o projeto existente:
+Validacoes executadas ao final da release:
 
 - Black.
 - Ruff.
 - MyPy strict.
 - PyTest.
 
-## Sugestoes de Melhoria
+## Riscos Tecnicos Identificados
 
-- Transformar casos de uso priorizados em issues ou milestones no GitHub.
-- Definir matriz de permissoes antes da Release 1.x Identity.
-- Criar modelos de tela PySide6 baseados em `UI_GUIDELINES.md`.
-- Criar migrations iniciais quando o modelo persistido dos modulos de negocio
-  for formalizado.
-- Criar rastreabilidade entre backlog, roadmap, ADRs e casos de teste.
+- Diferencas entre SQLite e PostgreSQL para UUID, JSON, constraints e
+  concorrencia.
+- Crescimento de tabelas de auditoria e decisoes automaticas.
+- Relatorios potencialmente pesados sobre dados operacionais.
+- Necessidade de separar audit trail, historico de negocio e outbox
+  transacional.
+
+## Decisoes Pendentes
+
+- Definir estrategia final de UUID em PostgreSQL.
+- Definir retencao e compactacao de auditoria.
+- Definir criptografia local para dados sensiveis.
+- Definir quando usar read models ou relatorios materializados.
+- Definir formato final de versionamento das regras automaticas.

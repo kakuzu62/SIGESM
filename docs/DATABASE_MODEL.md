@@ -1,46 +1,83 @@
 # Database Model
 
-Diretrizes para modelo de dados e persistencia.
+Este documento complementa `DATA_ARCHITECTURE.md` com convencoes oficiais para
+o modelo fisico do banco do SIGESM Enterprise. A Release 0.5 nao cria tabelas nem
+migrations.
 
 ## Estrategia
 
 - SQLite e o banco local inicial.
-- O desenho deve permanecer compativel com PostgreSQL.
+- PostgreSQL e o alvo de compatibilidade corporativa futura.
 - SQLAlchemy 2 e Alembic sao as ferramentas oficiais de ORM e migrations.
+- O dominio nao deve depender do formato fisico do banco.
 
-## Convencoes de Nome
+## Convencoes de Tabelas
 
-- Tabelas em snake_case e plural apenas quando o contexto exigir consistencia.
-- Colunas em snake_case.
-- Indices com prefixo `ix_`.
-- Unique constraints com prefixo `uq_`.
-- Foreign keys com prefixo `fk_`.
-- Check constraints com prefixo `ck_`.
+- Tabelas em `snake_case`.
+- Nome deve representar o conceito persistido, nao a tela.
+- Tabelas por bounded context devem usar nomes claros, por exemplo
+  `military_persons`, `service_assignments` e `audit_entries`.
+- Tabelas associativas usam nomes compostos: `user_profiles`,
+  `profile_permissions`.
 
-## Chaves
+## Convencoes de Colunas
 
-- Chaves primarias devem ser estaveis e explicitas.
-- Chaves estrangeiras devem preservar integridade referencial.
-- Identificadores de dominio podem usar UUID quando fizer sentido.
+- Colunas em `snake_case`.
+- Chave primaria: `id`.
+- Foreign keys: `<referenced_table_singular>_id` quando a leitura permanecer
+  clara.
+- Timestamps padrao: `created_at`, `updated_at`, `deleted_at`.
+- Responsaveis por alteracao: `created_by`, `updated_by`, `deleted_by` quando
+  houver auditoria de usuario.
+- Status devem ser armazenados como strings estaveis, nao como inteiros magicos.
 
-## Migrations Alembic
+## Constraints e Indices
 
-- Toda alteracao estrutural deve gerar migration.
-- Migration deve ter nome claro e reversao quando viavel.
-- Migrations nao devem carregar regra de negocio.
+- Primary key: `pk_<table>`.
+- Foreign key: `fk_<table>__<column>__<referenced_table>`.
+- Unique constraint: `uq_<table>__<columns>`.
+- Check constraint: `ck_<table>__<rule>`.
+- Index: `ix_<table>__<columns>`.
+- Indices devem priorizar consultas por periodo, status, militar, escala e
+  organizacao.
 
-## Indices
+## Tipos Portaveis
 
-- Criar indices para filtros frequentes, relatorios e integridade.
-- Evitar indices antes de existir necessidade operacional clara.
+- UUID: texto canonico inicialmente.
+- CPF, telefone e codigos: strings normalizadas.
+- Datas: tipos de data ou datetime do SQLAlchemy.
+- Metadata: JSON apenas quando a estrutura for flexivel por natureza.
+- Valores monetarios futuros: decimal, nunca float.
 
-## Auditoria e Timestamps
+## Auditoria
 
-- Entidades persistidas devem possuir `created_at` e `updated_at` quando
-  aplicavel.
-- Registros auditaveis devem guardar ator, origem, acao e metadata.
+- Toda acao sensivel deve gerar `audit_entries`.
+- Decisoes automaticas devem gerar `decision_records`.
+- Eventos de dominio podem ser persistidos em `domain_event_outbox` quando o
+  projeto adotar publicacao assíncrona.
+
+## Timestamps
+
+- `created_at` obrigatorio em registros operacionais.
+- `updated_at` obrigatorio quando o registro puder mudar.
+- Usar UTC como referencia tecnica e formatacao local na interface.
 
 ## Soft Delete
 
-- Usar soft delete quando houver requisito de historico ou auditoria.
-- Exclusao fisica deve ser restrita a dados temporarios ou tecnicos.
+- Preferir `deleted_at` e `deleted_by` para registros auditaveis.
+- Consultas padrao devem ignorar registros removidos logicamente.
+- Relatorios de auditoria podem incluir registros removidos.
+
+## Historico
+
+- Historico especifico deve existir quando a transicao tiver significado de
+  negocio, como mudanca de posto, contato, escala ou parametro.
+- Auditoria registra o fato; tabela historica registra o estado relevante para
+  consulta operacional.
+
+## Alembic
+
+- Migrations devem usar naming convention centralizada.
+- Revisoes devem ser pequenas e ordenadas.
+- Downgrade deve ser implementado quando seguro.
+- Seeds operacionais devem ficar separados de schema.

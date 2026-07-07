@@ -1,5 +1,17 @@
 # Changelog
 
+## Release 0.5 - Data Architecture
+
+- Criada arquitetura de dados completa em `docs/DATA_ARCHITECTURE.md`.
+- Expandido `docs/DATABASE_MODEL.md` com convencoes fisicas, Alembic,
+  auditoria, timestamps, soft delete e historico.
+- Criado `docs/RULE_ENGINE.md` com catalogo inicial de regras automaticas.
+- Criado `docs/EVENT_STORMING.md` com comandos, eventos, agregados e policies.
+- Criados diagramas `docs/diagrams/DATABASE_ER.md` e
+  `docs/diagrams/EVENT_FLOW.md`.
+- Registrados riscos tecnicos e decisoes pendentes.
+- Nenhuma tabela, migration ou funcionalidade de negocio foi criada.
+
 ## Release 0.4 - Enterprise Blueprint
 
 - Criada documentacao executiva e arquitetural oficial da fundacao Enterprise.
