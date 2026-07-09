@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-from bootstrap.application import Application
+from sigesm.main import main as run_desktop
 
 
-def main() -> None:
-    app = Application()
-    app.run()
+def main() -> int:
+    return run_desktop()
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

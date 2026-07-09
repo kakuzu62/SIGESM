@@ -72,6 +72,30 @@ PySide6 futura. Ele contem primitivas de shell, navegacao, workspace, dialogos,
 componentes, temas, resources, commands e viewmodels. O framework nao contem
 regras de negocio e nao acessa banco.
 
+### Desktop Platform
+
+A Release 2.0 transforma o framework em uma plataforma desktop executavel. O
+entrypoint `python src/main.py` delega para `sigesm.main`, inicializa o container
+da aplicacao, exibe splash screen, valida a saude da fundacao e abre o fluxo de
+login.
+
+O login usa `LoginDialog`, `LoginViewModel` e `LoginController`, que chamam o
+use case `AuthenticateUserHandler`. A View nao conhece repositories, engines ou
+SQLAlchemy. Para bootstrap local, a composicao registra repositories de
+identidade em memoria e cria um usuario administrativo de desenvolvimento com
+senha protegida pelo `PasswordService`.
+
+O `MainWindow` implementa o shell principal com header, menu lateral,
+workspace central e status bar. A navegacao e controlada por `NavigationService`
+e o carregamento de telas por `WorkspaceManager`. Os modulos iniciais
+`dashboard`, `organization`, `military`, `scale` e `settings` possuem views
+placeholder, mantendo o contrato visual pronto para as proximas releases.
+
+O `ThemeManager` aplica temas Light e Dark em tempo de execucao e mantem a
+estrutura preparada para Alto Contraste. Recursos visuais continuam
+centralizados no framework de presentation, sem acesso direto a infraestrutura
+de persistencia.
+
 ## Contexto Militar
 
 O contexto `domain.military` concentra o nucleo militar do SIGESM Enterprise.

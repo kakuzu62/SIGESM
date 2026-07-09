@@ -9,6 +9,7 @@ class ThemeMode(StrEnum):
 
     LIGHT = "LIGHT"
     DARK = "DARK"
+    HIGH_CONTRAST = "HIGH_CONTRAST"
 
 
 @dataclass(frozen=True, slots=True)

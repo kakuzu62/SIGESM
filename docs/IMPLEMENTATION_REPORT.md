@@ -1,70 +1,60 @@
-# Relatorio de Implementacao - Release 1.1
+# Relatorio de Implementacao - Release 2.0
 
 ## Objetivo
 
-Implementar o nucleo de autenticacao do SIGESM Enterprise e iniciar o Desktop
-Framework reutilizavel, sem criar telas de negocio.
+Implementar a primeira plataforma desktop executavel do SIGESM Enterprise,
+mantendo a separacao entre Presentation, Application, Domain e Infrastructure.
 
-## Authentication Core
+## Entregas
 
-Foram criados no dominio:
+- Splash screen de inicializacao.
+- Tela de login integrada ao Authentication Core.
+- Janela principal com header, menu lateral, workspace central e status bar.
+- Navegacao entre modulos iniciais.
+- Dashboard inicial com cards de Militares, Escalas, Organizacoes, Pendencias e
+  Auditoria.
+- Gerenciamento de tema Light e Dark em tempo de execucao.
+- Estrutura preparada para Alto Contraste.
+- Servico de notificacoes da interface.
+- Repositories de identidade em memoria para bootstrap local.
 
-- `AuthenticationService`.
-- `AuthenticationSession`.
-- `RefreshSession`.
-- `PasswordResetRequest`.
-- `AuthenticationAttempt`.
+## Fluxo de Inicializacao
 
-O servico de senha foi migrado para Argon2id usando `argon2-cffi`. Tokens de
-acesso, refresh e reset sao gerados como valores opacos e persistidos apenas
-como SHA-256.
+O entrypoint `src/main.py` delega para `sigesm.main`, que monta o container da
+aplicacao e inicia o fluxo PySide6. Durante a inicializacao, a aplicacao exibe a
+splash screen, executa o health check, carrega o contexto desktop, aplica o tema
+padrao e abre o login.
 
-## Application
+## Autenticacao
 
-Foram adicionados use cases para:
+O login nao utiliza autenticacao ficticia. A View chama `LoginViewModel`, que
+aciona `LoginController` e o use case `AuthenticateUserHandler`. O handler usa
+`AuthenticationService`, policies e `PasswordService` do contexto Identity.
 
-- `AuthenticateUser`.
-- `LogoutUser`.
-- `RequestPasswordReset`.
-- `ConfirmPasswordReset`.
-- `ValidateSession`.
-- `RenewSession`.
+Para desenvolvimento local, o container registra repositories em memoria e cria
+um usuario administrativo inicial:
 
-O use case de troca de senha existente permanece disponivel e o dominio tambem
-expoe troca autenticada por `AuthenticationService.change_password`.
+- usuario: `admin`
+- senha: `Admin#123`
 
-## Infraestrutura
+## Arquitetura Visual
 
-Foram adicionados models e repositories SQLAlchemy para:
+O `MainWindow` concentra apenas responsabilidades de shell. A navegacao e
+controlada por `NavigationService`, o workspace por `WorkspaceManager` e os
+temas por `ThemeManager`.
 
-- sessoes de autenticacao;
-- sessoes de refresh;
-- solicitacoes de recuperacao de senha;
-- tentativas de login.
+As views dos modulos iniciais sao placeholders estruturais. Elas nao acessam
+repositories, SQLAlchemy, engines ou regras de dominio diretamente.
 
-## Segurança
+## Arquivos Principais
 
-- Hash de senha com Argon2id.
-- Verificacao de senha delegada a biblioteca segura.
-- Politica configuravel de bloqueio por tentativas.
-- Auditoria inicial por `AuthenticationAttempt`.
-- Expiracao configuravel de sessao, refresh e reset de senha.
-
-## Desktop Framework
-
-Foi criada a estrutura reutilizavel em `src/presentation/framework`:
-
-- `shell`;
-- `navigation`;
-- `workspace`;
-- `dialogs`;
-- `components`;
-- `themes`;
-- `resources`;
-- `commands`;
-- `viewmodels`.
-
-Nenhuma tela de negocio foi implementada.
+- `src/sigesm/presentation/qt/app.py`
+- `src/presentation/framework/views/login_dialog.py`
+- `src/presentation/framework/views/main_window.py`
+- `src/presentation/framework/viewmodels/login_viewmodel.py`
+- `src/presentation/framework/controllers/login_controller.py`
+- `src/presentation/framework/themes/theme_manager.py`
+- `src/presentation/modules/dashboard/view.py`
 
 ## Validacoes
 
@@ -75,7 +65,10 @@ Validacoes executadas ao final da release:
 - MyPy strict.
 - PyTest.
 
+Resultado: suite completa aprovada com 89 testes.
+
 ## Observacoes
 
-Nenhuma migration Alembic foi criada nesta release. Os models SQLAlchemy foram
-preparados para uma etapa futura de migrations.
+Nenhuma funcionalidade de negocio nova foi criada nesta release. A entrega cria
+a plataforma visual reutilizavel que recebera os modulos funcionais das
+proximas releases.

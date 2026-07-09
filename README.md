@@ -5,10 +5,10 @@ construido com PySide6, SQLAlchemy 2, Alembic, Clean Architecture e DDD.
 
 ## Estado da Fundacao
 
-A Sprint 1.0 consolidou a base para crescimento de longo prazo. O projeto agora
-possui governanca de contribuicao, ADRs, diagramas de arquitetura, pipeline de
-CI, scripts de build PyInstaller e validacao automatizada por Black, Ruff, MyPy
-strict e PyTest.
+A Sprint 1.0 consolidou a base para crescimento de longo prazo. A Release 2.0
+inaugura a fase visual do produto com uma plataforma desktop executavel em
+PySide6, login integrado ao Authentication Core, shell principal, navegacao,
+workspace, temas e modulos iniciais.
 
 ## Qualidade
 
@@ -84,6 +84,30 @@ Argon2id para senhas.
 O pacote `src/presentation/framework` fornece a base reutilizavel da interface
 desktop: shell, navegacao, workspace, dialogos, componentes, temas, recursos,
 commands e viewmodels. Ele ainda nao implementa telas de negocio.
+
+## Release 2.0 - Desktop Platform
+
+A aplicacao agora pode ser iniciada por `python src/main.py` ou
+`python -m sigesm`. O fluxo visual carrega splash screen, valida a fundacao,
+abre a tela de login e, apos autenticacao pelo Authentication Core, exibe a
+janela principal do SIGESM.
+
+A plataforma desktop inclui:
+
+- shell principal com header, menu lateral, workspace central e status bar;
+- navegacao entre Dashboard, Organizacoes, Militares, Escalas e Configuracoes;
+- dashboard inicial com cards de Militares, Escalas, Organizacoes, Pendencias e
+  Auditoria;
+- troca de tema em tempo de execucao entre Light e Dark, com estrutura preparada
+  para Alto Contraste;
+- ViewModels e controllers isolando a interface da camada Application;
+- repositorios de identidade em memoria para bootstrap local de autenticacao,
+  usando o mesmo Authentication Core de producao.
+
+Credenciais locais de desenvolvimento:
+
+- usuario: `admin`
+- senha: `Admin#123`
 
 ## Dominio Militar
 

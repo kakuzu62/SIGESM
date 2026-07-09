@@ -1,5 +1,22 @@
 # Changelog
 
+## Release 2.0 - Desktop Platform
+
+- Criada a primeira plataforma visual executavel do SIGESM Enterprise.
+- Integrado `python src/main.py` ao bootstrap principal `sigesm.main`.
+- Adicionado fluxo PySide6 com splash screen, health check, login e janela
+  principal.
+- Criados `LoginDialog`, `LoginViewModel` e `LoginController` integrados ao
+  `AuthenticateUserHandler`.
+- Criado shell principal com header, menu lateral, workspace central, status bar
+  e troca de tema em tempo de execucao.
+- Adicionados `DesktopContext`, `ThemeManager` e `NotificationService`.
+- Criados modulos iniciais de Dashboard, Organizacoes, Militares, Escalas e
+  Configuracoes.
+- Adicionados repositories de identidade em memoria para bootstrap local de
+  autenticacao sem bypass de regra de dominio.
+- Criados testes unitarios para navegacao, workspace, notificacoes e recursos.
+
 ## Release 1.1 - Authentication Core
 
 - Adicionado `AuthenticationService` ao contexto Identity.
