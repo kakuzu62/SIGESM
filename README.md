@@ -114,6 +114,22 @@ Credenciais locais de desenvolvimento:
 - usuario: `admin`
 - senha: `Admin#123`
 
+## STS-001 - Gestao de Usuarios
+
+A Release 2.1 inicia o Epico Administracao com o primeiro modulo funcional em
+Vertical Slice Architecture:
+
+- `src/presentation/modules/user_management/application`
+- `src/presentation/modules/user_management/domain`
+- `src/presentation/modules/user_management/infrastructure`
+- `src/presentation/modules/user_management/presentation`
+
+O modulo entrega cadastro, edicao, pesquisa, paginacao, ativacao, desativacao,
+redefinicao de senha e associacao tecnica de perfis por handlers. A interface
+fica disponivel no menu lateral como `Usuarios` e segue MVVM: a View chama
+`UserViewModel`, que chama `UserManagementService`, que orquestra handlers e
+repositorios do modulo.
+
 ## Dominio Militar
 
 O contexto militar inicial esta em `src/domain/military`. Ele modela o agregado

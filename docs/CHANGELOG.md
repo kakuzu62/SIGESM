@@ -1,5 +1,23 @@
 # Changelog
 
+## Release 2.1 - User Management
+
+- Criado o vertical slice `presentation.modules.user_management`.
+- Adicionados Commands, Queries, Handlers, Validators, DTOs e mappings para
+  gestao de usuarios.
+- Implementadas regras de duplicidade de username/email, senha forte, ultimo
+  administrador e bloqueio de autodesativacao.
+- Criada fachada `UserManagementService` para a camada Presentation.
+- Criados adapters em memoria e SQLAlchemy para pesquisa, paginacao, ordenacao,
+  filtros, count e roles.
+- Criada tela `UserListView` com pesquisa, filtro, paginacao, toolbar CRUD e
+  dialogos de cadastro/redefinicao de senha.
+- Criados componentes reutilizaveis: SearchBar, PaginationWidget, FilterPanel,
+  CrudToolbar, LoadingOverlay, EmptyStateWidget e ConfirmationDialog.
+- Integrado o modulo `Usuarios` ao menu lateral do Desktop Platform.
+- Criada migration Alembic inicial das tabelas Identity.
+- Adicionados testes unitarios do modulo de gestao de usuarios.
+
 ## Release 2.0 - Desktop Platform
 
 - Criada a primeira plataforma visual executavel do SIGESM Enterprise.

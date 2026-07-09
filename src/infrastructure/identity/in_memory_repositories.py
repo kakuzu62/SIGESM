@@ -7,6 +7,7 @@ from domain.identity.entities import (
     AuthenticationSession,
     PasswordResetRequest,
     RefreshSession,
+    Role,
     User,
 )
 from domain.identity.repositories import (
@@ -15,6 +16,7 @@ from domain.identity.repositories import (
     IPasswordResetRequestRepository,
     IRefreshSessionRepository,
     IUserRepository,
+    IRoleRepository,
 )
 from domain.identity.value_objects import Email, Username
 from shared.kernel.identity import Identity
@@ -56,6 +58,45 @@ class InMemoryUserRepository(IUserRepository):
         return tuple(self._items.values())
 
     def first(self) -> User | None:
+        return next(iter(self._items.values()), None)
+
+
+class InMemoryRoleRepository(IRoleRepository):
+    """In-memory role repository for local desktop bootstrap."""
+
+    def __init__(self) -> None:
+        self._items: dict[Identity, Role] = {}
+
+    def add(self, entity: Role) -> Role:
+        self._items[entity.id] = entity
+        return entity
+
+    def update(self, entity: Role) -> Role:
+        self._items[entity.id] = entity
+        return entity
+
+    def delete(self, entity: Role) -> None:
+        self._items.pop(entity.id, None)
+
+    def get_by_id(self, entity_id: Identity) -> Role | None:
+        return self._items.get(entity_id)
+
+    def get_by_name(self, name: str) -> Role | None:
+        normalized = name.strip().lower()
+        return next(
+            (role for role in self._items.values() if role.name.lower() == normalized), None
+        )
+
+    def exists(self, entity_id: Identity) -> bool:
+        return entity_id in self._items
+
+    def count(self) -> int:
+        return len(self._items)
+
+    def list(self) -> Sequence[Role]:
+        return tuple(self._items.values())
+
+    def first(self) -> Role | None:
         return next(iter(self._items.values()), None)
 
 

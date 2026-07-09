@@ -13,19 +13,27 @@
 - Perfis e permissoes.
 - Politicas de senha e sessao.
 
-## Release 2.x Organization
+## Epico 1 - Administracao
+
+- Release 2.1: Gestao de Usuarios.
+- Release 2.2: Perfis.
+- Release 2.3: Permissoes.
+- Release 2.4: Auditoria.
+- Release 2.5: Configuracoes administrativas.
+
+## Epico 2 - Organizacao Militar
 
 - Cadastro de organizacao.
 - Parametros institucionais.
 - Integracao com settings.
 
-## Release 3.x Military
+## Epico 3 - Cadastro Militar
 
 - Cadastro completo de militares.
 - Restricoes.
 - Historico e status operacional.
 
-## Release 4.x Service Scale
+## Epico 4 - Escalas
 
 - Funcoes de servico.
 - Elegibilidade.

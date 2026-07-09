@@ -5,6 +5,7 @@ from infrastructure.identity.in_memory_repositories import (
     InMemoryAuthenticationSessionRepository,
     InMemoryPasswordResetRequestRepository,
     InMemoryRefreshSessionRepository,
+    InMemoryRoleRepository,
     InMemoryUserRepository,
 )
 
@@ -13,5 +14,6 @@ __all__ = [
     "InMemoryAuthenticationSessionRepository",
     "InMemoryPasswordResetRequestRepository",
     "InMemoryRefreshSessionRepository",
+    "InMemoryRoleRepository",
     "InMemoryUserRepository",
 ]

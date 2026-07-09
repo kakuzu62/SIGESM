@@ -13,8 +13,18 @@
 | Feature | Prioridade | Dependencias |
 |---|---|---|
 | Login | Alta | Foundation |
-| Usuarios | Alta | Foundation |
+| Usuarios | Critica | Desktop Platform |
 | Perfis e permissoes | Alta | Usuarios |
+
+## Administracao
+
+| Feature | Prioridade | Dependencias |
+|---|---|---|
+| Gestao de usuarios | Critica | Release 2.0 |
+| Gestao de perfis | Alta | Gestao de usuarios |
+| Gestao de permissoes | Alta | Gestao de perfis |
+| Auditoria administrativa | Alta | Gestao de usuarios |
+| Configuracoes administrativas | Media | Auditoria |
 
 ## Organization
 

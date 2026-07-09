@@ -1,83 +1,52 @@
-# Relatorio de Implementacao - Release 2.0
+# Relatorio de Implementacao - STS-001
+
+## Identificacao
+
+- Release: 2.1.
+- Epico: Administracao.
+- Modulo: Gestao de Usuarios.
+- Branch: `codex/sts-001-user-management`.
 
 ## Objetivo
 
-Implementar a primeira plataforma desktop executavel do SIGESM Enterprise,
-mantendo a separacao entre Presentation, Application, Domain e Infrastructure.
+Implementar o primeiro modulo funcional completo do SIGESM Enterprise sobre a
+Desktop Platform, usando Vertical Slice Architecture, CQRS, MVVM e Clean
+Architecture.
 
 ## Entregas
 
-- Splash screen de inicializacao.
-- Tela de login integrada ao Authentication Core.
-- Janela principal com header, menu lateral, workspace central e status bar.
-- Navegacao entre modulos iniciais com historico de voltar e avancar.
-- Dashboard inicial com cards de Militares, Escalas, Organizacoes, Pendencias e
-- Auditoria exibindo valores zerados.
-- Gerenciamento de tema Light e Dark por QSS em tempo de execucao.
-- Estrutura preparada para Alto Contraste.
-- Servico de notificacoes da interface.
-- Dialogo padrao de mensagens.
-- Primitives MVVM para ObservableObject, Command e ViewModel.
-- Resource manager desktop.
-- Repositories de identidade em memoria para bootstrap local.
+- Vertical slice `presentation.modules.user_management`.
+- Commands, Queries, Handlers, Validators, DTOs e mappings.
+- Regras de duplicidade de username/email.
+- Validacao de senha forte usando `PasswordService`.
+- Protecao contra remocao/desativacao do ultimo administrador.
+- Protecao contra autodesativacao.
+- Auditoria inicial de acoes administrativas em `UserAuditService`.
+- Repositorio em memoria compartilhado com Authentication Core local.
+- Adapter SQLAlchemy com pesquisa, filtros, ordenacao e paginacao.
+- Migration Alembic inicial das tabelas Identity.
+- Tela `UserListView` integrada ao menu lateral.
+- Dialogos de cadastro/edicao e redefinicao de senha.
+- Componentes reutilizaveis para CRUD, filtros, pesquisa e paginacao.
 
-## Fluxo de Inicializacao
+## Arquitetura
 
-O entrypoint `src/main.py` delega para `sigesm.main`, que monta o container da
-aplicacao e inicia `DesktopApplication`. Durante a inicializacao, o lifecycle
-registra logs, a aplicacao exibe a splash screen, executa o health check,
-carrega o contexto desktop, aplica o tema padrao e abre o login.
-
-## Autenticacao
-
-O login nao utiliza autenticacao ficticia. A View chama `LoginViewModel`, que
-aciona `LoginController` e o use case `AuthenticateUserHandler`. O handler usa
-`AuthenticationService`, policies e `PasswordService` do contexto Identity.
-
-Para desenvolvimento local, o container registra repositories em memoria e cria
-um usuario administrativo inicial:
-
-- usuario: `admin`
-- senha: `Admin#123`
-
-## Arquitetura Visual
-
-O `MainWindow` concentra apenas responsabilidades de shell e recebe
-`ShellViewModel`. O shell e dividido em `HeaderBar`, `SideBar`, `WorkspaceView`
-e `StatusBar`. A navegacao e controlada por `NavigationService` e
-`NavigationHistory`, o workspace por `WorkspaceManager` e os temas por
-`ThemeManager`.
-
-As views dos modulos iniciais sao placeholders estruturais. Elas nao acessam
-repositories, SQLAlchemy, engines ou regras de dominio diretamente.
-
-## Arquivos Principais
-
-- `src/presentation/framework/application/desktop_application.py`
-- `src/presentation/framework/application/application_lifecycle.py`
-- `src/sigesm/presentation/qt/app.py`
-- `src/presentation/framework/views/login_dialog.py`
-- `src/presentation/framework/shell/main_window.py`
-- `src/presentation/framework/viewmodels/login_viewmodel.py`
-- `src/presentation/framework/controllers/login_controller.py`
-- `src/presentation/framework/themes/theme_manager.py`
-- `src/presentation/framework/navigation/navigation_service.py`
-- `src/presentation/framework/workspace/workspace_manager.py`
-- `src/presentation/modules/dashboard/dashboard_view.py`
+A View acessa apenas `UserViewModel`. O ViewModel acessa `UserManagementService`.
+O service orquestra handlers de Commands e Queries, que usam contratos do modulo
+e objetos do dominio Identity existente. Nenhuma View acessa SQLAlchemy,
+repositories ou regras de dominio diretamente.
 
 ## Validacoes
 
-Validacoes executadas ao final da release:
+- Black: aprovado.
+- Ruff: aprovado.
+- MyPy strict: aprovado.
+- PyTest: aprovado.
 
-- Black.
-- Ruff.
-- MyPy strict.
-- PyTest.
-
-Resultado: suite completa aprovada com 93 testes.
+Resultado final: 100 testes aprovados.
 
 ## Observacoes
 
-Nenhuma funcionalidade de negocio nova foi criada nesta release. A entrega cria
-a plataforma visual reutilizavel que recebera os modulos funcionais das
-proximas releases.
+A associacao visual completa de perfis sera expandida na STS-002. A STS-001 ja
+mantem os commands `AssignRole` e `RemoveRole` e suporta roles no dominio,
+handlers e repositorios.

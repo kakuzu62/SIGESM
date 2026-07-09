@@ -84,8 +84,8 @@ migrations.
 
 ## Identity - Modelo Fisico Inicial
 
-A Release 1.0 prepara os models SQLAlchemy do contexto Identity, ainda sem
-criar migration versionada. As tabelas planejadas para o contexto sao:
+A Release 2.1 cria a primeira migration versionada para o contexto Identity,
+usada pelo modulo de Gestao de Usuarios. As tabelas iniciais sao:
 
 - `identity_users`: usuarios, username, email, hash de senha, status ativo,
   tentativas falhas, bloqueio e timestamps.
@@ -106,3 +106,11 @@ Senhas nunca devem ser armazenadas em texto puro. O campo `password_hash` deve
 conter apenas o hash Argon2id codificado produzido pelo servico de senha do
 dominio. Tokens de acesso, refresh e reset tambem nao devem ser persistidos em
 texto puro.
+
+Migration inicial:
+
+- `migrations/versions/20260709_2100_user_management_identity_tables.py`
+
+Observacao: sessoes de autenticacao, refresh tokens e reset de senha ja possuem
+models SQLAlchemy e permanecem preparadas para migrations especificas quando a
+persistencia definitiva do Authentication Core for ativada no desktop.
