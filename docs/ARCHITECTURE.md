@@ -52,6 +52,26 @@ Application define commands, queries e DTOs sem depender de UI. A persistencia
 SQLAlchemy fica isolada em `infrastructure.persistence.sqlalchemy.identity`, com
 models, repositories e mapper explicito entre dominio e banco.
 
+### Authentication Core
+
+A Release 1.1 expande Identity com `AuthenticationService`,
+`AuthenticationSession`, `RefreshSession`, `PasswordResetRequest` e
+`AuthenticationAttempt`. Tokens de acesso, refresh e reset sao opacos para o
+cliente e persistidos somente como hash SHA-256. Senhas usam Argon2id por meio
+de `argon2-cffi`, mantendo comparacao segura pela biblioteca de hashing.
+
+As policies de tentativa de login sao configuraveis para bloqueio futuro. A
+auditoria inicial de autenticacao e representada por `AuthenticationAttempt`.
+Application expoe use cases de autenticar, sair, alterar senha, solicitar e
+confirmar recuperacao de senha, validar sessao e renovar sessao.
+
+## Desktop Framework
+
+O pacote `presentation.framework` cria uma infraestrutura reutilizavel para a UI
+PySide6 futura. Ele contem primitivas de shell, navegacao, workspace, dialogos,
+componentes, temas, resources, commands e viewmodels. O framework nao contem
+regras de negocio e nao acessa banco.
+
 ## Contexto Militar
 
 O contexto `domain.military` concentra o nucleo militar do SIGESM Enterprise.

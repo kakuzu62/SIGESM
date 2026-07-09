@@ -1,6 +1,15 @@
 from __future__ import annotations
 
-from domain.identity.entities import Permission, Role, User, UserSession
+from domain.identity.entities import (
+    AuthenticationAttempt,
+    AuthenticationSession,
+    PasswordResetRequest,
+    Permission,
+    RefreshSession,
+    Role,
+    User,
+    UserSession,
+)
 from domain.identity.value_objects import (
     Email,
     PasswordHash,
@@ -9,7 +18,11 @@ from domain.identity.value_objects import (
     Username,
 )
 from infrastructure.persistence.sqlalchemy.identity.models import (
+    AuthenticationAttemptModel,
+    AuthenticationSessionModel,
+    PasswordResetRequestModel,
     PermissionModel,
+    RefreshSessionModel,
     RoleModel,
     UserModel,
     UserSessionModel,
@@ -74,6 +87,59 @@ class IdentityMapper:
         )
 
     @staticmethod
+    def authentication_session_to_domain(
+        model: AuthenticationSessionModel,
+    ) -> AuthenticationSession:
+        """Map an authentication session model to a domain entity."""
+        return AuthenticationSession(
+            entity_id=Identity.from_string(model.id),
+            user_id=Identity.from_string(model.user_id),
+            token_hash=model.token_hash,
+            status=SessionStatus(model.status),
+            created_at=model.created_at,
+            expires_at=model.expires_at,
+            revoked_at=model.revoked_at,
+        )
+
+    @staticmethod
+    def refresh_session_to_domain(model: RefreshSessionModel) -> RefreshSession:
+        """Map a refresh session model to a domain entity."""
+        return RefreshSession(
+            entity_id=Identity.from_string(model.id),
+            user_id=Identity.from_string(model.user_id),
+            session_id=Identity.from_string(model.session_id),
+            token_hash=model.token_hash,
+            created_at=model.created_at,
+            expires_at=model.expires_at,
+            revoked_at=model.revoked_at,
+        )
+
+    @staticmethod
+    def password_reset_to_domain(model: PasswordResetRequestModel) -> PasswordResetRequest:
+        """Map a password reset model to a domain entity."""
+        return PasswordResetRequest(
+            entity_id=Identity.from_string(model.id),
+            user_id=Identity.from_string(model.user_id),
+            token_hash=model.token_hash,
+            created_at=model.created_at,
+            expires_at=model.expires_at,
+            used_at=model.used_at,
+        )
+
+    @staticmethod
+    def authentication_attempt_to_domain(
+        model: AuthenticationAttemptModel,
+    ) -> AuthenticationAttempt:
+        """Map an authentication attempt model to a domain entity."""
+        return AuthenticationAttempt(
+            entity_id=Identity.from_string(model.id),
+            username=Username(model.username),
+            successful=model.successful,
+            reason=model.reason,
+            occurred_at=model.occurred_at,
+        )
+
+    @staticmethod
     def permission_to_model(entity: Permission) -> PermissionModel:
         """Map a permission entity to a SQLAlchemy model."""
         return PermissionModel(
@@ -126,4 +192,57 @@ class IdentityMapper:
             created_at=entity.created_at,
             expires_at=entity.expires_at,
             ended_at=entity.ended_at,
+        )
+
+    @staticmethod
+    def authentication_session_to_model(
+        entity: AuthenticationSession,
+    ) -> AuthenticationSessionModel:
+        """Map an authentication session entity to a SQLAlchemy model."""
+        return AuthenticationSessionModel(
+            id=str(entity.id),
+            user_id=str(entity.user_id),
+            token_hash=entity.token_hash,
+            status=entity.status.value,
+            created_at=entity.created_at,
+            expires_at=entity.expires_at,
+            revoked_at=entity.revoked_at,
+        )
+
+    @staticmethod
+    def refresh_session_to_model(entity: RefreshSession) -> RefreshSessionModel:
+        """Map a refresh session entity to a SQLAlchemy model."""
+        return RefreshSessionModel(
+            id=str(entity.id),
+            user_id=str(entity.user_id),
+            session_id=str(entity.session_id),
+            token_hash=entity.token_hash,
+            created_at=entity.created_at,
+            expires_at=entity.expires_at,
+            revoked_at=entity.revoked_at,
+        )
+
+    @staticmethod
+    def password_reset_to_model(entity: PasswordResetRequest) -> PasswordResetRequestModel:
+        """Map a password reset request entity to a SQLAlchemy model."""
+        return PasswordResetRequestModel(
+            id=str(entity.id),
+            user_id=str(entity.user_id),
+            token_hash=entity.token_hash,
+            created_at=entity.created_at,
+            expires_at=entity.expires_at,
+            used_at=entity.used_at,
+        )
+
+    @staticmethod
+    def authentication_attempt_to_model(
+        entity: AuthenticationAttempt,
+    ) -> AuthenticationAttemptModel:
+        """Map an authentication attempt entity to a SQLAlchemy model."""
+        return AuthenticationAttemptModel(
+            id=str(entity.id),
+            username=entity.username.value,
+            successful=entity.successful,
+            reason=entity.reason,
+            occurred_at=entity.occurred_at,
         )

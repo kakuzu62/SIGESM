@@ -12,6 +12,16 @@ class LoginAttemptPolicy:
         self._max_attempts = max_attempts
         self._lock_duration = timedelta(minutes=lock_minutes)
 
+    @property
+    def max_attempts(self) -> int:
+        """Return configured maximum attempts before lock."""
+        return self._max_attempts
+
+    @property
+    def lock_duration(self) -> timedelta:
+        """Return configured lock duration."""
+        return self._lock_duration
+
     def can_attempt_login(self, user: User) -> bool:
         """Return whether the user can attempt authentication."""
         if user.locked_until is None:

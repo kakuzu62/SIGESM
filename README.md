@@ -75,6 +75,16 @@ sessoes, politicas de senha e tentativa de login, servico de hash seguro de
 senha e contratos de repositorio. A infraestrutura SQLAlchemy correspondente
 fica em `src/infrastructure/persistence/sqlalchemy/identity`.
 
+A Release 1.1 adiciona o nucleo de autenticacao com login, logout, validacao e
+renovacao de sessao, recuperacao de senha, auditoria de tentativas e hash
+Argon2id para senhas.
+
+## Desktop Framework
+
+O pacote `src/presentation/framework` fornece a base reutilizavel da interface
+desktop: shell, navegacao, workspace, dialogos, componentes, temas, recursos,
+commands e viewmodels. Ele ainda nao implementa telas de negocio.
+
 ## Dominio Militar
 
 O contexto militar inicial esta em `src/domain/military`. Ele modela o agregado

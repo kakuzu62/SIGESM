@@ -10,16 +10,25 @@ from core.database.base import Base
 from core.database.engine import DatabaseEngineFactory
 from core.database.session import DatabaseSessionFactory
 from domain.identity.entities import Permission, Role, User
-from domain.identity.services import PasswordService
+from domain.identity.policies import LoginAttemptPolicy
+from domain.identity.services import AuthenticationService, PasswordService
 from domain.identity.value_objects import Email, PermissionCode, Username
 from infrastructure.persistence.sqlalchemy.identity.models import (
+    AuthenticationAttemptModel,
+    AuthenticationSessionModel,
+    PasswordResetRequestModel,
     PermissionModel,
+    RefreshSessionModel,
     RoleModel,
     UserModel,
     UserSessionModel,
 )
 from infrastructure.persistence.sqlalchemy.identity.repositories import (
+    SqlAlchemyAuthenticationAttemptRepository,
+    SqlAlchemyAuthenticationSessionRepository,
+    SqlAlchemyPasswordResetRequestRepository,
     SqlAlchemyPermissionRepository,
+    SqlAlchemyRefreshSessionRepository,
     SqlAlchemyRoleRepository,
     SqlAlchemyUserRepository,
 )
@@ -29,7 +38,16 @@ from infrastructure.persistence.sqlalchemy.session_context import SessionContext
 @pytest.fixture
 def identity_session_factory(tmp_path: Path) -> Iterator[DatabaseSessionFactory]:
     """Create an isolated database with identity tables."""
-    _ = (PermissionModel, RoleModel, UserModel, UserSessionModel)
+    _ = (
+        AuthenticationAttemptModel,
+        AuthenticationSessionModel,
+        PasswordResetRequestModel,
+        PermissionModel,
+        RefreshSessionModel,
+        RoleModel,
+        UserModel,
+        UserSessionModel,
+    )
     database_settings = DatabaseSettings(database=str(tmp_path / "identity.db"))
     factory = DatabaseSessionFactory.from_engine_factory(DatabaseEngineFactory(database_settings))
     Base.metadata.create_all(factory.engine)
@@ -74,3 +92,45 @@ def test_identity_repositories_persist_user_roles_and_permissions(
         assert user_repository.count() == 1
         assert role_repository.count() == 1
         assert permission_repository.count() == 1
+
+
+def test_authentication_repositories_persist_sessions_attempts_and_reset_requests(
+    identity_session_factory: DatabaseSessionFactory,
+) -> None:
+    user = User.create(
+        Username("authadmin"),
+        Email("authadmin@sigesm.local"),
+        PasswordService().hash_password("Strong#123"),
+    )
+
+    with SessionContext(identity_session_factory) as session:
+        user_repository = SqlAlchemyUserRepository(session)
+        session_repository = SqlAlchemyAuthenticationSessionRepository(session)
+        refresh_repository = SqlAlchemyRefreshSessionRepository(session)
+        reset_repository = SqlAlchemyPasswordResetRequestRepository(session)
+        attempt_repository = SqlAlchemyAuthenticationAttemptRepository(session)
+        user_repository.add(user)
+        session.flush()
+        auth = AuthenticationService(
+            users=user_repository,
+            sessions=session_repository,
+            refresh_sessions=refresh_repository,
+            password_resets=reset_repository,
+            attempts=attempt_repository,
+            password_service=PasswordService(),
+            login_attempt_policy=LoginAttemptPolicy(max_attempts=3),
+        )
+
+        tokens = auth.authenticate(Username("authadmin"), "Strong#123")
+        reset_token, reset_request = auth.request_password_reset(Email("authadmin@sigesm.local"))
+        session.commit()
+
+        assert (
+            session_repository.get_by_token_hash(auth.hash_token(tokens.access_token)) is not None
+        )
+        assert (
+            refresh_repository.get_by_token_hash(auth.hash_token(tokens.refresh_token)) is not None
+        )
+        assert reset_repository.get_by_token_hash(auth.hash_token(reset_token)) is not None
+        assert attempt_repository.count() == 1
+        assert reset_request.active

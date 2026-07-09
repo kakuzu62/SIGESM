@@ -1,5 +1,19 @@
 # Changelog
 
+## Release 1.1 - Authentication Core
+
+- Adicionado `AuthenticationService` ao contexto Identity.
+- Criadas entidades `AuthenticationSession`, `RefreshSession`,
+  `PasswordResetRequest` e `AuthenticationAttempt`.
+- Migrado `PasswordService` para Argon2id com `argon2-cffi`.
+- Criados use cases de autenticar, sair, alterar senha autenticada, solicitar e
+  confirmar recuperacao de senha, validar sessao e renovar sessao.
+- Criada persistencia SQLAlchemy para sessoes, refresh sessions, reset de senha
+  e tentativas de login.
+- Criado Desktop Framework reutilizavel em `src/presentation/framework`.
+- Adicionados testes para login valido, senha invalida, usuario bloqueado,
+  sessao expirada, alteracao de senha, recuperacao de senha e renovacao.
+
 ## Release 1.0 - Identity Context
 
 - Criado o bounded context `domain.identity`.

@@ -14,8 +14,7 @@ class PasswordHash(ValueObject):
 
     def __init__(self, value: str) -> None:
         normalized = value.strip()
-        parts = normalized.split("$")
-        if len(parts) != 4 or parts[0] != "pbkdf2_sha256":
+        if not normalized.startswith("$argon2id$"):
             raise InvalidPasswordHashException("Password hash format is not supported.")
 
         object.__setattr__(self, "_value", normalized)

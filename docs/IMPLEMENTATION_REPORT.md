@@ -1,73 +1,70 @@
-# Relatorio de Implementacao - Release 1.0
+# Relatorio de Implementacao - Release 1.1
 
 ## Objetivo
 
-Criar o contexto inicial de Identidade e Seguranca do SIGESM Enterprise, sem
-interface grafica, mantendo Clean Architecture, DDD, Repository Pattern,
-Dependency Injection preparada, SQLAlchemy 2, MyPy strict e testes automatizados.
+Implementar o nucleo de autenticacao do SIGESM Enterprise e iniciar o Desktop
+Framework reutilizavel, sem criar telas de negocio.
 
-## Escopo Implementado
+## Authentication Core
 
-- Dominio `domain.identity`.
-- Application `application.identity`.
-- Infraestrutura SQLAlchemy `infrastructure.persistence.sqlalchemy.identity`.
-- Testes unitarios e de integracao.
-- Documentacao da release.
+Foram criados no dominio:
 
-## Dominio
+- `AuthenticationService`.
+- `AuthenticationSession`.
+- `RefreshSession`.
+- `PasswordResetRequest`.
+- `AuthenticationAttempt`.
 
-Foram criados:
-
-- `User` como AggregateRoot.
-- `Role`, `Permission` e `UserSession` como entidades.
-- Value objects `Username`, `Email`, `PasswordHash`, `PermissionCode` e
-  `SessionStatus`.
-- Eventos `UserCreated`, `UserActivated`, `UserDeactivated`,
-  `PasswordChanged` e `LoginFailed`.
-- Contratos `IUserRepository`, `IRoleRepository` e `IPermissionRepository`.
-- `PasswordPolicy` com minimo de 8 caracteres, letra maiuscula, letra
-  minuscula, numero e caractere especial.
-- `LoginAttemptPolicy` preparada para bloqueio futuro.
-- `PasswordService` com PBKDF2-SHA256, salt seguro e comparacao constante.
-- `PermissionService` para avaliacao de permissoes por role.
+O servico de senha foi migrado para Argon2id usando `argon2-cffi`. Tokens de
+acesso, refresh e reset sao gerados como valores opacos e persistidos apenas
+como SHA-256.
 
 ## Application
 
-Foram criados commands e handlers para:
+Foram adicionados use cases para:
 
-- criar usuario;
-- ativar usuario;
-- desativar usuario;
-- alterar senha.
+- `AuthenticateUser`.
+- `LogoutUser`.
+- `RequestPasswordReset`.
+- `ConfirmPasswordReset`.
+- `ValidateSession`.
+- `RenewSession`.
 
-Tambem foram criadas queries para:
-
-- buscar usuario por id;
-- listar usuarios.
-
-`UserDTO` representa a saida da application layer sem expor entidades de dominio.
+O use case de troca de senha existente permanece disponivel e o dominio tambem
+expoe troca autenticada por `AuthenticationService.change_password`.
 
 ## Infraestrutura
 
-Foram criados models SQLAlchemy para:
+Foram adicionados models e repositories SQLAlchemy para:
 
-- `identity_users`;
-- `identity_roles`;
-- `identity_permissions`;
-- `identity_user_roles`;
-- `identity_role_permissions`;
-- `identity_user_sessions`.
+- sessoes de autenticacao;
+- sessoes de refresh;
+- solicitacoes de recuperacao de senha;
+- tentativas de login.
 
-Tambem foram criados repositories SQLAlchemy e mapper explicito entre models e
-objetos de dominio.
+## Segurança
 
-## Garantias Arquiteturais
+- Hash de senha com Argon2id.
+- Verificacao de senha delegada a biblioteca segura.
+- Politica configuravel de bloqueio por tentativas.
+- Auditoria inicial por `AuthenticationAttempt`.
+- Expiracao configuravel de sessao, refresh e reset de senha.
 
-- Dominio nao depende de SQLAlchemy.
-- Application nao depende de Presentation.
-- Infraestrutura nao contem regra de negocio.
-- Senha em texto puro nao e persistida.
-- Regras de senha ficam no dominio.
+## Desktop Framework
+
+Foi criada a estrutura reutilizavel em `src/presentation/framework`:
+
+- `shell`;
+- `navigation`;
+- `workspace`;
+- `dialogs`;
+- `components`;
+- `themes`;
+- `resources`;
+- `commands`;
+- `viewmodels`.
+
+Nenhuma tela de negocio foi implementada.
 
 ## Validacoes
 
@@ -80,5 +77,5 @@ Validacoes executadas ao final da release:
 
 ## Observacoes
 
-Nenhuma interface grafica foi criada nesta release. Nenhuma migration Alembic foi
-criada; os models foram preparados para a futura etapa de migrations.
+Nenhuma migration Alembic foi criada nesta release. Os models SQLAlchemy foram
+preparados para uma etapa futura de migrations.

@@ -95,6 +95,14 @@ criar migration versionada. As tabelas planejadas para o contexto sao:
 - `identity_role_permissions`: associacao muitos-para-muitos entre roles e
   permissoes.
 - `identity_user_sessions`: sessoes de usuario e status de sessao.
+- `identity_authentication_sessions`: sessoes de autenticacao com hash do token
+  de acesso.
+- `identity_refresh_sessions`: refresh tokens persistidos por hash.
+- `identity_password_reset_requests`: recuperacao de senha com hash do token de
+  reset e controle de uso.
+- `identity_authentication_attempts`: auditoria de tentativas de login.
 
 Senhas nunca devem ser armazenadas em texto puro. O campo `password_hash` deve
-conter apenas o hash codificado produzido pelo servico de senha do dominio.
+conter apenas o hash Argon2id codificado produzido pelo servico de senha do
+dominio. Tokens de acesso, refresh e reset tambem nao devem ser persistidos em
+texto puro.
