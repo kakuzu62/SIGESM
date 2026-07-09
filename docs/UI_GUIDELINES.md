@@ -11,9 +11,22 @@ Diretrizes para a interface desktop em PySide6.
 ## Shell e Navegacao
 
 - Shell principal com menu lateral, area de conteudo e barra de status.
+- HeaderBar deve conter identidade da aplicacao, usuario autenticado e acoes
+  globais.
+- SideBar deve expor apenas modulos registrados no `NavigationService`.
+- WorkspaceView deve ser a unica area de troca de views de modulo.
 - Navegacao por modulos: Dashboard, Organizacao, Militares, Escalas, Trocas,
   Relatorios, Auditoria e Configuracoes.
 - Acoes globais devem ficar em locais previsiveis.
+
+## MVVM
+
+- Views PySide6 nao acessam repositories, SQLAlchemy, engines ou regras de
+  dominio diretamente.
+- Toda acao de tela passa por ViewModel, Controller ou caso de uso da camada
+  Application.
+- ViewModels podem usar `ObservableObject`, `Command` e lifecycle padrao.
+- Widgets devem conter apenas composicao visual e binding de interacao.
 
 ## Dashboard
 
@@ -37,6 +50,12 @@ Diretrizes para a interface desktop em PySide6.
 
 - Usar dialogos para confirmacoes, detalhes e fluxos curtos.
 - Operacoes criticas devem explicar impacto antes da confirmacao.
+
+## Temas
+
+- Temas devem ser aplicados via `ThemeManager`.
+- Arquivos QSS devem ficar em `resources/styles` e ter fallback seguro.
+- Dark e Light sao obrigatorios; Alto Contraste deve permanecer preparado.
 
 ## Mensagens
 

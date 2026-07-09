@@ -1,0 +1,21 @@
+QWidget {
+    background: #111827;
+    color: #f9fafb;
+    font-family: "Segoe UI", Arial;
+    font-size: 10pt;
+}
+
+QFrame#header,
+QFrame#sidebar,
+QFrame#statusBar,
+QFrame#card {
+    background: #1f2937;
+    border: 1px solid rgba(128, 128, 128, 0.22);
+}
+
+QPushButton {
+    background: #1f2937;
+    border: 1px solid rgba(128, 128, 128, 0.45);
+    border-radius: 6px;
+    padding: 8px 10px;
+}

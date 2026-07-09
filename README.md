@@ -83,7 +83,8 @@ Argon2id para senhas.
 
 O pacote `src/presentation/framework` fornece a base reutilizavel da interface
 desktop: shell, navegacao, workspace, dialogos, componentes, temas, recursos,
-commands e viewmodels. Ele ainda nao implementa telas de negocio.
+MVVM, comandos e viewmodels. Ele nao contem regras de negocio nem acesso direto
+a repositories ou SQLAlchemy.
 
 ## Release 2.0 - Desktop Platform
 
@@ -94,13 +95,17 @@ janela principal do SIGESM.
 
 A plataforma desktop inclui:
 
+- `DesktopApplication` e `ApplicationLifecycle` para startup, shutdown, logs e
+  tratamento global de excecoes;
 - shell principal com header, menu lateral, workspace central e status bar;
-- navegacao entre Dashboard, Organizacoes, Militares, Escalas e Configuracoes;
+- navegacao com historico entre Dashboard, Organizacoes, Militares, Escalas e
+  Configuracoes;
 - dashboard inicial com cards de Militares, Escalas, Organizacoes, Pendencias e
-  Auditoria;
-- troca de tema em tempo de execucao entre Light e Dark, com estrutura preparada
-  para Alto Contraste;
+- Auditoria exibindo valores zerados ate conexao com os modulos reais;
+- troca de tema em tempo de execucao entre Light e Dark via QSS, com estrutura
+  preparada para Alto Contraste;
 - ViewModels e controllers isolando a interface da camada Application;
+- primitives MVVM para `ObservableObject`, `Command` e `ViewModel`;
 - repositorios de identidade em memoria para bootstrap local de autenticacao,
   usando o mesmo Authentication Core de producao.
 

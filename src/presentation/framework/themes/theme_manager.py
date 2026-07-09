@@ -1,15 +1,31 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from PySide6.QtWidgets import QApplication
 
-from presentation.framework.themes.theme import ThemeMode, ThemePalette
+from presentation.framework.themes.qss_loader import QssLoader
+from presentation.framework.themes.theme import Theme, ThemeMode, ThemePalette
 
 
 class ThemeManager:
     """Applies runtime QSS themes to the desktop application."""
 
-    def __init__(self) -> None:
+    def __init__(
+        self, styles_root: Path | None = None, qss_loader: QssLoader | None = None
+    ) -> None:
         self._current_mode = ThemeMode.DARK
+        self._styles_root = styles_root or Path("resources") / "styles"
+        self._qss_loader = qss_loader or QssLoader()
+        self._themes = {
+            ThemeMode.DARK: Theme("dark", "Dark", self._styles_root / "dark.qss"),
+            ThemeMode.LIGHT: Theme("light", "Light", self._styles_root / "light.qss"),
+            ThemeMode.HIGH_CONTRAST: Theme(
+                "high_contrast",
+                "Alto Contraste",
+                self._styles_root / "high_contrast.qss",
+            ),
+        }
         self._palettes = {
             ThemeMode.DARK: ThemePalette(
                 mode=ThemeMode.DARK,
@@ -45,8 +61,11 @@ class ThemeManager:
     def apply(self, application: QApplication, mode: ThemeMode) -> None:
         """Apply a theme to the Qt application."""
         self._current_mode = mode
-        palette = self._palettes[mode]
-        application.setStyleSheet(self._build_qss(palette))
+        theme = self._themes[mode]
+        stylesheet = self._qss_loader.load(theme.qss_path)
+        if not stylesheet:
+            stylesheet = self._build_qss(self._palettes[mode])
+        application.setStyleSheet(stylesheet)
 
     def toggle_light_dark(self, application: QApplication) -> ThemeMode:
         """Toggle between light and dark themes."""

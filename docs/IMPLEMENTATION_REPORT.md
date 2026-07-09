@@ -10,20 +10,23 @@ mantendo a separacao entre Presentation, Application, Domain e Infrastructure.
 - Splash screen de inicializacao.
 - Tela de login integrada ao Authentication Core.
 - Janela principal com header, menu lateral, workspace central e status bar.
-- Navegacao entre modulos iniciais.
+- Navegacao entre modulos iniciais com historico de voltar e avancar.
 - Dashboard inicial com cards de Militares, Escalas, Organizacoes, Pendencias e
-  Auditoria.
-- Gerenciamento de tema Light e Dark em tempo de execucao.
+- Auditoria exibindo valores zerados.
+- Gerenciamento de tema Light e Dark por QSS em tempo de execucao.
 - Estrutura preparada para Alto Contraste.
 - Servico de notificacoes da interface.
+- Dialogo padrao de mensagens.
+- Primitives MVVM para ObservableObject, Command e ViewModel.
+- Resource manager desktop.
 - Repositories de identidade em memoria para bootstrap local.
 
 ## Fluxo de Inicializacao
 
 O entrypoint `src/main.py` delega para `sigesm.main`, que monta o container da
-aplicacao e inicia o fluxo PySide6. Durante a inicializacao, a aplicacao exibe a
-splash screen, executa o health check, carrega o contexto desktop, aplica o tema
-padrao e abre o login.
+aplicacao e inicia `DesktopApplication`. Durante a inicializacao, o lifecycle
+registra logs, a aplicacao exibe a splash screen, executa o health check,
+carrega o contexto desktop, aplica o tema padrao e abre o login.
 
 ## Autenticacao
 
@@ -39,22 +42,28 @@ um usuario administrativo inicial:
 
 ## Arquitetura Visual
 
-O `MainWindow` concentra apenas responsabilidades de shell. A navegacao e
-controlada por `NavigationService`, o workspace por `WorkspaceManager` e os
-temas por `ThemeManager`.
+O `MainWindow` concentra apenas responsabilidades de shell e recebe
+`ShellViewModel`. O shell e dividido em `HeaderBar`, `SideBar`, `WorkspaceView`
+e `StatusBar`. A navegacao e controlada por `NavigationService` e
+`NavigationHistory`, o workspace por `WorkspaceManager` e os temas por
+`ThemeManager`.
 
 As views dos modulos iniciais sao placeholders estruturais. Elas nao acessam
 repositories, SQLAlchemy, engines ou regras de dominio diretamente.
 
 ## Arquivos Principais
 
+- `src/presentation/framework/application/desktop_application.py`
+- `src/presentation/framework/application/application_lifecycle.py`
 - `src/sigesm/presentation/qt/app.py`
 - `src/presentation/framework/views/login_dialog.py`
-- `src/presentation/framework/views/main_window.py`
+- `src/presentation/framework/shell/main_window.py`
 - `src/presentation/framework/viewmodels/login_viewmodel.py`
 - `src/presentation/framework/controllers/login_controller.py`
 - `src/presentation/framework/themes/theme_manager.py`
-- `src/presentation/modules/dashboard/view.py`
+- `src/presentation/framework/navigation/navigation_service.py`
+- `src/presentation/framework/workspace/workspace_manager.py`
+- `src/presentation/modules/dashboard/dashboard_view.py`
 
 ## Validacoes
 
@@ -65,7 +74,7 @@ Validacoes executadas ao final da release:
 - MyPy strict.
 - PyTest.
 
-Resultado: suite completa aprovada com 89 testes.
+Resultado: suite completa aprovada com 93 testes.
 
 ## Observacoes
 

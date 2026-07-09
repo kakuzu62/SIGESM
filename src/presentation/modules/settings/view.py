@@ -1,17 +1,3 @@
-from __future__ import annotations
+from presentation.modules.settings.settings_view import SettingsView
 
-from PySide6.QtWidgets import QLabel, QVBoxLayout, QWidget
-
-
-class SettingsView(QWidget):
-    """Settings placeholder view."""
-
-    def __init__(self) -> None:
-        super().__init__()
-        layout = QVBoxLayout(self)
-        title = QLabel("Configuracoes")
-        title.setObjectName("title")
-        message = QLabel("Tema, preferencias e parametros operacionais ficarao aqui.")
-        layout.addWidget(title)
-        layout.addWidget(message)
-        layout.addStretch()
+__all__ = ["SettingsView"]
