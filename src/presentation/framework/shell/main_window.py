@@ -17,6 +17,8 @@ from presentation.modules.military import MilitaryView
 from presentation.modules.organization import OrganizationView
 from presentation.modules.scale import ScaleView
 from presentation.modules.settings import SettingsView
+from presentation.modules.user_management.presentation.viewmodels import UserListViewModel
+from presentation.modules.user_management.presentation.views import UserListView
 
 
 class MainWindow(QMainWindow):
@@ -36,6 +38,7 @@ class MainWindow(QMainWindow):
         self._status = StatusBar()
         self._view_factories: dict[str, Callable[[], QWidget]] = {
             "dashboard": DashboardView,
+            "users": self._users_view,
             "organization": OrganizationView,
             "military": MilitaryView,
             "scale": ScaleView,
@@ -78,6 +81,7 @@ class MainWindow(QMainWindow):
         for order, (key, title, factory) in enumerate(
             (
                 ("dashboard", "Dashboard", DashboardView),
+                ("users", "Usuarios", self._users_view),
                 ("organization", "Organizacao Militar", OrganizationView),
                 ("military", "Cadastro de Militares", MilitaryView),
                 ("scale", "Escalas", ScaleView),
@@ -104,3 +108,6 @@ class MainWindow(QMainWindow):
 
     def _close_application(self) -> None:
         self.close()
+
+    def _users_view(self) -> QWidget:
+        return UserListView(UserListViewModel(self._context.user_listing))

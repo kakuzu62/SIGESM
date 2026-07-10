@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import cached_property
 
 from application.identity.commands import AuthenticateUserHandler
 from domain.identity.entities import User
@@ -13,6 +14,10 @@ from infrastructure.identity import (
     InMemoryPasswordResetRequestRepository,
     InMemoryRefreshSessionRepository,
     InMemoryUserRepository,
+)
+from presentation.modules.user_management.application import UserListingService
+from presentation.modules.user_management.infrastructure.repositories import (
+    InMemoryUserListingRepository,
 )
 from sigesm.application.ports import UnitOfWorkFactory
 from sigesm.application.use_cases import RunHealthCheck
@@ -29,27 +34,40 @@ class ApplicationContainer:
     def health_check(self) -> RunHealthCheck:
         return RunHealthCheck(unit_of_work_factory=self.unit_of_work_factory)
 
-    def authentication_service(self) -> AuthenticationService:
-        """Build the desktop authentication service."""
+    @cached_property
+    def password_service(self) -> PasswordService:
+        """Return the shared password service."""
+        return PasswordService()
+
+    @cached_property
+    def identity_users(self) -> InMemoryUserRepository:
+        """Return shared local users for desktop bootstrap."""
         users = InMemoryUserRepository()
-        password_service = PasswordService()
         users.add(
             User.create(
                 Username("admin"),
                 Email("admin@sigesm.local"),
-                password_service.hash_password("Admin#123"),
+                self.password_service.hash_password("Admin#123"),
             )
         )
+        return users
+
+    def authentication_service(self) -> AuthenticationService:
+        """Build the desktop authentication service."""
         return AuthenticationService(
-            users=users,
+            users=self.identity_users,
             sessions=InMemoryAuthenticationSessionRepository(),
             refresh_sessions=InMemoryRefreshSessionRepository(),
             password_resets=InMemoryPasswordResetRequestRepository(),
             attempts=InMemoryAuthenticationAttemptRepository(),
-            password_service=password_service,
+            password_service=self.password_service,
             login_attempt_policy=LoginAttemptPolicy(max_attempts=5, lock_minutes=15),
         )
 
     def authenticate_user_handler(self) -> AuthenticateUserHandler:
         """Return the authenticate user use case handler."""
         return AuthenticateUserHandler(self.authentication_service())
+
+    def user_listing_service(self) -> UserListingService:
+        """Return the user listing application facade."""
+        return UserListingService(InMemoryUserListingRepository(self.identity_users))

@@ -114,6 +114,20 @@ Credenciais locais de desenvolvimento:
 - usuario: `admin`
 - senha: `Admin#123`
 
+## STS-001A - Listagem de Usuarios
+
+A primeira entrega funcional do Epico Administracao adiciona o modulo
+`Usuarios` ao menu lateral. A tela permite listar usuarios, pesquisar, ordenar
+colunas, paginar, atualizar a lista e abrir os dialogos de novo/edicao ainda sem
+persistir alteracoes.
+
+O fluxo segue MVVM e CQRS:
+
+- `UserListView` conversa apenas com `UserListViewModel`.
+- `UserListViewModel` usa `UserListingService`.
+- `UserListingService` executa `ListUsersHandler` e `SearchUsersHandler`.
+- Repositories ficam em Infrastructure, sem acesso direto pela UI.
+
 ## Dominio Militar
 
 O contexto militar inicial esta em `src/domain/military`. Ele modela o agregado

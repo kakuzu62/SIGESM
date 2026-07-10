@@ -1,83 +1,50 @@
-# Relatorio de Implementacao - Release 2.0
+# Relatorio de Implementacao - STS-001A
+
+## Identificacao
+
+- Epico: Administracao.
+- Release: 2.1 - User Management.
+- STS: 001A - Listagem de Usuarios.
+- Branch: `codex/sts-001a-user-listing`.
 
 ## Objetivo
 
-Implementar a primeira plataforma desktop executavel do SIGESM Enterprise,
-mantendo a separacao entre Presentation, Application, Domain e Infrastructure.
+Entregar a primeira funcionalidade completa visivel ao usuario autenticado:
+listagem de usuarios com pesquisa, ordenacao, paginacao e atualizacao.
 
 ## Entregas
 
-- Splash screen de inicializacao.
-- Tela de login integrada ao Authentication Core.
-- Janela principal com header, menu lateral, workspace central e status bar.
-- Navegacao entre modulos iniciais com historico de voltar e avancar.
-- Dashboard inicial com cards de Militares, Escalas, Organizacoes, Pendencias e
-- Auditoria exibindo valores zerados.
-- Gerenciamento de tema Light e Dark por QSS em tempo de execucao.
-- Estrutura preparada para Alto Contraste.
-- Servico de notificacoes da interface.
-- Dialogo padrao de mensagens.
-- Primitives MVVM para ObservableObject, Command e ViewModel.
-- Resource manager desktop.
-- Repositories de identidade em memoria para bootstrap local.
+- Modulo `Usuarios` integrado ao menu lateral.
+- Query `ListUsersQuery`.
+- Handler `ListUsersHandler`.
+- Validator `ListUsersValidator`.
+- DTO `UserListItemDTO` sem `PasswordHash`.
+- Query de pesquisa `SearchUsersQuery`.
+- Contrato `IUserListingRepository`.
+- Adapter em memoria para desktop local e testes.
+- Adapter SQLAlchemy de leitura com paginacao.
+- `UserListViewModel`.
+- `UserTableModel` baseado em `QAbstractTableModel`.
+- `SearchBar`, `PaginationWidget` e `CrudToolbar`.
+- `UserFormDialog` placeholder para novo/edicao.
 
-## Fluxo de Inicializacao
+## Arquitetura
 
-O entrypoint `src/main.py` delega para `sigesm.main`, que monta o container da
-aplicacao e inicia `DesktopApplication`. Durante a inicializacao, o lifecycle
-registra logs, a aplicacao exibe a splash screen, executa o health check,
-carrega o contexto desktop, aplica o tema padrao e abre o login.
+A Presentation nao acessa banco nem repository diretamente. O fluxo e:
 
-## Autenticacao
-
-O login nao utiliza autenticacao ficticia. A View chama `LoginViewModel`, que
-aciona `LoginController` e o use case `AuthenticateUserHandler`. O handler usa
-`AuthenticationService`, policies e `PasswordService` do contexto Identity.
-
-Para desenvolvimento local, o container registra repositories em memoria e cria
-um usuario administrativo inicial:
-
-- usuario: `admin`
-- senha: `Admin#123`
-
-## Arquitetura Visual
-
-O `MainWindow` concentra apenas responsabilidades de shell e recebe
-`ShellViewModel`. O shell e dividido em `HeaderBar`, `SideBar`, `WorkspaceView`
-e `StatusBar`. A navegacao e controlada por `NavigationService` e
-`NavigationHistory`, o workspace por `WorkspaceManager` e os temas por
-`ThemeManager`.
-
-As views dos modulos iniciais sao placeholders estruturais. Elas nao acessam
-repositories, SQLAlchemy, engines ou regras de dominio diretamente.
-
-## Arquivos Principais
-
-- `src/presentation/framework/application/desktop_application.py`
-- `src/presentation/framework/application/application_lifecycle.py`
-- `src/sigesm/presentation/qt/app.py`
-- `src/presentation/framework/views/login_dialog.py`
-- `src/presentation/framework/shell/main_window.py`
-- `src/presentation/framework/viewmodels/login_viewmodel.py`
-- `src/presentation/framework/controllers/login_controller.py`
-- `src/presentation/framework/themes/theme_manager.py`
-- `src/presentation/framework/navigation/navigation_service.py`
-- `src/presentation/framework/workspace/workspace_manager.py`
-- `src/presentation/modules/dashboard/dashboard_view.py`
+```text
+UserListView -> UserListViewModel -> UserListingService -> Handlers -> Repository
+```
 
 ## Validacoes
 
-Validacoes executadas ao final da release:
-
-- Black.
-- Ruff.
-- MyPy strict.
-- PyTest.
-
-Resultado: suite completa aprovada com 93 testes.
+- Black: aprovado.
+- Ruff: aprovado.
+- MyPy strict: aprovado.
+- PyTest: aprovado.
 
 ## Observacoes
 
-Nenhuma funcionalidade de negocio nova foi criada nesta release. A entrega cria
-a plataforma visual reutilizavel que recebera os modulos funcionais das
-proximas releases.
+Nenhuma operacao de alteracao foi implementada nesta STS. Cadastro, edicao,
+ativacao/desativacao, redefinicao de senha e associacao de perfis permanecem
+planejadas para STS futuras.

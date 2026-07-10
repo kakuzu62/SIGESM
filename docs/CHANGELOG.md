@@ -1,5 +1,20 @@
 # Changelog
 
+## STS-001A - User Listing
+
+- Criado o modulo `presentation.modules.user_management` focado em listagem.
+- Adicionados `ListUsersQuery`, `ListUsersHandler`, `ListUsersValidator` e
+  `UserListItemDTO`.
+- Adicionados `SearchUsersQuery` e `SearchUsersHandler`.
+- Criado contrato `IUserListingRepository` com listagem, pesquisa, ordenacao,
+  paginacao e total.
+- Criados adapters de leitura em memoria e SQLAlchemy.
+- Criados `UserListViewModel`, `UserTableModel`, `UserListView`,
+  `SearchBar`, `PaginationWidget` e `UserFormDialog`.
+- Integrado o modulo `Usuarios` ao menu lateral do Desktop Platform.
+- Criados testes unitarios para handler, ViewModel, TableModel, pesquisa,
+  paginacao e ordenacao.
+
 ## Release 2.0 - Desktop Platform
 
 - Criada a primeira plataforma visual executavel do SIGESM Enterprise.
