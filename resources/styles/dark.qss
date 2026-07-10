@@ -38,7 +38,7 @@ QLineEdit, QTableView {
 }
 
 QWidget#workspaceView {
-    background-image: url(resources/images/sigesm_military_watermark.svg);
+    background-image: url(resources/images/sigesm_symbols_watermark.png);
     background-position: center;
     background-repeat: no-repeat;
 }
