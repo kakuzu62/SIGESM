@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520">
+  <g opacity="0.10" fill="none" stroke="#c8b568" stroke-width="4">
+    <path d="M292 295c-32-38-31-91 5-127 31-31 80-41 121-24 18-37 65-58 109-43 50 16 78 70 64 119 38 22 55 71 38 112-17 43-62 67-107 58-31 42-94 54-139 24-35 17-76 10-103-19-27-29-30-71 12-100z"/>
+    <path d="M355 178c46 8 82 39 100 85 11-44 43-76 91-89"/>
+    <path d="M326 323c55-19 109-19 164 0 39 13 77 13 115 0"/>
+    <circle cx="450" cy="260" r="168"/>
+    <circle cx="450" cy="260" r="205"/>
+  </g>
+  <g opacity="0.12" fill="#c8b568">
+    <text x="450" y="455" text-anchor="middle" font-family="Segoe UI, Arial" font-size="34" font-weight="700">SIGESM</text>
+    <text x="450" y="492" text-anchor="middle" font-family="Segoe UI, Arial" font-size="20" letter-spacing="5">REGIMENTO SAMPAIO  •  FEB</text>
+  </g>
+</svg>

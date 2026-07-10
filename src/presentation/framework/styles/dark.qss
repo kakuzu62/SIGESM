@@ -1,6 +1,6 @@
 QWidget {
-    background: #111827;
-    color: #f9fafb;
+    background: #182015;
+    color: #f4f1df;
     font-family: "Segoe UI", Arial;
     font-size: 10pt;
 }
@@ -9,8 +9,8 @@ QFrame#header,
 QFrame#sidebar,
 QFrame#statusBar,
 QFrame#card {
-    background: #1f2937;
-    border: 1px solid rgba(128, 128, 128, 0.22);
+    background: #242f1d;
+    border: 1px solid rgba(200, 181, 104, 0.24);
 }
 
 QLabel#title {
@@ -19,30 +19,36 @@ QLabel#title {
 }
 
 QLabel#subtitle {
-    color: #38bdf8;
+    color: #c8b568;
     font-weight: 600;
 }
 
 QPushButton {
-    background: #1f2937;
-    border: 1px solid rgba(128, 128, 128, 0.45);
+    background: #2f3b25;
+    border: 1px solid rgba(200, 181, 104, 0.46);
     border-radius: 6px;
     padding: 8px 10px;
 }
 
 QPushButton:hover {
-    border-color: #38bdf8;
+    border-color: #c8b568;
 }
 
 QPushButton#primaryButton {
-    background: #38bdf8;
-    color: #111827;
+    background: #6f7f3d;
+    color: #f8f5df;
     font-weight: 700;
 }
 
 QLineEdit {
-    background: #1f2937;
-    border: 1px solid rgba(128, 128, 128, 0.45);
+    background: rgba(30, 39, 24, 0.94);
+    border: 1px solid rgba(200, 181, 104, 0.32);
     border-radius: 6px;
     padding: 8px;
+}
+
+QWidget#workspaceView {
+    background-image: url(resources/images/sigesm_military_watermark.svg);
+    background-position: center;
+    background-repeat: no-repeat;
 }

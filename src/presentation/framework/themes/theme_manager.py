@@ -29,18 +29,18 @@ class ThemeManager:
         self._palettes = {
             ThemeMode.DARK: ThemePalette(
                 mode=ThemeMode.DARK,
-                background="#111827",
-                surface="#1f2937",
-                text="#f9fafb",
-                primary="#38bdf8",
-                danger="#f87171",
+                background="#182015",
+                surface="#242f1d",
+                text="#f4f1df",
+                primary="#c8b568",
+                danger="#b85445",
             ),
             ThemeMode.LIGHT: ThemePalette(
                 mode=ThemeMode.LIGHT,
-                background="#f8fafc",
-                surface="#ffffff",
-                text="#111827",
-                primary="#0369a1",
+                background="#eef0e2",
+                surface="#f7f5e9",
+                text="#1e2718",
+                primary="#5f6f35",
                 danger="#b91c1c",
             ),
             ThemeMode.HIGH_CONTRAST: ThemePalette(

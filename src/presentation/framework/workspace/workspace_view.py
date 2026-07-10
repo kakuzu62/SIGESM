@@ -8,6 +8,7 @@ class WorkspaceView(QWidget):
 
     def __init__(self) -> None:
         super().__init__()
+        self.setObjectName("workspaceView")
         self._layout = QVBoxLayout(self)
         self._layout.setContentsMargins(0, 0, 0, 0)
         self._current: QWidget | None = None
