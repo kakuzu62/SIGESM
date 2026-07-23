@@ -13,6 +13,7 @@ from domain.identity.value_objects import Email, Username
 class CreateUserCommand:
     """Command used to create a user."""
 
+    full_name: str
     username: str
     email: str
     password: str
@@ -30,6 +31,6 @@ class CreateUserHandler:
         username = Username(command.username)
         email = Email(command.email)
         password_hash = self._password_service.hash_password(command.password)
-        user = User.create(username, email, password_hash)
+        user = User.create(username, email, password_hash, full_name=command.full_name)
         self._users.add(user)
         return UserDTO.from_domain(user)

@@ -14,6 +14,7 @@ class User(AggregateRoot[Identity]):
     """Aggregate root representing an application user."""
 
     __slots__ = (
+        "_full_name",
         "_username",
         "_email",
         "_password_hash",
@@ -28,6 +29,7 @@ class User(AggregateRoot[Identity]):
     def __init__(
         self,
         entity_id: Identity,
+        full_name: str,
         username: Username,
         email: Email,
         password_hash: PasswordHash,
@@ -39,6 +41,7 @@ class User(AggregateRoot[Identity]):
         updated_at: datetime,
     ) -> None:
         super().__init__(entity_id)
+        self._full_name = self._normalize_full_name(full_name)
         self._username = username
         self._email = email
         self._password_hash = password_hash
@@ -50,11 +53,18 @@ class User(AggregateRoot[Identity]):
         self._updated_at = updated_at
 
     @classmethod
-    def create(cls, username: Username, email: Email, password_hash: PasswordHash) -> User:
+    def create(
+        cls,
+        username: Username,
+        email: Email,
+        password_hash: PasswordHash,
+        full_name: str | None = None,
+    ) -> User:
         """Create an active user and record a domain event."""
         now = datetime.now(UTC)
         user = cls(
             entity_id=Identity.new(),
+            full_name=full_name or username.value,
             username=username,
             email=email,
             password_hash=password_hash,
@@ -67,6 +77,11 @@ class User(AggregateRoot[Identity]):
         )
         user.add_domain_event(UserCreated(user.id, username, email))
         return user
+
+    @property
+    def full_name(self) -> str:
+        """Return the user's full name."""
+        return self._full_name
 
     @property
     def username(self) -> Username:
@@ -171,3 +186,12 @@ class User(AggregateRoot[Identity]):
 
     def _touch(self) -> None:
         self._updated_at = datetime.now(UTC)
+
+    @staticmethod
+    def _normalize_full_name(full_name: str) -> str:
+        normalized = " ".join(full_name.strip().split())
+        if not normalized:
+            raise IdentityDomainException("Full name is required.")
+        if len(normalized) > 120:
+            raise IdentityDomainException("Full name must contain at most 120 characters.")
+        return normalized

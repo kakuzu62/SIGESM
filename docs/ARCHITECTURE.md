@@ -99,6 +99,25 @@ temas em tempo de execucao e mantem a estrutura preparada para Alto Contraste.
 Recursos visuais sao resolvidos por `DesktopResourceManager`, sem acesso direto
 a infraestrutura de persistencia.
 
+## Epico Administracao - User Management
+
+A STS-001A introduz a listagem de usuarios como vertical slice funcional. A
+STS-001B adiciona o fluxo de criacao de usuarios usando CQRS e MVVM:
+
+```text
+UserFormDialog
+  -> CreateUserViewModel
+  -> CreateUserService
+  -> CreateUserHandler
+  -> IUserRepository
+  -> UserCreationUnitOfWork
+```
+
+A View nao acessa SQLAlchemy, repositories, session, engine ou Unit of Work. O
+cadastro reutiliza o agregado `User`, os value objects `Username` e `Email`, e o
+`PasswordService` do Identity Context. O campo `full_name` passa a fazer parte
+do agregado e do modelo fisico `identity_users`.
+
 ## Contexto Militar
 
 O contexto `domain.military` concentra o nucleo militar do SIGESM Enterprise.

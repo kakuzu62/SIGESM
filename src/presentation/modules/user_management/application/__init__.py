@@ -1,7 +1,10 @@
-"""Application layer for user listing."""
+"""Application layer for user management."""
 
+from presentation.modules.user_management.application.create_user_service import (
+    CreateUserService,
+)
 from presentation.modules.user_management.application.user_listing_service import (
     UserListingService,
 )
 
-__all__ = ["UserListingService"]
+__all__ = ["CreateUserService", "UserListingService"]

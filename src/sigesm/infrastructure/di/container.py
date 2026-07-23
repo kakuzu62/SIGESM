@@ -15,8 +15,9 @@ from infrastructure.identity import (
     InMemoryRefreshSessionRepository,
     InMemoryUserRepository,
 )
-from presentation.modules.user_management.application import UserListingService
+from presentation.modules.user_management.application import CreateUserService, UserListingService
 from presentation.modules.user_management.infrastructure.repositories import (
+    InMemoryUserCreationUnitOfWorkFactory,
     InMemoryUserListingRepository,
 )
 from sigesm.application.ports import UnitOfWorkFactory
@@ -48,6 +49,7 @@ class ApplicationContainer:
                 Username("admin"),
                 Email("admin@sigesm.local"),
                 self.password_service.hash_password("Admin#123"),
+                full_name="Administrador do Sistema",
             )
         )
         return users
@@ -71,3 +73,10 @@ class ApplicationContainer:
     def user_listing_service(self) -> UserListingService:
         """Return the user listing application facade."""
         return UserListingService(InMemoryUserListingRepository(self.identity_users))
+
+    def create_user_service(self) -> CreateUserService:
+        """Return the user creation application facade."""
+        return CreateUserService(
+            InMemoryUserCreationUnitOfWorkFactory(self.identity_users),
+            self.password_service,
+        )

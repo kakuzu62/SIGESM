@@ -143,7 +143,7 @@ def test_identity_application_handlers() -> None:
     password_service = PasswordService()
 
     created = CreateUserHandler(repository, password_service).handle(
-        CreateUserCommand("manager", "manager@sigesm.local", "Strong#123")
+        CreateUserCommand("Manager User", "manager", "manager@sigesm.local", "Strong#123")
     )
     DeactivateUserHandler(repository).handle(DeactivateUserCommand(created.id, "rotation"))
     inactive = GetUserByIdHandler(repository).handle(GetUserByIdQuery(created.id))

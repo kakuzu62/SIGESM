@@ -1,11 +1,37 @@
-# Relatorio de Implementacao - STS-001A
+# Relatorio de Implementacao - User Management
+
+## STS-001B - Cadastro de Usuarios
+
+Implementada a criacao real de usuarios no modulo Administracao.
+
+Entregas principais:
+
+- formulario real de novo usuario;
+- `CreateUserViewModel` com `is_loading`, `can_submit`, mensagens por campo e
+  sinais de sucesso/falha;
+- `CreateUserService`, `CreateUserCommand`, `CreateUserHandler` e DTO seguro;
+- Unit of Work em memoria e SQLAlchemy;
+- coluna `identity_users.full_name`;
+- migration Alembic para bases existentes;
+- atualizacao automatica da listagem apos sucesso;
+- testes de Application, ViewModel, dialogo e persistencia.
+
+Fora de escopo preservado: edicao, ativacao/desativacao, redefinicao de senha,
+perfis, permissoes e auditoria.
+
+Quality Gate da STS-001B:
+
+- Black: aprovado, 448 arquivos verificados.
+- Ruff: aprovado, sem violacoes.
+- MyPy strict: aprovado, 448 arquivos analisados.
+- PyTest: aprovado, 128 testes executados.
 
 ## Identificacao
 
 - Epico: Administracao.
 - Release: 2.1 - User Management.
-- STS: 001A - Listagem de Usuarios.
-- Branch: `codex/sts-001a-user-listing`.
+- STS: 001A - Listagem de Usuarios; 001B - Cadastro de Usuarios.
+- Branch: `codex/sts-001b-user-creation`.
 
 ## Objetivo
 

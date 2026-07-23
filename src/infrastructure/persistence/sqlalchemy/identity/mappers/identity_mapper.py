@@ -63,6 +63,7 @@ class IdentityMapper:
         """Map a user model to a domain aggregate."""
         return User(
             entity_id=Identity.from_string(model.id),
+            full_name=model.full_name,
             username=Username(model.username),
             email=Email(model.email),
             password_hash=PasswordHash(model.password_hash),
@@ -170,6 +171,7 @@ class IdentityMapper:
         """Map a user aggregate to a SQLAlchemy model."""
         model = UserModel(
             id=str(entity.id),
+            full_name=entity.full_name,
             username=entity.username.value,
             email=entity.email.value,
             password_hash=entity.password_hash.value,

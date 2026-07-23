@@ -76,7 +76,7 @@ class InMemoryUserListingRepository(IUserListingRepository):
         return UserListItemDTO(
             id=str(user.id),
             login=user.username.value,
-            name=user.username.value,
+            name=user.full_name,
             email=user.email.value,
             status="Ativo" if user.active else "Inativo",
             profiles=tuple(role.name for role in user.roles),

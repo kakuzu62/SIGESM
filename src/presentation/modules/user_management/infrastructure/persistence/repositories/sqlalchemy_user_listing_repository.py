@@ -56,7 +56,7 @@ class SqlAlchemyUserListingRepository(IUserListingRepository):
                 UserListItemDTO(
                     id=model.id,
                     login=model.username,
-                    name=model.username,
+                    name=model.full_name,
                     email=model.email,
                     status="Ativo" if model.active else "Inativo",
                     profiles=tuple(role.name for role in model.roles),

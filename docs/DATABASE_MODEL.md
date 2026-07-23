@@ -84,11 +84,12 @@ migrations.
 
 ## Identity - Modelo Fisico Inicial
 
-A Release 1.0 prepara os models SQLAlchemy do contexto Identity, ainda sem
-criar migration versionada. As tabelas planejadas para o contexto sao:
+A Release 1.0 prepara os models SQLAlchemy do contexto Identity. A STS-001B
+adiciona a primeira migration versionada para suportar cadastro de usuarios com
+nome completo. As tabelas planejadas para o contexto sao:
 
-- `identity_users`: usuarios, username, email, hash de senha, status ativo,
-  tentativas falhas, bloqueio e timestamps.
+- `identity_users`: usuarios, nome completo, username, email, hash de senha,
+  status ativo, tentativas falhas, bloqueio e timestamps.
 - `identity_roles`: perfis de acesso.
 - `identity_permissions`: permissoes atomicas.
 - `identity_user_roles`: associacao muitos-para-muitos entre usuarios e roles.
@@ -106,3 +107,15 @@ Senhas nunca devem ser armazenadas em texto puro. O campo `password_hash` deve
 conter apenas o hash Argon2id codificado produzido pelo servico de senha do
 dominio. Tokens de acesso, refresh e reset tambem nao devem ser persistidos em
 texto puro.
+
+### STS-001B
+
+Migration:
+
+```text
+migrations/versions/20260723_0001_add_identity_user_full_name.py
+```
+
+A coluna `identity_users.full_name` e obrigatoria, possui limite de 120
+caracteres e e preenchida com `username` para usuarios existentes durante a
+migration.

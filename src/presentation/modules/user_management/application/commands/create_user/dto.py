@@ -7,8 +7,8 @@ from domain.identity.entities import User
 
 
 @dataclass(frozen=True, slots=True)
-class UserDTO:
-    """Application DTO representing a user."""
+class CreateUserResultDTO:
+    """Safe DTO returned after a user is created."""
 
     id: str
     full_name: str
@@ -16,12 +16,13 @@ class UserDTO:
     email: str
     active: bool
     roles: tuple[str, ...]
+    last_access_at: datetime | None
     created_at: datetime
     updated_at: datetime
 
     @classmethod
-    def from_domain(cls, user: User) -> UserDTO:
-        """Create a DTO from a user aggregate."""
+    def from_domain(cls, user: User) -> CreateUserResultDTO:
+        """Create a safe DTO from a user aggregate."""
         return cls(
             id=str(user.id),
             full_name=user.full_name,
@@ -29,6 +30,7 @@ class UserDTO:
             email=user.email.value,
             active=user.active,
             roles=tuple(role.name for role in user.roles),
+            last_access_at=None,
             created_at=user.created_at,
             updated_at=user.updated_at,
         )

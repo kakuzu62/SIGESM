@@ -9,7 +9,10 @@ from presentation.framework.themes import ThemeManager
 from presentation.framework.workspace import WorkspaceManager
 
 if TYPE_CHECKING:
-    from presentation.modules.user_management.application import UserListingService
+    from presentation.modules.user_management.application import (
+        CreateUserService,
+        UserListingService,
+    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -21,3 +24,4 @@ class DesktopContext:
     themes: ThemeManager
     notifications: NotificationService
     user_listing: UserListingService
+    user_creation: CreateUserService

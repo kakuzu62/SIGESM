@@ -76,8 +76,10 @@ class UserListView(QWidget):
         self._pagination.setEnabled(not is_loading)
 
     def _open_new_dialog(self) -> None:
-        UserFormDialog().exec()
+        create_view_model = self._view_model.create_user_view_model()
+        create_view_model.user_created.connect(self._view_model.handle_user_created)
+        UserFormDialog(create_view_model).exec()
 
     def _open_edit_dialog(self, user: object) -> None:
         if isinstance(user, UserListItemDTO):
-            UserFormDialog(user).exec()
+            UserFormDialog(user=user).exec()

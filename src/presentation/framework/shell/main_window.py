@@ -110,4 +110,6 @@ class MainWindow(QMainWindow):
         self.close()
 
     def _users_view(self) -> QWidget:
-        return UserListView(UserListViewModel(self._context.user_listing))
+        return UserListView(
+            UserListViewModel(self._context.user_listing, self._context.user_creation)
+        )

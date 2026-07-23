@@ -28,6 +28,7 @@ class UserModel(Base):
     __tablename__ = "identity_users"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    full_name: Mapped[str] = mapped_column(String(120), nullable=False)
     username: Mapped[str] = mapped_column(String(64), nullable=False, unique=True, index=True)
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
     password_hash: Mapped[str] = mapped_column(String(512), nullable=False)

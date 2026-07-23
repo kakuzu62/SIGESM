@@ -3,11 +3,17 @@ from __future__ import annotations
 from PySide6.QtCore import Signal
 
 from presentation.framework.mvvm import ViewModel
-from presentation.modules.user_management.application import UserListingService
+from presentation.modules.user_management.application import CreateUserService, UserListingService
 from presentation.modules.user_management.application.common import PagedResult, SortDirection
+from presentation.modules.user_management.application.commands.create_user import (
+    CreateUserResultDTO,
+)
 from presentation.modules.user_management.application.queries.list_users import (
     ListUsersQuery,
     UserListItemDTO,
+)
+from presentation.modules.user_management.presentation.viewmodels.create_user_view_model import (
+    CreateUserViewModel,
 )
 
 
@@ -17,9 +23,14 @@ class UserListViewModel(ViewModel):
     new_user_requested = Signal()
     edit_user_requested = Signal(object)
 
-    def __init__(self, service: UserListingService) -> None:
+    def __init__(
+        self,
+        service: UserListingService,
+        create_user_service: CreateUserService | None = None,
+    ) -> None:
         super().__init__()
         self._service = service
+        self._create_user_service = create_user_service
         self._query = ListUsersQuery()
         self._result: PagedResult[UserListItemDTO] = PagedResult(
             items=(), total=0, page=1, page_size=20
@@ -120,7 +131,7 @@ class UserListViewModel(ViewModel):
 
     def request_new_user(self) -> None:
         """Request opening the new user form."""
-        if self._is_loading:
+        if self._is_loading or self._create_user_service is None:
             return
 
         self.new_user_requested.emit()
@@ -131,6 +142,18 @@ class UserListViewModel(ViewModel):
             return
 
         self.edit_user_requested.emit(user)
+
+    def create_user_view_model(self) -> CreateUserViewModel:
+        """Create the ViewModel used by the new user dialog."""
+        if self._create_user_service is None:
+            raise RuntimeError("Create user service is not configured.")
+        return CreateUserViewModel(self._create_user_service)
+
+    def handle_user_created(self, user: CreateUserResultDTO) -> None:
+        """Refresh the current listing after a user is created."""
+        self._error_message = f"Usuario criado: {user.username}"
+        self.notify_property_changed("error_message")
+        self.refresh()
 
     def _set_loading(self, is_loading: bool) -> None:
         self._is_loading = is_loading

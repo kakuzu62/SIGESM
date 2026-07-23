@@ -52,6 +52,7 @@ class DesktopApplication:
             themes=ThemeManager(),
             notifications=NotificationService(),
             user_listing=self._container.user_listing_service(),
+            user_creation=self._container.create_user_service(),
         )
         context.themes.apply(qt_app, ThemeMode.DARK)
         self._show_splash_message(qt_app, splash, "Carregando autenticacao...")

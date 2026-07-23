@@ -118,8 +118,18 @@ Credenciais locais de desenvolvimento:
 
 A primeira entrega funcional do Epico Administracao adiciona o modulo
 `Usuarios` ao menu lateral. A tela permite listar usuarios, pesquisar, ordenar
-colunas, paginar, atualizar a lista e abrir os dialogos de novo/edicao ainda sem
-persistir alteracoes.
+e paginar registros.
+
+## STS-001B - Cadastro de Usuarios
+
+A STS-001B transforma o dialogo de novo usuario em um fluxo real de criacao. O
+cadastro usa `CreateUserViewModel`, `CreateUserService`, `CreateUserCommand`,
+`CreateUserHandler`, `IUserRepository` e Unit of Work. A interface nao acessa
+SQLAlchemy, repositories, session, engine ou Unit of Work diretamente.
+
+O usuario criado inicia ativo, sem perfis nesta STS e com senha armazenada
+apenas como hash Argon2id. O campo `full_name` foi adicionado ao Identity
+Context e ao schema `identity_users`.
 
 O fluxo segue MVVM e CQRS:
 

@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from domain.identity.entities import User
+from domain.identity.services import PasswordService
 from domain.identity.value_objects import Email, PasswordHash, Username
 from infrastructure.identity import InMemoryUserRepository
-from presentation.modules.user_management.application import UserListingService
+from presentation.modules.user_management.application import CreateUserService, UserListingService
 from presentation.modules.user_management.application.common import PagedResult, SortDirection
 from presentation.modules.user_management.application.queries.list_users import (
     ListUsersHandler,
@@ -11,6 +12,7 @@ from presentation.modules.user_management.application.queries.list_users import 
     UserListItemDTO,
 )
 from presentation.modules.user_management.infrastructure.repositories import (
+    InMemoryUserCreationUnitOfWorkFactory,
     InMemoryUserListingRepository,
 )
 from presentation.modules.user_management.presentation.models import UserTableModel
@@ -196,7 +198,11 @@ def test_user_list_view_model_notifies_loading_state() -> None:
 
 
 def test_user_list_view_model_emits_new_user_event() -> None:
-    view_model = UserListViewModel(UserListingService(_repository_with_users("admin")))
+    users = InMemoryUserRepository()
+    view_model = UserListViewModel(
+        UserListingService(InMemoryUserListingRepository(users)),
+        CreateUserService(InMemoryUserCreationUnitOfWorkFactory(users), PasswordService()),
+    )
     emitted: list[bool] = []
     view_model.new_user_requested.connect(lambda: emitted.append(True))
 

@@ -1,5 +1,18 @@
 # Changelog
 
+## STS-001B - User Creation
+
+- Transformado `UserFormDialog` em formulario real de criacao de usuario.
+- Criados `CreateUserCommand`, `CreateUserCommandValidator`,
+  `CreateUserHandler`, `CreateUserResultDTO` e `CreateUserService`.
+- Adicionado `CreateUserViewModel` com `is_loading`, `can_submit`, erros por
+  campo e sinais de sucesso/falha.
+- Adicionado `full_name` ao agregado `User`, DTOs, SQLAlchemy model e mapper.
+- Criados Unit of Work em memoria e SQLAlchemy para criacao de usuarios.
+- Criada migration `20260723_0001_add_identity_user_full_name`.
+- Expandida a suite de testes para criacao, duplicidade, rollback, ViewModel,
+  dialogo e persistencia SQLite.
+
 ## AR-001R1 - STS-001A User Listing Hardening
 
 - Corrigidas notificacoes completas da `UserListViewModel` apos carregamento.

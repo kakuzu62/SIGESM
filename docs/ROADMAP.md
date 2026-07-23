@@ -10,6 +10,7 @@
 
 - Autenticacao.
 - Usuarios.
+- Criacao de usuarios administrativos.
 - Perfis e permissoes.
 - Politicas de senha e sessao.
 
