@@ -131,6 +131,16 @@ O usuario criado inicia ativo, sem perfis nesta STS e com senha armazenada
 apenas como hash Argon2id. O campo `full_name` foi adicionado ao Identity
 Context e ao schema `identity_users`.
 
+## STS-001C - Edicao de Usuarios
+
+A STS-001C permite editar nome completo, login e e-mail de usuarios existentes.
+O fluxo usa `EditUserViewModel`, `EditUserService`, `UpdateUserCommand`,
+`UpdateUserHandler`, `IUserRepository` e Unit of Work. Senha, hash, estado
+ativo, roles e `created_at` sao preservados.
+
+O dialogo de edicao nao exibe campos de senha e a listagem e atualizada apos
+sucesso mantendo filtro, ordenacao e pagina.
+
 O fluxo segue MVVM e CQRS:
 
 - `UserListView` conversa apenas com `UserListViewModel`.

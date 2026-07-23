@@ -1,5 +1,19 @@
 # Changelog
 
+## STS-001C - User Editing
+
+- Implementada edicao de nome completo, login e e-mail de usuarios existentes.
+- Criados `UpdateUserCommand`, `UpdateUserCommandValidator`,
+  `UpdateUserHandler`, `UpdateUserResultDTO` e `EditUserService`.
+- Adicionado `User.update_profile()` preservando ID, senha, estado ativo, roles
+  e `created_at`.
+- Criados Unit of Work em memoria e SQLAlchemy para edicao de usuarios.
+- Adicionado `EditUserViewModel` com `has_changes`, `can_submit`, erros por
+  campo e sinais de sucesso/falha.
+- Atualizado `UserFormDialog` para modos criacao e edicao.
+- Expandida a suite de testes para edicao, duplicidade, rollback, ViewModel,
+  dialogo e persistencia SQLite.
+
 ## STS-001B - User Creation
 
 - Transformado `UserFormDialog` em formulario real de criacao de usuario.

@@ -11,6 +11,7 @@ from presentation.framework.workspace import WorkspaceManager
 if TYPE_CHECKING:
     from presentation.modules.user_management.application import (
         CreateUserService,
+        EditUserService,
         UserListingService,
     )
 
@@ -25,3 +26,4 @@ class DesktopContext:
     notifications: NotificationService
     user_listing: UserListingService
     user_creation: CreateUserService
+    user_editing: EditUserService

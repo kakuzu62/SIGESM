@@ -7,9 +7,15 @@ from presentation.modules.user_management.infrastructure.repositories.in_memory_
     InMemoryUserCreationUnitOfWork,
     InMemoryUserCreationUnitOfWorkFactory,
 )
+from presentation.modules.user_management.infrastructure.repositories.in_memory_user_update_unit_of_work import (
+    InMemoryUserUpdateUnitOfWork,
+    InMemoryUserUpdateUnitOfWorkFactory,
+)
 
 __all__ = [
     "InMemoryUserCreationUnitOfWork",
     "InMemoryUserCreationUnitOfWorkFactory",
     "InMemoryUserListingRepository",
+    "InMemoryUserUpdateUnitOfWork",
+    "InMemoryUserUpdateUnitOfWorkFactory",
 ]

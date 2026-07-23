@@ -111,5 +111,9 @@ class MainWindow(QMainWindow):
 
     def _users_view(self) -> QWidget:
         return UserListView(
-            UserListViewModel(self._context.user_listing, self._context.user_creation)
+            UserListViewModel(
+                self._context.user_listing,
+                self._context.user_creation,
+                self._context.user_editing,
+            )
         )

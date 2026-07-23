@@ -15,6 +15,7 @@
 | Login | Alta | Foundation |
 | Usuarios | Alta | Foundation |
 | Criacao de usuarios | Alta | Usuarios |
+| Edicao de usuarios | Alta | Usuarios |
 | Perfis e permissoes | Alta | Usuarios |
 
 ## Organization

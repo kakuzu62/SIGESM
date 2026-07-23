@@ -81,3 +81,36 @@ Application, Domain ou Persistence.
 - Falha mantem o dialogo aberto e preserva dados nao sensiveis.
 - Login e e-mail duplicados sao exibidos como mensagens compreensiveis.
 - Senha e hash nao sao retornados em DTO, sinais ou mensagens.
+
+## STS-001C - Edicao de Usuarios
+
+Fluxo:
+
+```text
+UserListView
+  -> UserFormDialog
+  -> EditUserViewModel
+  -> EditUserService
+  -> UpdateUserCommand
+  -> UpdateUserHandler
+  -> IUserRepository
+  -> UserUpdateUnitOfWork
+```
+
+Campos editaveis:
+
+- nome completo;
+- login;
+- e-mail.
+
+O modo edicao nao exibe senha, confirmacao, hash, tokens ou detalhes internos de
+autenticacao.
+
+## Politica de Edicao
+
+- Salvar permanece desabilitado quando nao houver alteracoes.
+- O proprio login/e-mail atual do usuario nao e tratado como duplicidade.
+- Login/e-mail pertencentes a outro usuario sao rejeitados.
+- Senha, estado ativo, roles e `created_at` sao preservados.
+- A listagem e atualizada apos sucesso mantendo filtro, ordenacao e pagina.
+- Controle otimista ainda nao existe; o comportamento atual e last-write-wins.

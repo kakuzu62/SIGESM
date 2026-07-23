@@ -26,12 +26,45 @@ Quality Gate da STS-001B:
 - MyPy strict: aprovado, 448 arquivos analisados.
 - PyTest: aprovado, 128 testes executados.
 
+## STS-001C - Edicao de Usuarios
+
+Implementada a edicao real de usuarios existentes no modulo Administracao.
+
+Entregas principais:
+
+- `UpdateUserCommand`, `UpdateUserHandler`, `UpdateUserResultDTO` e
+  `EditUserService`;
+- `User.update_profile()` no agregado Identity;
+- Unit of Work em memoria e SQLAlchemy para edicao;
+- `EditUserViewModel` com `has_changes`, `is_loading`, `can_submit`, erros por
+  campo e sinais de sucesso/falha;
+- `UserFormDialog` com modo criacao e modo edicao;
+- atualizacao automatica da listagem apos sucesso;
+- testes de dominio, Application, ViewModel, dialogo e persistencia SQLite.
+
+Fora de escopo preservado: redefinicao de senha, ativacao/desativacao, perfis,
+permissoes, auditoria e exclusao.
+
+Quality Gate da STS-001C:
+
+- Black: aprovado, 460 arquivos verificados.
+- Ruff: aprovado, sem violacoes.
+- MyPy strict: aprovado, 460 arquivos analisados.
+- PyTest: aprovado, 142 testes executados.
+
+Debitos registrados:
+
+- AR-001-01: realocar `user_management` para fora de `src/presentation/modules/`.
+- Controle otimista ausente: sem `version_id`; comportamento atual e
+  last-write-wins.
+- Execucao de UI ainda sincronona.
+
 ## Identificacao
 
 - Epico: Administracao.
 - Release: 2.1 - User Management.
-- STS: 001A - Listagem de Usuarios; 001B - Cadastro de Usuarios.
-- Branch: `codex/sts-001b-user-creation`.
+- STS: 001A - Listagem; 001B - Cadastro; 001C - Edicao.
+- Branch: `codex/sts-001c-user-editing`.
 
 ## Objetivo
 

@@ -141,6 +141,21 @@ class User(AggregateRoot[Identity]):
         self._roles = tuple(item for item in self._roles if item != role)
         self._touch()
 
+    def update_profile(self, full_name: str, username: Username, email: Email) -> None:
+        """Update editable profile fields while preserving identity and credentials."""
+        normalized_full_name = self._normalize_full_name(full_name)
+        if (
+            self._full_name == normalized_full_name
+            and self._username == username
+            and self._email == email
+        ):
+            return
+
+        self._full_name = normalized_full_name
+        self._username = username
+        self._email = email
+        self._touch()
+
     def activate(self) -> None:
         """Activate the user."""
         if self._active:

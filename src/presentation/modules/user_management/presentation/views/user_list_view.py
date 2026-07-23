@@ -82,4 +82,6 @@ class UserListView(QWidget):
 
     def _open_edit_dialog(self, user: object) -> None:
         if isinstance(user, UserListItemDTO):
-            UserFormDialog(user=user).exec()
+            edit_view_model = self._view_model.edit_user_view_model(user)
+            edit_view_model.user_updated.connect(self._view_model.handle_user_updated)
+            UserFormDialog(edit_view_model).exec()

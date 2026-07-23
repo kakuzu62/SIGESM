@@ -4,7 +4,11 @@ from domain.identity.entities import User
 from domain.identity.services import PasswordService
 from domain.identity.value_objects import Email, PasswordHash, Username
 from infrastructure.identity import InMemoryUserRepository
-from presentation.modules.user_management.application import CreateUserService, UserListingService
+from presentation.modules.user_management.application import (
+    CreateUserService,
+    EditUserService,
+    UserListingService,
+)
 from presentation.modules.user_management.application.common import PagedResult, SortDirection
 from presentation.modules.user_management.application.queries.list_users import (
     ListUsersHandler,
@@ -14,6 +18,7 @@ from presentation.modules.user_management.application.queries.list_users import 
 from presentation.modules.user_management.infrastructure.repositories import (
     InMemoryUserCreationUnitOfWorkFactory,
     InMemoryUserListingRepository,
+    InMemoryUserUpdateUnitOfWorkFactory,
 )
 from presentation.modules.user_management.presentation.models import UserTableModel
 from presentation.modules.user_management.presentation.viewmodels import UserListViewModel
@@ -212,7 +217,11 @@ def test_user_list_view_model_emits_new_user_event() -> None:
 
 
 def test_user_list_view_model_emits_edit_user_event() -> None:
-    view_model = UserListViewModel(UserListingService(_repository_with_users("admin")))
+    users = _users_with_users("admin")
+    view_model = UserListViewModel(
+        UserListingService(InMemoryUserListingRepository(users)),
+        edit_user_service=EditUserService(InMemoryUserUpdateUnitOfWorkFactory(users)),
+    )
     view_model.load()
     emitted: list[UserListItemDTO] = []
     view_model.edit_user_requested.connect(lambda user: emitted.append(user))
@@ -261,6 +270,10 @@ def test_user_list_item_dto_does_not_expose_sensitive_data() -> None:
 
 
 def _repository_with_users(*usernames: str) -> InMemoryUserListingRepository:
+    return InMemoryUserListingRepository(_users_with_users(*usernames))
+
+
+def _users_with_users(*usernames: str) -> InMemoryUserRepository:
     users = InMemoryUserRepository()
     for username in usernames:
         users.add(
@@ -270,4 +283,4 @@ def _repository_with_users(*usernames: str) -> InMemoryUserListingRepository:
                 PasswordHash(_VALID_ARGON2ID_HASH),
             )
         )
-    return InMemoryUserListingRepository(users)
+    return users

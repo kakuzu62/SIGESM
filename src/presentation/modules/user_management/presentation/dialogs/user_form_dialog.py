@@ -11,7 +11,12 @@ from PySide6.QtWidgets import (
 )
 
 from presentation.modules.user_management.application.queries.list_users import UserListItemDTO
-from presentation.modules.user_management.presentation.viewmodels import CreateUserViewModel
+from presentation.modules.user_management.presentation.viewmodels import (
+    CreateUserViewModel,
+    EditUserViewModel,
+)
+
+UserFormViewModel = CreateUserViewModel | EditUserViewModel
 
 
 class UserFormDialog(QDialog):
@@ -19,15 +24,16 @@ class UserFormDialog(QDialog):
 
     def __init__(
         self,
-        view_model: CreateUserViewModel | None = None,
+        view_model: UserFormViewModel | None = None,
         user: UserListItemDTO | None = None,
     ) -> None:
         super().__init__()
         self._view_model = view_model
-        self._editing_user = user
-        self._full_name = QLineEdit(user.name if user is not None else "")
-        self._username = QLineEdit(user.login if user is not None else "")
-        self._email = QLineEdit(user.email if user is not None else "")
+        self._creating = isinstance(view_model, CreateUserViewModel)
+        self._editing = isinstance(view_model, EditUserViewModel)
+        self._full_name = QLineEdit(self._initial_full_name(user))
+        self._username = QLineEdit(self._initial_username(user))
+        self._email = QLineEdit(self._initial_email(user))
         self._password = QLineEdit()
         self._password_confirmation = QLineEdit()
         self._general_error = QLabel("")
@@ -45,8 +51,7 @@ class UserFormDialog(QDialog):
         self._sync_state()
 
     def _build(self) -> None:
-        creating = self._view_model is not None
-        self.setWindowTitle("Novo usuario" if creating else "Editar usuario")
+        self.setWindowTitle("Novo usuario" if self._creating else "Editar usuario")
         self._password.setEchoMode(QLineEdit.EchoMode.Password)
         self._password_confirmation.setEchoMode(QLineEdit.EchoMode.Password)
         self._general_error.setObjectName("errorMessage")
@@ -55,7 +60,7 @@ class UserFormDialog(QDialog):
         self._add_field(form, "Nome completo", self._full_name, "full_name")
         self._add_field(form, "Login", self._username, "username")
         self._add_field(form, "E-mail", self._email, "email")
-        if creating:
+        if self._creating:
             self._add_field(form, "Senha inicial", self._password, "password")
             self._add_field(
                 form,
@@ -63,7 +68,7 @@ class UserFormDialog(QDialog):
                 self._password_confirmation,
                 "password_confirmation",
             )
-        else:
+        elif not self._editing:
             self._full_name.setReadOnly(True)
             self._username.setReadOnly(True)
             self._email.setReadOnly(True)
@@ -106,15 +111,19 @@ class UserFormDialog(QDialog):
             lambda value: self._view_model.update_input("username", value)
         )
         self._email.textChanged.connect(lambda value: self._view_model.update_input("email", value))
-        self._password.textChanged.connect(
-            lambda value: self._view_model.update_input("password", value)
-        )
-        self._password_confirmation.textChanged.connect(
-            lambda value: self._view_model.update_input("password_confirmation", value)
-        )
+        if isinstance(self._view_model, CreateUserViewModel):
+            self._password.textChanged.connect(
+                lambda value: self._view_model.update_input("password", value)
+            )
+            self._password_confirmation.textChanged.connect(
+                lambda value: self._view_model.update_input("password_confirmation", value)
+            )
+            self._view_model.user_created.connect(self._on_operation_succeeded)
+            self._view_model.creation_failed.connect(self._on_operation_failed)
+        elif isinstance(self._view_model, EditUserViewModel):
+            self._view_model.user_updated.connect(self._on_operation_succeeded)
+            self._view_model.update_failed.connect(self._on_operation_failed)
         self._view_model.subscribe(self._on_view_model_changed)
-        self._view_model.user_created.connect(self._on_user_created)
-        self._view_model.creation_failed.connect(self._on_creation_failed)
 
     def _sync_state(self) -> None:
         if self._view_model is None:
@@ -151,10 +160,27 @@ class UserFormDialog(QDialog):
         self._password.setEnabled(not is_loading)
         self._password_confirmation.setEnabled(not is_loading)
         self._cancel_button.setEnabled(not is_loading)
-        self._save_button.setEnabled(not is_loading and self._view_model is not None)
+        self._save_button.setEnabled(
+            not is_loading and self._view_model is not None and self._view_model.can_submit
+        )
 
-    def _on_user_created(self, _user: object) -> None:
+    def _on_operation_succeeded(self, _user: object) -> None:
         self.accept()
 
-    def _on_creation_failed(self, message: str) -> None:
+    def _on_operation_failed(self, message: str) -> None:
         self._general_error.setText(message)
+
+    def _initial_full_name(self, user: UserListItemDTO | None) -> str:
+        if isinstance(self._view_model, EditUserViewModel):
+            return self._view_model.full_name
+        return user.name if user is not None else ""
+
+    def _initial_username(self, user: UserListItemDTO | None) -> str:
+        if isinstance(self._view_model, EditUserViewModel):
+            return self._view_model.username
+        return user.login if user is not None else ""
+
+    def _initial_email(self, user: UserListItemDTO | None) -> str:
+        if isinstance(self._view_model, EditUserViewModel):
+            return self._view_model.email
+        return user.email if user is not None else ""

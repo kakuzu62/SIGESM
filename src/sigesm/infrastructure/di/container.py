@@ -15,10 +15,15 @@ from infrastructure.identity import (
     InMemoryRefreshSessionRepository,
     InMemoryUserRepository,
 )
-from presentation.modules.user_management.application import CreateUserService, UserListingService
+from presentation.modules.user_management.application import (
+    CreateUserService,
+    EditUserService,
+    UserListingService,
+)
 from presentation.modules.user_management.infrastructure.repositories import (
     InMemoryUserCreationUnitOfWorkFactory,
     InMemoryUserListingRepository,
+    InMemoryUserUpdateUnitOfWorkFactory,
 )
 from sigesm.application.ports import UnitOfWorkFactory
 from sigesm.application.use_cases import RunHealthCheck
@@ -80,3 +85,7 @@ class ApplicationContainer:
             InMemoryUserCreationUnitOfWorkFactory(self.identity_users),
             self.password_service,
         )
+
+    def edit_user_service(self) -> EditUserService:
+        """Return the user editing application facade."""
+        return EditUserService(InMemoryUserUpdateUnitOfWorkFactory(self.identity_users))

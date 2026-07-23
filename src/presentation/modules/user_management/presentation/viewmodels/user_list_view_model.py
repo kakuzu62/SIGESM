@@ -3,10 +3,17 @@ from __future__ import annotations
 from PySide6.QtCore import Signal
 
 from presentation.framework.mvvm import ViewModel
-from presentation.modules.user_management.application import CreateUserService, UserListingService
+from presentation.modules.user_management.application import (
+    CreateUserService,
+    EditUserService,
+    UserListingService,
+)
 from presentation.modules.user_management.application.common import PagedResult, SortDirection
 from presentation.modules.user_management.application.commands.create_user import (
     CreateUserResultDTO,
+)
+from presentation.modules.user_management.application.commands.update_user import (
+    UpdateUserResultDTO,
 )
 from presentation.modules.user_management.application.queries.list_users import (
     ListUsersQuery,
@@ -14,6 +21,9 @@ from presentation.modules.user_management.application.queries.list_users import 
 )
 from presentation.modules.user_management.presentation.viewmodels.create_user_view_model import (
     CreateUserViewModel,
+)
+from presentation.modules.user_management.presentation.viewmodels.edit_user_view_model import (
+    EditUserViewModel,
 )
 
 
@@ -27,10 +37,12 @@ class UserListViewModel(ViewModel):
         self,
         service: UserListingService,
         create_user_service: CreateUserService | None = None,
+        edit_user_service: EditUserService | None = None,
     ) -> None:
         super().__init__()
         self._service = service
         self._create_user_service = create_user_service
+        self._edit_user_service = edit_user_service
         self._query = ListUsersQuery()
         self._result: PagedResult[UserListItemDTO] = PagedResult(
             items=(), total=0, page=1, page_size=20
@@ -138,7 +150,7 @@ class UserListViewModel(ViewModel):
 
     def request_edit_user(self, user: UserListItemDTO | None) -> None:
         """Request opening the edit form."""
-        if self._is_loading or user is None:
+        if self._is_loading or user is None or self._edit_user_service is None:
             return
 
         self.edit_user_requested.emit(user)
@@ -149,9 +161,21 @@ class UserListViewModel(ViewModel):
             raise RuntimeError("Create user service is not configured.")
         return CreateUserViewModel(self._create_user_service)
 
+    def edit_user_view_model(self, user: UserListItemDTO) -> EditUserViewModel:
+        """Create the ViewModel used by the edit user dialog."""
+        if self._edit_user_service is None:
+            raise RuntimeError("Edit user service is not configured.")
+        return EditUserViewModel(user, self._edit_user_service)
+
     def handle_user_created(self, user: CreateUserResultDTO) -> None:
         """Refresh the current listing after a user is created."""
         self._error_message = f"Usuario criado: {user.username}"
+        self.notify_property_changed("error_message")
+        self.refresh()
+
+    def handle_user_updated(self, user: UpdateUserResultDTO) -> None:
+        """Refresh the current listing after a user is updated."""
+        self._error_message = f"Usuario atualizado: {user.username}"
         self.notify_property_changed("error_message")
         self.refresh()
 

@@ -102,7 +102,8 @@ a infraestrutura de persistencia.
 ## Epico Administracao - User Management
 
 A STS-001A introduz a listagem de usuarios como vertical slice funcional. A
-STS-001B adiciona o fluxo de criacao de usuarios usando CQRS e MVVM:
+STS-001B adiciona o fluxo de criacao de usuarios usando CQRS e MVVM. A STS-001C
+adiciona edicao de nome completo, login e e-mail:
 
 ```text
 UserFormDialog
@@ -113,10 +114,20 @@ UserFormDialog
   -> UserCreationUnitOfWork
 ```
 
+```text
+UserFormDialog
+  -> EditUserViewModel
+  -> EditUserService
+  -> UpdateUserHandler
+  -> IUserRepository
+  -> UserUpdateUnitOfWork
+```
+
 A View nao acessa SQLAlchemy, repositories, session, engine ou Unit of Work. O
 cadastro reutiliza o agregado `User`, os value objects `Username` e `Email`, e o
 `PasswordService` do Identity Context. O campo `full_name` passa a fazer parte
-do agregado e do modelo fisico `identity_users`.
+do agregado e do modelo fisico `identity_users`. A edicao usa
+`User.update_profile()` e preserva senha, estado ativo, roles e `created_at`.
 
 ## Contexto Militar
 
