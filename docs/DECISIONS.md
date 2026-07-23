@@ -48,3 +48,16 @@ presentes na base: PySide6 para interface, SQLAlchemy e Alembic para
 persistencia, psycopg para compatibilidade PostgreSQL, pydantic e
 pydantic-settings no modulo `sigesm`, python-dotenv para ambiente e ferramentas
 de desenvolvimento para validacao e empacotamento.
+
+## ADR-0004 - Contagem Compartilhada e Prioridade de Servico
+
+Militares podem estar habilitados para varios servicos. Servicos pertencentes ao
+mesmo grupo de contagem compartilham a mesma fila de folga para cada tipo de
+escala. A contagem oficial passa a ser definida por militar, grupo de contagem e
+tipo de escala.
+
+A geracao automatica devera ordenar servicos por prioridade antes de selecionar
+candidatos. A antiguidade militar sera aplicada depois de elegibilidade,
+restricoes, descanso minimo e maior quantidade de dias sem servico, usando data
+da promocao atual, data de praca, data de nascimento e sorteio auditavel em
+empate absoluto.

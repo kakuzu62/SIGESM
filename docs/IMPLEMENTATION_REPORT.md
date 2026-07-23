@@ -1,5 +1,21 @@
 # Relatorio de Implementacao - Release 2.0
 
+## ADR-0004 - Shared Rest Counter and Service Priority
+
+Foi registrada a regra arquitetural de contagem compartilhada de folga e
+prioridade de servico. A decisao nao implementa novas funcionalidades, mas passa
+a orientar as futuras STSs de Organization, Military e ServiceScale.
+
+Resumo da decisao:
+
+- Um militar pode estar habilitado para varios tipos de servico.
+- Servicos do mesmo grupo compartilham o contador de folga.
+- A contagem oficial e definida por militar, grupo de contagem e tipo de escala.
+- Tipos de servico possuem prioridade configuravel de geracao.
+- Antiguidade militar considera data da promocao atual, data de praca, data de
+  nascimento e sorteio auditavel em empate absoluto.
+- A regra foi documentada em `docs/adr/ADR-0004-shared-rest-counter-service-priority.md`.
+
 ## Objetivo
 
 Implementar a primeira plataforma desktop executavel do SIGESM Enterprise,

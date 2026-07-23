@@ -32,17 +32,22 @@ Contexto ja iniciado para organizacoes militares.
 
 Contexto ja iniciado para cadastro e ciclo de vida do militar.
 
-- Entidades principais: MilitaryPerson.
+- Entidades principais: MilitaryPerson, MilitaryServiceQualification.
 - Aggregate Roots: MilitaryPerson.
-- Value Objects: MilitaryId, FullName, CPF, Rank, Phone, MilitaryStatus.
+- Value Objects: MilitaryId, FullName, CPF, Rank, Phone, MilitaryStatus,
+  SeniorityKey.
 - Repositorios: IMilitaryRepository.
+- Servicos de dominio previstos: MilitarySeniorityService.
 - Eventos: MilitaryRegistered.
+- Dados obrigatorios previstos para escala: posto/graduacao, data da promocao
+  atual, data de praca, data de nascimento e servicos habilitados.
 
 ### ServiceScale
 
 Contexto ja iniciado para escalas, designacoes, elegibilidade e geracao.
 
-- Entidades principais: ServiceScale, ServiceAssignment, ServiceRole.
+- Entidades principais: ServiceScale, ServiceAssignment, ServiceRole,
+  ServiceType, ServiceRestGroup, MilitaryRestCounter.
 - Aggregate Roots: ServiceScale.
 - Value Objects: ScaleType, ServiceDate, RestPeriod, AssignmentStatus, ServiceRoleName.
 - Repositorios: IServiceScaleRepository.
@@ -56,6 +61,17 @@ Contexto ja iniciado para escalas, designacoes, elegibilidade e geracao.
 - Eventos: ServiceAssignmentCreated, ServiceAssignmentCancelled,
   MilitaryDeclaredEligible, MilitaryDeclaredIneligible, ScaleGenerated,
   MilitarySelected, MilitarySkipped.
+- Regra estrutural: contadores de folga sao vinculados a militar, grupo de
+  contagem e tipo de escala. Tipos de servico possuem prioridade de geracao.
+
+#### Estruturas Previstas para Contagem e Prioridade
+
+- `MilitaryServiceQualification`: militar habilitado para determinado tipo de
+  servico.
+- `ServiceRestGroup`: grupo de contagem compartilhada entre tipos de servico.
+- `ServiceType`: tipo de servico com grupo de contagem, prioridade e status.
+- `MilitaryRestCounter`: contador por militar, grupo de contagem e tipo de
+  escala.
 
 ### ServiceExchange
 

@@ -28,6 +28,8 @@
 | Feature | Prioridade | Dependencias |
 |---|---|---|
 | Cadastro de militar | Alta | Organization |
+| Dados de antiguidade militar | Alta | Cadastro de militar |
+| Habilitacoes por tipo de servico | Alta | Cadastro de militar, Service Scale |
 | Restricoes individuais | Alta | Military |
 | Historico funcional | Media | Audit |
 
@@ -36,8 +38,11 @@
 | Feature | Prioridade | Dependencias |
 |---|---|---|
 | Cadastro de funcoes | Alta | Military |
+| Tipos de servico e prioridade | Alta | Organization, Military |
+| Grupos de contagem de folga | Alta | Military |
+| Contador por militar, grupo e escala | Alta | Military, Service Scale |
 | Elegibilidade | Alta | Military, Leave |
-| Geracao automatica | Alta | Elegibilidade |
+| Geracao automatica | Alta | Elegibilidade, Grupos de contagem de folga |
 
 ## Service Exchange
 

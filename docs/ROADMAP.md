@@ -22,12 +22,18 @@
 ## Release 3.x Military
 
 - Cadastro completo de militares.
+- Dados de antiguidade militar: data da promocao atual, data de praca e data de
+  nascimento.
+- Habilitacoes por tipo de servico.
 - Restricoes.
 - Historico e status operacional.
 
 ## Release 4.x Service Scale
 
 - Funcoes de servico.
+- Tipos de servico com prioridade de geracao.
+- Grupos de contagem de folga compartilhada.
+- Contadores por militar, grupo de contagem e tipo de escala.
 - Elegibilidade.
 - Geracao automatica de escalas.
 - Trocas e vendas integradas.

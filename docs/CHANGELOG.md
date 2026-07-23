@@ -1,5 +1,15 @@
 # Changelog
 
+## ADR-0004 - Shared Rest Counter and Service Priority
+
+- Registrada decisao arquitetural para contagem de folga compartilhada por
+  militar, grupo de contagem e tipo de escala.
+- Formalizada prioridade configuravel de tipos de servico na geracao de
+  escalas.
+- Formalizada chave de antiguidade militar para desempate operacional.
+- Atualizados modelo de dominio, regras de negocio, motor de regras, backlog e
+  roadmap.
+
 ## Release 2.0 - Desktop Platform
 
 - Criada a primeira plataforma visual executavel do SIGESM Enterprise.
