@@ -43,6 +43,27 @@ UserListView -> UserListViewModel -> UserListingService -> Handlers -> Repositor
 - MyPy strict: aprovado.
 - PyTest: aprovado.
 
+## AR-001R1
+
+Correcoes aplicadas apos a Architecture Review AR-001:
+
+- `UserListViewModel` passou a notificar `users`, `page`, `total`,
+  `total_pages` e `error_message` apos consultas bem-sucedidas.
+- Falhas preservam os dados anteriores e atualizam explicitamente
+  `error_message`.
+- Abertura de formulario de novo usuario e edicao passou a usar sinais
+  explicitos.
+- Adicionado `is_loading` para bloquear acoes duplicadas durante carregamento.
+- Testes ampliados para validacoes, limites, falhas, sinais, estado de
+  carregamento, tabela vazia e ausencia de dados sensiveis no DTO.
+
+### Quality Gate AR-001R1
+
+- Black: aprovado, 433 arquivos verificados.
+- Ruff: aprovado, sem violacoes.
+- MyPy strict: aprovado, 433 arquivos analisados.
+- PyTest: aprovado, 112 testes executados.
+
 ## Observacoes
 
 Nenhuma operacao de alteracao foi implementada nesta STS. Cadastro, edicao,

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from PySide6.QtCore import Signal
+
 from presentation.framework.mvvm import ViewModel
 from presentation.modules.user_management.application import UserListingService
 from presentation.modules.user_management.application.common import PagedResult, SortDirection
@@ -12,6 +14,9 @@ from presentation.modules.user_management.application.queries.list_users import 
 class UserListViewModel(ViewModel):
     """View model for the user listing screen."""
 
+    new_user_requested = Signal()
+    edit_user_requested = Signal(object)
+
     def __init__(self, service: UserListingService) -> None:
         super().__init__()
         self._service = service
@@ -20,8 +25,7 @@ class UserListViewModel(ViewModel):
             items=(), total=0, page=1, page_size=20
         )
         self._error_message = ""
-        self._open_new_requested = False
-        self._open_edit_requested: UserListItemDTO | None = None
+        self._is_loading = False
 
     @property
     def users(self) -> tuple[UserListItemDTO, ...]:
@@ -49,25 +53,28 @@ class UserListViewModel(ViewModel):
         return self._error_message
 
     @property
-    def open_new_requested(self) -> bool:
-        """Return whether opening new user dialog was requested."""
-        return self._open_new_requested
-
-    @property
-    def open_edit_requested(self) -> UserListItemDTO | None:
-        """Return requested edit user."""
-        return self._open_edit_requested
+    def is_loading(self) -> bool:
+        """Return whether the view model is currently loading users."""
+        return self._is_loading
 
     def load(self) -> None:
         """Load current query."""
-        result = self._service.list_users(self._query)
-        if result.is_success:
-            self._result = result.value
-            self._error_message = ""
-            self.notify_property_changed("users")
+        if self._is_loading:
             return
-        self._error_message = result.error
-        self.notify_property_changed("error_message")
+
+        self._set_loading(True)
+        try:
+            result = self._service.list_users(self._query)
+            if result.is_success:
+                self._result = result.value
+                self._error_message = ""
+                self._notify_query_state_changed()
+                return
+
+            self._error_message = result.error
+            self.notify_property_changed("error_message")
+        finally:
+            self._set_loading(False)
 
     def refresh(self) -> None:
         """Refresh list."""
@@ -113,12 +120,25 @@ class UserListViewModel(ViewModel):
 
     def request_new_user(self) -> None:
         """Request opening the new user form."""
-        self._open_new_requested = True
-        self.notify_property_changed("open_new_requested")
-        self._open_new_requested = False
+        if self._is_loading:
+            return
+
+        self.new_user_requested.emit()
 
     def request_edit_user(self, user: UserListItemDTO | None) -> None:
         """Request opening the edit form."""
-        self._open_edit_requested = user
-        self.notify_property_changed("open_edit_requested")
-        self._open_edit_requested = None
+        if self._is_loading or user is None:
+            return
+
+        self.edit_user_requested.emit(user)
+
+    def _set_loading(self, is_loading: bool) -> None:
+        self._is_loading = is_loading
+        self.notify_property_changed("is_loading")
+
+    def _notify_query_state_changed(self) -> None:
+        self.notify_property_changed("users")
+        self.notify_property_changed("page")
+        self.notify_property_changed("total")
+        self.notify_property_changed("total_pages")
+        self.notify_property_changed("error_message")

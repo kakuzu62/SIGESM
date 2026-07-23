@@ -4,6 +4,7 @@ from PySide6.QtCore import QModelIndex
 from PySide6.QtWidgets import QLabel, QTableView, QVBoxLayout, QWidget
 
 from presentation.framework.components import CrudToolbar
+from presentation.modules.user_management.application.queries.list_users import UserListItemDTO
 from presentation.modules.user_management.presentation.dialogs import UserFormDialog
 from presentation.modules.user_management.presentation.models import UserTableModel
 from presentation.modules.user_management.presentation.viewmodels import UserListViewModel
@@ -19,9 +20,17 @@ class UserListView(QWidget):
         self._table_model = UserTableModel()
         self._table = QTableView()
         self._message = QLabel("")
+        self._search_bar = SearchBar(self._view_model.search)
+        self._toolbar = CrudToolbar(
+            self._view_model.request_new_user,
+            self._request_edit_selected,
+            self._view_model.refresh,
+        )
         self._pagination = PaginationWidget(self._view_model.change_page)
         self._build()
         self._view_model.subscribe(self._on_view_model_changed)
+        self._view_model.new_user_requested.connect(self._open_new_dialog)
+        self._view_model.edit_user_requested.connect(self._open_edit_dialog)
         self._view_model.load()
         self._refresh_table()
 
@@ -33,14 +42,8 @@ class UserListView(QWidget):
         self._table.horizontalHeader().sectionClicked.connect(self._sort_by_column)
         layout = QVBoxLayout(self)
         layout.addWidget(title)
-        layout.addWidget(SearchBar(self._view_model.search))
-        layout.addWidget(
-            CrudToolbar(
-                self._view_model.request_new_user,
-                self._request_edit_selected,
-                self._view_model.refresh,
-            )
-        )
+        layout.addWidget(self._search_bar)
+        layout.addWidget(self._toolbar)
         layout.addWidget(self._message)
         layout.addWidget(self._table)
         layout.addWidget(self._pagination)
@@ -64,10 +67,17 @@ class UserListView(QWidget):
             self._refresh_table()
         elif property_name == "error_message":
             self._message.setText(self._view_model.error_message)
-        elif property_name == "open_new_requested":
-            UserFormDialog().exec()
-        elif (
-            property_name == "open_edit_requested"
-            and self._view_model.open_edit_requested is not None
-        ):
-            UserFormDialog(self._view_model.open_edit_requested).exec()
+        elif property_name == "is_loading":
+            self._set_loading(self._view_model.is_loading)
+
+    def _set_loading(self, is_loading: bool) -> None:
+        self._search_bar.setEnabled(not is_loading)
+        self._toolbar.setEnabled(not is_loading)
+        self._pagination.setEnabled(not is_loading)
+
+    def _open_new_dialog(self) -> None:
+        UserFormDialog().exec()
+
+    def _open_edit_dialog(self, user: object) -> None:
+        if isinstance(user, UserListItemDTO):
+            UserFormDialog(user).exec()

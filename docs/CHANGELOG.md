@@ -1,5 +1,16 @@
 # Changelog
 
+## AR-001R1 - STS-001A User Listing Hardening
+
+- Corrigidas notificacoes completas da `UserListViewModel` apos carregamento.
+- Substituidas propriedades transitorias de abertura de dialogo por sinais
+  explicitos.
+- Adicionado estado `is_loading` para preparar consultas reais e bloquear acoes
+  duplicadas na interface.
+- Documentada a politica de preservacao dos dados anteriores em caso de falha.
+- Expandida a suite de testes da STS-001A para validacoes, limites, resultado
+  vazio, pagina parcial, eventos de dialogo, falha e dados sensiveis ausentes.
+
 ## STS-001A - User Listing
 
 - Criado o modulo `presentation.modules.user_management` focado em listagem.
