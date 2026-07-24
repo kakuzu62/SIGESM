@@ -5,6 +5,8 @@
 - Senhas devem ser armazenadas somente com hash forte e salt.
 - Politica minima: tamanho, complexidade e bloqueio de senhas comuns.
 - Redefinicao de senha deve ser auditada.
+- Redefinicao administrativa deve usar exclusivamente o `PasswordService` e nao
+  deve expor senha ou hash em DTOs, sinais, logs ou mensagens.
 
 ## Sessao
 

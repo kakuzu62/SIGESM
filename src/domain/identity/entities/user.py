@@ -177,10 +177,14 @@ class User(AggregateRoot[Identity]):
         self._touch(occurred_at)
         self.add_domain_event(UserDeactivated(self.id, reason.strip()))
 
-    def change_password(self, password_hash: PasswordHash) -> None:
+    def change_password(
+        self,
+        password_hash: PasswordHash,
+        occurred_at: datetime | None = None,
+    ) -> None:
         """Change user password hash."""
         self._password_hash = password_hash
-        self._touch()
+        self._touch(occurred_at)
         self.add_domain_event(PasswordChanged(self.id))
 
     def register_failed_login(self) -> None:

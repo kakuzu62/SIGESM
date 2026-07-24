@@ -1,5 +1,41 @@
 # Relatorio de Implementacao - User Management
 
+## STS-001E - Redefinicao de Senha
+
+Implementada a redefinicao real de senha por administrador no modulo
+Administracao.
+
+Entregas principais:
+
+- `ResetPasswordCommand`, `ResetPasswordHandler`, `ResetPasswordResultDTO` e
+  `ResetPasswordService`;
+- Unit of Work em memoria e SQLAlchemy para reset de senha;
+- `User.change_password()` no agregado Identity;
+- `ResetPasswordViewModel` e `ResetPasswordDialog` especificos;
+- acao "Redefinir Senha" na toolbar de usuarios;
+- uso exclusivo do `PasswordService` para validar politica e gerar hash;
+- limpeza de campos sensiveis apos sucesso e cancelamento;
+- testes de dominio, Application, ViewModel, dialogo, persistencia SQLite e
+  autenticacao com senha antiga/nova.
+
+Fora de escopo preservado: troca de senha pelo proprio usuario, recuperacao por
+e-mail, token de redefinicao, MFA, expiracao e historico de senhas.
+
+Quality Gate da STS-001E:
+
+- Black: aprovado, 483 arquivos verificados.
+- Ruff: aprovado, sem violacoes.
+- MyPy strict: aprovado, 483 arquivos analisados.
+- PyTest: aprovado, 167 testes executados.
+
+Debitos registrados:
+
+- AR-001-01: realocar `user_management` para fora de `src/presentation/modules/`.
+- Controle otimista ausente: sem `version_id`; comportamento atual e
+  last-write-wins.
+- Execucao de UI ainda sincronona.
+- Invalidacao de sessoes ativas apos reset de senha.
+
 ## STS-001D - Ativacao e Desativacao de Usuarios
 
 Implementada a mudanca real de status de usuarios existentes no modulo
@@ -100,8 +136,8 @@ Debitos registrados:
 
 - Epico: Administracao.
 - Release: 2.1 - User Management.
-- STS: 001A - Listagem; 001B - Cadastro; 001C - Edicao; 001D - Status.
-- Branch: `codex/sts-001d-user-activation`.
+- STS: 001A - Listagem; 001B - Cadastro; 001C - Edicao; 001D - Status; 001E - Senha.
+- Branch: `codex/sts-001e-password-reset`.
 
 ## Objetivo
 

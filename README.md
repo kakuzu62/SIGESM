@@ -150,6 +150,13 @@ atualizacao da tabela mantendo filtro, ordenacao e pagina.
 Usuario inativo nao autentica pelo Authentication Core. A protecao do ultimo
 administrador permanece documentada para a etapa de perfis e permissoes.
 
+## STS-001E - Redefinicao de Senha
+
+A STS-001E adiciona redefinicao de senha por administrador com dialogo dedicado,
+validacao pela politica existente, hashing exclusivo pelo `PasswordService` e
+DTOs seguros sem senha ou hash. A senha antiga passa a ser rejeitada apos o
+sucesso e a nova senha autentica normalmente.
+
 O fluxo segue MVVM e CQRS:
 
 - `UserListView` conversa apenas com `UserListViewModel`.

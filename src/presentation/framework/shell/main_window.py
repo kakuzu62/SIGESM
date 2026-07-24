@@ -116,6 +116,7 @@ class MainWindow(QMainWindow):
                 self._context.user_creation,
                 self._context.user_editing,
                 self._context.user_status,
+                self._context.password_reset,
                 self._view_model.user_id,
             )
         )

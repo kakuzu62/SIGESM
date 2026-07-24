@@ -7,6 +7,10 @@ from presentation.modules.user_management.infrastructure.repositories.in_memory_
     InMemoryUserCreationUnitOfWork,
     InMemoryUserCreationUnitOfWorkFactory,
 )
+from presentation.modules.user_management.infrastructure.repositories.in_memory_reset_password_unit_of_work import (
+    InMemoryResetPasswordUnitOfWork,
+    InMemoryResetPasswordUnitOfWorkFactory,
+)
 from presentation.modules.user_management.infrastructure.repositories.in_memory_user_status_unit_of_work import (
     InMemoryUserStatusUnitOfWork,
     InMemoryUserStatusUnitOfWorkFactory,
@@ -19,6 +23,8 @@ from presentation.modules.user_management.infrastructure.repositories.in_memory_
 __all__ = [
     "InMemoryUserCreationUnitOfWork",
     "InMemoryUserCreationUnitOfWorkFactory",
+    "InMemoryResetPasswordUnitOfWork",
+    "InMemoryResetPasswordUnitOfWorkFactory",
     "InMemoryUserListingRepository",
     "InMemoryUserStatusUnitOfWork",
     "InMemoryUserStatusUnitOfWorkFactory",

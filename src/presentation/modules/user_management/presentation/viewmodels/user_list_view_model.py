@@ -7,6 +7,7 @@ from presentation.modules.user_management.application import (
     ChangeUserActiveStatusService,
     CreateUserService,
     EditUserService,
+    ResetPasswordService,
     UserListingService,
 )
 from presentation.modules.user_management.application.commands.change_user_status import (
@@ -18,6 +19,9 @@ from presentation.modules.user_management.application.commands.create_user impor
 )
 from presentation.modules.user_management.application.commands.update_user import (
     UpdateUserResultDTO,
+)
+from presentation.modules.user_management.application.commands.reset_password import (
+    ResetPasswordResultDTO,
 )
 from presentation.modules.user_management.application.queries.list_users import (
     ListUsersQuery,
@@ -32,6 +36,9 @@ from presentation.modules.user_management.presentation.viewmodels.change_user_st
 from presentation.modules.user_management.presentation.viewmodels.edit_user_view_model import (
     EditUserViewModel,
 )
+from presentation.modules.user_management.presentation.viewmodels.reset_password_view_model import (
+    ResetPasswordViewModel,
+)
 
 
 class UserListViewModel(ViewModel):
@@ -39,6 +46,7 @@ class UserListViewModel(ViewModel):
 
     new_user_requested = Signal()
     edit_user_requested = Signal(object)
+    reset_password_requested = Signal(object)
 
     def __init__(
         self,
@@ -46,6 +54,7 @@ class UserListViewModel(ViewModel):
         create_user_service: CreateUserService | None = None,
         edit_user_service: EditUserService | None = None,
         status_service: ChangeUserActiveStatusService | None = None,
+        reset_password_service: ResetPasswordService | None = None,
         actor_user_id: str = "",
     ) -> None:
         super().__init__()
@@ -53,6 +62,7 @@ class UserListViewModel(ViewModel):
         self._create_user_service = create_user_service
         self._edit_user_service = edit_user_service
         self._status_service = status_service
+        self._reset_password_service = reset_password_service
         self._actor_user_id = actor_user_id
         self._query = ListUsersQuery()
         self._result: PagedResult[UserListItemDTO] = PagedResult(
@@ -166,6 +176,13 @@ class UserListViewModel(ViewModel):
 
         self.edit_user_requested.emit(user)
 
+    def request_reset_password(self, user: UserListItemDTO | None) -> None:
+        """Request opening the reset password form."""
+        if self._is_loading or user is None or self._reset_password_service is None:
+            return
+
+        self.reset_password_requested.emit(user)
+
     def create_user_view_model(self) -> CreateUserViewModel:
         """Create the ViewModel used by the new user dialog."""
         if self._create_user_service is None:
@@ -184,6 +201,12 @@ class UserListViewModel(ViewModel):
             raise RuntimeError("Change user status service is not configured.")
         return ChangeUserActiveStatusViewModel(self._actor_user_id, self._status_service)
 
+    def reset_password_view_model(self, user: UserListItemDTO) -> ResetPasswordViewModel:
+        """Create the ViewModel used by the reset password dialog."""
+        if self._reset_password_service is None:
+            raise RuntimeError("Reset password service is not configured.")
+        return ResetPasswordViewModel(self._actor_user_id, user, self._reset_password_service)
+
     def handle_user_created(self, user: CreateUserResultDTO) -> None:
         """Refresh the current listing after a user is created."""
         self._error_message = f"Usuario criado: {user.username}"
@@ -200,6 +223,12 @@ class UserListViewModel(ViewModel):
         """Refresh the current listing after a user's active status changes."""
         state = "ativado" if user.active else "desativado"
         self._error_message = f"Usuario {state}: {user.username}"
+        self.notify_property_changed("error_message")
+        self.refresh()
+
+    def handle_password_reset(self, user: ResetPasswordResultDTO) -> None:
+        """Refresh the current listing after a user's password is reset."""
+        self._error_message = f"Senha redefinida: {user.username}"
         self.notify_property_changed("error_message")
         self.refresh()
 

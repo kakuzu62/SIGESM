@@ -1,5 +1,20 @@
 # Changelog
 
+## STS-001E - Password Reset
+
+- Implementada redefinicao de senha por administrador a partir da listagem de
+  usuarios.
+- Criados `ResetPasswordCommand`, `ResetPasswordCommandValidator`,
+  `ResetPasswordHandler`, `ResetPasswordResultDTO` e `ResetPasswordService`.
+- Criados Unit of Work em memoria e SQLAlchemy para redefinicao de senha.
+- Adicionado `User.change_password(password_hash, occurred_at=None)` preservando
+  dados cadastrais e estado do usuario.
+- Criados `ResetPasswordViewModel` e `ResetPasswordDialog` especificos, com
+  campos mascarados e limpeza de dados sensiveis.
+- Integrada acao "Redefinir Senha" na toolbar de usuarios.
+- Expandida a suite de testes para dominio, Application, ViewModel, dialogo,
+  persistencia SQLite e login com senha antiga/nova.
+
 ## STS-001D - User Activation
 
 - Implementada ativacao e desativacao de usuarios administrativos existentes.

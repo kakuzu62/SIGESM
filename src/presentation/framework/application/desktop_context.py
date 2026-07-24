@@ -13,6 +13,7 @@ if TYPE_CHECKING:
         ChangeUserActiveStatusService,
         CreateUserService,
         EditUserService,
+        ResetPasswordService,
         UserListingService,
     )
 
@@ -29,3 +30,4 @@ class DesktopContext:
     user_creation: CreateUserService
     user_editing: EditUserService
     user_status: ChangeUserActiveStatusService
+    password_reset: ResetPasswordService

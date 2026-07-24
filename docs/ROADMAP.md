@@ -13,6 +13,7 @@
 - Criacao de usuarios administrativos.
 - Edicao de usuarios administrativos.
 - Ativacao e desativacao de usuarios administrativos.
+- Redefinicao de senha por administrador.
 - Perfis e permissoes.
 - Politicas de senha e sessao.
 

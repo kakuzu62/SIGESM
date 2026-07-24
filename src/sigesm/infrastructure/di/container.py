@@ -19,10 +19,12 @@ from presentation.modules.user_management.application import (
     ChangeUserActiveStatusService,
     CreateUserService,
     EditUserService,
+    ResetPasswordService,
     UserListingService,
 )
 from presentation.modules.user_management.infrastructure.repositories import (
     InMemoryUserCreationUnitOfWorkFactory,
+    InMemoryResetPasswordUnitOfWorkFactory,
     InMemoryUserListingRepository,
     InMemoryUserStatusUnitOfWorkFactory,
     InMemoryUserUpdateUnitOfWorkFactory,
@@ -96,4 +98,11 @@ class ApplicationContainer:
         """Return the user active status application facade."""
         return ChangeUserActiveStatusService(
             InMemoryUserStatusUnitOfWorkFactory(self.identity_users)
+        )
+
+    def reset_password_service(self) -> ResetPasswordService:
+        """Return the administrator password reset application facade."""
+        return ResetPasswordService(
+            InMemoryResetPasswordUnitOfWorkFactory(self.identity_users),
+            self.password_service,
         )

@@ -141,3 +141,29 @@ UserListView
 - A listagem e atualizada apos sucesso mantendo filtro, ordenacao e pagina.
 - A protecao do ultimo administrador sera implementada quando roles/permissoes
   estiverem formalmente disponiveis no modulo administrativo.
+
+## STS-001E - Redefinicao de Senha
+
+Fluxo:
+
+```text
+UserListView
+  -> ResetPasswordDialog
+  -> ResetPasswordViewModel
+  -> ResetPasswordService
+  -> ResetPasswordCommand
+  -> ResetPasswordHandler
+  -> PasswordService
+  -> IUserRepository
+  -> ResetPasswordUnitOfWork
+```
+
+## Politica de Redefinicao
+
+- O dialogo possui apenas nova senha e confirmacao.
+- A confirmacao permanece restrita a Presentation.
+- A politica de senha e aplicada exclusivamente pelo `PasswordService`.
+- Senha e hash nao trafegam em DTOs, sinais, logs ou mensagens.
+- Sucesso limpa campos sensiveis, fecha o dialogo e atualiza a listagem.
+- Cancelamento limpa os campos e nao chama Application.
+- Invalidacao de sessoes ativas fica pendente ate definicao formal de politica.
