@@ -156,16 +156,16 @@ class User(AggregateRoot[Identity]):
         self._email = email
         self._touch()
 
-    def activate(self) -> None:
+    def activate(self, occurred_at: datetime | None = None) -> None:
         """Activate the user."""
         if self._active:
             return
 
         self._active = True
-        self._touch()
+        self._touch(occurred_at)
         self.add_domain_event(UserActivated(self.id))
 
-    def deactivate(self, reason: str) -> None:
+    def deactivate(self, reason: str, occurred_at: datetime | None = None) -> None:
         """Deactivate the user with an auditable reason."""
         if not reason.strip():
             raise IdentityDomainException("Deactivation reason is required.")
@@ -174,7 +174,7 @@ class User(AggregateRoot[Identity]):
             return
 
         self._active = False
-        self._touch()
+        self._touch(occurred_at)
         self.add_domain_event(UserDeactivated(self.id, reason.strip()))
 
     def change_password(self, password_hash: PasswordHash) -> None:
@@ -199,8 +199,8 @@ class User(AggregateRoot[Identity]):
         self._locked_until = locked_until
         self._touch()
 
-    def _touch(self) -> None:
-        self._updated_at = datetime.now(UTC)
+    def _touch(self, occurred_at: datetime | None = None) -> None:
+        self._updated_at = occurred_at or datetime.now(UTC)
 
     @staticmethod
     def _normalize_full_name(full_name: str) -> str:

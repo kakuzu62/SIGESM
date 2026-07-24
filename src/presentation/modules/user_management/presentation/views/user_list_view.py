@@ -1,13 +1,15 @@
 from __future__ import annotations
 
 from PySide6.QtCore import QModelIndex
-from PySide6.QtWidgets import QLabel, QTableView, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QLabel, QMessageBox, QTableView, QVBoxLayout, QWidget
 
 from presentation.framework.components import CrudToolbar
 from presentation.modules.user_management.application.queries.list_users import UserListItemDTO
 from presentation.modules.user_management.presentation.dialogs import UserFormDialog
 from presentation.modules.user_management.presentation.models import UserTableModel
-from presentation.modules.user_management.presentation.viewmodels import UserListViewModel
+from presentation.modules.user_management.presentation.viewmodels import (
+    UserListViewModel,
+)
 from presentation.modules.user_management.presentation.widgets import PaginationWidget, SearchBar
 
 
@@ -21,16 +23,22 @@ class UserListView(QWidget):
         self._table = QTableView()
         self._message = QLabel("")
         self._search_bar = SearchBar(self._view_model.search)
+        self._status_view_model = self._view_model.change_status_view_model()
         self._toolbar = CrudToolbar(
             self._view_model.request_new_user,
             self._request_edit_selected,
             self._view_model.refresh,
+            self._request_status_change_selected,
         )
         self._pagination = PaginationWidget(self._view_model.change_page)
         self._build()
         self._view_model.subscribe(self._on_view_model_changed)
+        self._status_view_model.subscribe(self._on_status_view_model_changed)
         self._view_model.new_user_requested.connect(self._open_new_dialog)
         self._view_model.edit_user_requested.connect(self._open_edit_dialog)
+        self._status_view_model.confirmation_requested.connect(self._confirm_status_change)
+        self._status_view_model.status_changed.connect(self._view_model.handle_user_status_changed)
+        self._status_view_model.status_change_failed.connect(self._show_status_error)
         self._view_model.load()
         self._refresh_table()
 
@@ -39,6 +47,7 @@ class UserListView(QWidget):
         title.setObjectName("title")
         self._table.setModel(self._table_model)
         self._table.setSortingEnabled(False)
+        self._table.selectionModel().currentRowChanged.connect(self._sync_selected_user)
         self._table.horizontalHeader().sectionClicked.connect(self._sort_by_column)
         layout = QVBoxLayout(self)
         layout.addWidget(title)
@@ -55,12 +64,19 @@ class UserListView(QWidget):
     def _request_edit_selected(self) -> None:
         self._view_model.request_edit_user(self._table_model.item_at(self._selected_user()))
 
+    def _request_status_change_selected(self) -> None:
+        self._status_view_model.request_change_status(
+            self._table_model.item_at(self._selected_user())
+        )
+
     def _sort_by_column(self, column: int) -> None:
         self._view_model.sort(self._table_model.sort_field(column))
 
     def _refresh_table(self) -> None:
         self._table_model.set_items(self._view_model.users)
         self._pagination.update_state(self._view_model.page, self._view_model.total_pages)
+        self._status_view_model.select_user(self._table_model.item_at(self._selected_user()))
+        self._sync_status_action()
 
     def _on_view_model_changed(self, property_name: str) -> None:
         if property_name == "users":
@@ -74,6 +90,7 @@ class UserListView(QWidget):
         self._search_bar.setEnabled(not is_loading)
         self._toolbar.setEnabled(not is_loading)
         self._pagination.setEnabled(not is_loading)
+        self._sync_status_action()
 
     def _open_new_dialog(self) -> None:
         create_view_model = self._view_model.create_user_view_model()
@@ -85,3 +102,40 @@ class UserListView(QWidget):
             edit_view_model = self._view_model.edit_user_view_model(user)
             edit_view_model.user_updated.connect(self._view_model.handle_user_updated)
             UserFormDialog(edit_view_model).exec()
+
+    def _sync_selected_user(
+        self,
+        current: QModelIndex | None = None,
+        previous: QModelIndex | None = None,
+    ) -> None:
+        _ = (current, previous)
+        self._status_view_model.select_user(self._table_model.item_at(self._selected_user()))
+        self._sync_status_action()
+
+    def _on_status_view_model_changed(self, property_name: str) -> None:
+        if property_name in {"selected_user", "can_change_status", "is_loading"}:
+            self._sync_status_action()
+        elif property_name == "general_error":
+            self._message.setText(self._status_view_model.general_error)
+
+    def _sync_status_action(self) -> None:
+        user = self._status_view_model.selected_user
+        label = "Ativar" if user is not None and user.status == "Inativo" else "Desativar"
+        enabled = self._status_view_model.can_change_status and not self._view_model.is_loading
+        self._toolbar.set_status_action(label, enabled)
+
+    def _confirm_status_change(self, message: str) -> None:
+        answer = QMessageBox.question(
+            self,
+            "Confirmar alteracao",
+            message,
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No,
+        )
+        if answer == QMessageBox.StandardButton.Yes:
+            self._status_view_model.confirm_change_status()
+        else:
+            self._status_view_model.cancel_change_status()
+
+    def _show_status_error(self, message: str) -> None:
+        self._message.setText(message)

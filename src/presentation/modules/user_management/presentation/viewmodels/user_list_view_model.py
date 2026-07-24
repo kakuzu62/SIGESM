@@ -4,9 +4,13 @@ from PySide6.QtCore import Signal
 
 from presentation.framework.mvvm import ViewModel
 from presentation.modules.user_management.application import (
+    ChangeUserActiveStatusService,
     CreateUserService,
     EditUserService,
     UserListingService,
+)
+from presentation.modules.user_management.application.commands.change_user_status import (
+    ChangeUserActiveStatusResultDTO,
 )
 from presentation.modules.user_management.application.common import PagedResult, SortDirection
 from presentation.modules.user_management.application.commands.create_user import (
@@ -21,6 +25,9 @@ from presentation.modules.user_management.application.queries.list_users import 
 )
 from presentation.modules.user_management.presentation.viewmodels.create_user_view_model import (
     CreateUserViewModel,
+)
+from presentation.modules.user_management.presentation.viewmodels.change_user_status_view_model import (
+    ChangeUserActiveStatusViewModel,
 )
 from presentation.modules.user_management.presentation.viewmodels.edit_user_view_model import (
     EditUserViewModel,
@@ -38,11 +45,15 @@ class UserListViewModel(ViewModel):
         service: UserListingService,
         create_user_service: CreateUserService | None = None,
         edit_user_service: EditUserService | None = None,
+        status_service: ChangeUserActiveStatusService | None = None,
+        actor_user_id: str = "",
     ) -> None:
         super().__init__()
         self._service = service
         self._create_user_service = create_user_service
         self._edit_user_service = edit_user_service
+        self._status_service = status_service
+        self._actor_user_id = actor_user_id
         self._query = ListUsersQuery()
         self._result: PagedResult[UserListItemDTO] = PagedResult(
             items=(), total=0, page=1, page_size=20
@@ -167,6 +178,12 @@ class UserListViewModel(ViewModel):
             raise RuntimeError("Edit user service is not configured.")
         return EditUserViewModel(user, self._edit_user_service)
 
+    def change_status_view_model(self) -> ChangeUserActiveStatusViewModel:
+        """Create the ViewModel used by active status actions."""
+        if self._status_service is None:
+            raise RuntimeError("Change user status service is not configured.")
+        return ChangeUserActiveStatusViewModel(self._actor_user_id, self._status_service)
+
     def handle_user_created(self, user: CreateUserResultDTO) -> None:
         """Refresh the current listing after a user is created."""
         self._error_message = f"Usuario criado: {user.username}"
@@ -176,6 +193,13 @@ class UserListViewModel(ViewModel):
     def handle_user_updated(self, user: UpdateUserResultDTO) -> None:
         """Refresh the current listing after a user is updated."""
         self._error_message = f"Usuario atualizado: {user.username}"
+        self.notify_property_changed("error_message")
+        self.refresh()
+
+    def handle_user_status_changed(self, user: ChangeUserActiveStatusResultDTO) -> None:
+        """Refresh the current listing after a user's active status changes."""
+        state = "ativado" if user.active else "desativado"
+        self._error_message = f"Usuario {state}: {user.username}"
         self.notify_property_changed("error_message")
         self.refresh()
 

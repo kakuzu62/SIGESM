@@ -4,6 +4,10 @@ from presentation.modules.user_management.infrastructure.persistence.sqlalchemy_
     SqlAlchemyUserCreationUnitOfWork,
     SqlAlchemyUserCreationUnitOfWorkFactory,
 )
+from presentation.modules.user_management.infrastructure.persistence.sqlalchemy_user_status_unit_of_work import (
+    SqlAlchemyUserStatusUnitOfWork,
+    SqlAlchemyUserStatusUnitOfWorkFactory,
+)
 from presentation.modules.user_management.infrastructure.persistence.sqlalchemy_user_update_unit_of_work import (
     SqlAlchemyUserUpdateUnitOfWork,
     SqlAlchemyUserUpdateUnitOfWorkFactory,
@@ -12,6 +16,8 @@ from presentation.modules.user_management.infrastructure.persistence.sqlalchemy_
 __all__ = [
     "SqlAlchemyUserCreationUnitOfWork",
     "SqlAlchemyUserCreationUnitOfWorkFactory",
+    "SqlAlchemyUserStatusUnitOfWork",
+    "SqlAlchemyUserStatusUnitOfWorkFactory",
     "SqlAlchemyUserUpdateUnitOfWork",
     "SqlAlchemyUserUpdateUnitOfWorkFactory",
 ]

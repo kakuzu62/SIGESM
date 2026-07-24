@@ -1,5 +1,21 @@
 # Changelog
 
+## STS-001D - User Activation
+
+- Implementada ativacao e desativacao de usuarios administrativos existentes.
+- Criados `ChangeUserActiveStatusCommand`,
+  `ChangeUserActiveStatusCommandValidator`, `ChangeUserActiveStatusHandler`,
+  `ChangeUserActiveStatusResultDTO` e `ChangeUserActiveStatusService`.
+- Criados Unit of Work em memoria e SQLAlchemy para mudanca de status.
+- Adicionado `ChangeUserActiveStatusViewModel` com confirmacao explicita,
+  `is_loading`, falhas seguras e sinais de sucesso/falha.
+- Atualizada a toolbar de usuarios com acao contextual de ativar/desativar.
+- Integrado o ID do ator autenticado ao fluxo sem uso de singleton ou variavel
+  global.
+- Confirmado que usuario inativo nao autentica pelo Authentication Core.
+- Expandida a suite de testes para dominio, Application, ViewModel,
+  persistencia SQLite e autenticacao.
+
 ## STS-001C - User Editing
 
 - Implementada edicao de nome completo, login e e-mail de usuarios existentes.

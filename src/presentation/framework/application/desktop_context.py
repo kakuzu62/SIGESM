@@ -10,6 +10,7 @@ from presentation.framework.workspace import WorkspaceManager
 
 if TYPE_CHECKING:
     from presentation.modules.user_management.application import (
+        ChangeUserActiveStatusService,
         CreateUserService,
         EditUserService,
         UserListingService,
@@ -27,3 +28,4 @@ class DesktopContext:
     user_listing: UserListingService
     user_creation: CreateUserService
     user_editing: EditUserService
+    user_status: ChangeUserActiveStatusService

@@ -103,7 +103,8 @@ a infraestrutura de persistencia.
 
 A STS-001A introduz a listagem de usuarios como vertical slice funcional. A
 STS-001B adiciona o fluxo de criacao de usuarios usando CQRS e MVVM. A STS-001C
-adiciona edicao de nome completo, login e e-mail:
+adiciona edicao de nome completo, login e e-mail. A STS-001D adiciona ativacao
+e desativacao com confirmacao e protecao contra auto-desativacao:
 
 ```text
 UserFormDialog
@@ -123,11 +124,23 @@ UserFormDialog
   -> UserUpdateUnitOfWork
 ```
 
+```text
+UserListView
+  -> ChangeUserActiveStatusViewModel
+  -> ChangeUserActiveStatusService
+  -> ChangeUserActiveStatusHandler
+  -> IUserRepository
+  -> UserStatusUnitOfWork
+```
+
 A View nao acessa SQLAlchemy, repositories, session, engine ou Unit of Work. O
 cadastro reutiliza o agregado `User`, os value objects `Username` e `Email`, e o
 `PasswordService` do Identity Context. O campo `full_name` passa a fazer parte
 do agregado e do modelo fisico `identity_users`. A edicao usa
 `User.update_profile()` e preserva senha, estado ativo, roles e `created_at`.
+A mudanca de status usa o ID do ator autenticado como dado explicito no Command,
+preserva dados cadastrais e credenciais, e o Authentication Core rejeita usuario
+inativo.
 
 ## Contexto Militar
 

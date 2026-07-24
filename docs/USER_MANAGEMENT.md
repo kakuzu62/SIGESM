@@ -114,3 +114,30 @@ autenticacao.
 - Senha, estado ativo, roles e `created_at` sao preservados.
 - A listagem e atualizada apos sucesso mantendo filtro, ordenacao e pagina.
 - Controle otimista ainda nao existe; o comportamento atual e last-write-wins.
+
+## STS-001D - Ativacao e Desativacao de Usuarios
+
+Fluxo:
+
+```text
+UserListView
+  -> ChangeUserActiveStatusViewModel
+  -> ChangeUserActiveStatusService
+  -> ChangeUserActiveStatusCommand
+  -> ChangeUserActiveStatusHandler
+  -> IUserRepository
+  -> UserStatusUnitOfWork
+```
+
+## Politica de Status
+
+- A toolbar exibe ativar para usuarios inativos e desativar para usuarios
+  ativos.
+- Toda mudanca exige confirmacao explicita.
+- Cancelar a confirmacao nao chama a camada Application.
+- O ator autenticado e enviado no Command como `actor_user_id`.
+- A auto-desativacao e bloqueada no Application Handler, nao apenas na UI.
+- Usuario inativo e rejeitado pelo Authentication Core.
+- A listagem e atualizada apos sucesso mantendo filtro, ordenacao e pagina.
+- A protecao do ultimo administrador sera implementada quando roles/permissoes
+  estiverem formalmente disponiveis no modulo administrativo.

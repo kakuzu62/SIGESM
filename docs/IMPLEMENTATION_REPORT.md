@@ -1,5 +1,42 @@
 # Relatorio de Implementacao - User Management
 
+## STS-001D - Ativacao e Desativacao de Usuarios
+
+Implementada a mudanca real de status de usuarios existentes no modulo
+Administracao.
+
+Entregas principais:
+
+- `ChangeUserActiveStatusCommand`, `ChangeUserActiveStatusHandler`,
+  `ChangeUserActiveStatusResultDTO` e `ChangeUserActiveStatusService`;
+- Unit of Work em memoria e SQLAlchemy para status;
+- `ChangeUserActiveStatusViewModel` com confirmacao, `is_loading`,
+  `can_change_status` e sinais de sucesso/falha;
+- acao contextual de ativar/desativar na toolbar de usuarios;
+- injecao do `actor_user_id` a partir do contexto autenticado do desktop;
+- protecao contra auto-desativacao na camada Application;
+- confirmacao de que usuario inativo nao autentica;
+- testes de dominio, Application, ViewModel, persistencia SQLite e
+  autenticacao.
+
+Fora de escopo preservado: redefinicao de senha, perfis, permissoes, auditoria,
+exclusao fisica e exclusao logica.
+
+Quality Gate da STS-001D:
+
+- Black: aprovado, 471 arquivos verificados.
+- Ruff: aprovado, sem violacoes.
+- MyPy strict: aprovado, 471 arquivos analisados.
+- PyTest: aprovado, 156 testes executados.
+
+Debitos registrados:
+
+- AR-001-01: realocar `user_management` para fora de `src/presentation/modules/`.
+- Controle otimista ausente: sem `version_id`; comportamento atual e
+  last-write-wins.
+- Execucao de UI ainda sincronona.
+- Protecao do ultimo administrador pendente ate roles/permissoes formais.
+
 ## STS-001B - Cadastro de Usuarios
 
 Implementada a criacao real de usuarios no modulo Administracao.
@@ -63,8 +100,8 @@ Debitos registrados:
 
 - Epico: Administracao.
 - Release: 2.1 - User Management.
-- STS: 001A - Listagem; 001B - Cadastro; 001C - Edicao.
-- Branch: `codex/sts-001c-user-editing`.
+- STS: 001A - Listagem; 001B - Cadastro; 001C - Edicao; 001D - Status.
+- Branch: `codex/sts-001d-user-activation`.
 
 ## Objetivo
 

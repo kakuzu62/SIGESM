@@ -141,6 +141,15 @@ ativo, roles e `created_at` sao preservados.
 O dialogo de edicao nao exibe campos de senha e a listagem e atualizada apos
 sucesso mantendo filtro, ordenacao e pagina.
 
+## STS-001D - Ativacao e Desativacao de Usuarios
+
+A STS-001D adiciona ativacao e desativacao de usuarios pela listagem, com
+confirmacao explicita, protecao contra auto-desativacao no Application Handler e
+atualizacao da tabela mantendo filtro, ordenacao e pagina.
+
+Usuario inativo nao autentica pelo Authentication Core. A protecao do ultimo
+administrador permanece documentada para a etapa de perfis e permissoes.
+
 O fluxo segue MVVM e CQRS:
 
 - `UserListView` conversa apenas com `UserListViewModel`.

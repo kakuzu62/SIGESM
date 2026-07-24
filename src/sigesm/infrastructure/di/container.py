@@ -16,6 +16,7 @@ from infrastructure.identity import (
     InMemoryUserRepository,
 )
 from presentation.modules.user_management.application import (
+    ChangeUserActiveStatusService,
     CreateUserService,
     EditUserService,
     UserListingService,
@@ -23,6 +24,7 @@ from presentation.modules.user_management.application import (
 from presentation.modules.user_management.infrastructure.repositories import (
     InMemoryUserCreationUnitOfWorkFactory,
     InMemoryUserListingRepository,
+    InMemoryUserStatusUnitOfWorkFactory,
     InMemoryUserUpdateUnitOfWorkFactory,
 )
 from sigesm.application.ports import UnitOfWorkFactory
@@ -89,3 +91,9 @@ class ApplicationContainer:
     def edit_user_service(self) -> EditUserService:
         """Return the user editing application facade."""
         return EditUserService(InMemoryUserUpdateUnitOfWorkFactory(self.identity_users))
+
+    def change_user_status_service(self) -> ChangeUserActiveStatusService:
+        """Return the user active status application facade."""
+        return ChangeUserActiveStatusService(
+            InMemoryUserStatusUnitOfWorkFactory(self.identity_users)
+        )

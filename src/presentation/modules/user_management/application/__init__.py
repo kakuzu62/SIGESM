@@ -1,5 +1,8 @@
 """Application layer for user management."""
 
+from presentation.modules.user_management.application.change_user_status_service import (
+    ChangeUserActiveStatusService,
+)
 from presentation.modules.user_management.application.create_user_service import (
     CreateUserService,
 )
@@ -10,4 +13,9 @@ from presentation.modules.user_management.application.user_listing_service impor
     UserListingService,
 )
 
-__all__ = ["CreateUserService", "EditUserService", "UserListingService"]
+__all__ = [
+    "ChangeUserActiveStatusService",
+    "CreateUserService",
+    "EditUserService",
+    "UserListingService",
+]

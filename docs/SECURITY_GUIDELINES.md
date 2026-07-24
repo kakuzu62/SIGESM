@@ -11,6 +11,9 @@
 - Sessoes devem expirar por inatividade.
 - Logout deve invalidar a sessao.
 - Tentativas simultaneas suspeitas devem ser registradas.
+- Usuario inativo nao deve autenticar, mesmo com credenciais validas.
+- A interface de login deve manter mensagens seguras e evitar revelar detalhes
+  excessivos sobre o estado da conta.
 
 ## Bloqueio por Tentativas
 
