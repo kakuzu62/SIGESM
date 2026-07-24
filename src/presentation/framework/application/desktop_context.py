@@ -10,9 +10,11 @@ from presentation.framework.workspace import WorkspaceManager
 
 if TYPE_CHECKING:
     from presentation.modules.user_management.application import (
+        AssignUserRolesService,
         ChangeUserActiveStatusService,
         CreateUserService,
         EditUserService,
+        ListAvailableRolesService,
         ResetPasswordService,
         UserListingService,
     )
@@ -31,3 +33,5 @@ class DesktopContext:
     user_editing: EditUserService
     user_status: ChangeUserActiveStatusService
     password_reset: ResetPasswordService
+    role_listing: ListAvailableRolesService
+    role_assignment: AssignUserRolesService

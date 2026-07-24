@@ -105,7 +105,8 @@ A STS-001A introduz a listagem de usuarios como vertical slice funcional. A
 STS-001B adiciona o fluxo de criacao de usuarios usando CQRS e MVVM. A STS-001C
 adiciona edicao de nome completo, login e e-mail. A STS-001D adiciona ativacao
 e desativacao com confirmacao e protecao contra auto-desativacao. A STS-001E
-adiciona redefinicao de senha por administrador:
+adiciona redefinicao de senha por administrador. A STS-001F adiciona atribuicao
+de perfis:
 
 ```text
 UserFormDialog
@@ -145,6 +146,17 @@ UserListView
   -> ResetPasswordUnitOfWork
 ```
 
+```text
+UserListView
+  -> UserRolesDialog
+  -> UserRolesViewModel
+  -> AssignUserRolesService
+  -> AssignUserRolesHandler
+  -> IUserRepository
+  -> IRoleRepository
+  -> UserRolesUnitOfWork
+```
+
 A View nao acessa SQLAlchemy, repositories, session, engine ou Unit of Work. O
 cadastro reutiliza o agregado `User`, os value objects `Username` e `Email`, e o
 `PasswordService` do Identity Context. O campo `full_name` passa a fazer parte
@@ -154,7 +166,8 @@ A mudanca de status usa o ID do ator autenticado como dado explicito no Command,
 preserva dados cadastrais e credenciais, e o Authentication Core rejeita usuario
 inativo. A redefinicao de senha usa `User.change_password()` e centraliza toda
 validacao e hashing no `PasswordService`, sem expor senha ou hash para DTOs,
-sinais ou logs.
+sinais ou logs. A atribuicao de perfis usa `Role.normalized_name` para proteger
+o ultimo Administrador ativo e prepara a base para permissoes granulares.
 
 ## Contexto Militar
 

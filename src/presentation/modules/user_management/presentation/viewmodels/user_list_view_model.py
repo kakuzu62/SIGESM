@@ -4,11 +4,16 @@ from PySide6.QtCore import Signal
 
 from presentation.framework.mvvm import ViewModel
 from presentation.modules.user_management.application import (
+    AssignUserRolesService,
     ChangeUserActiveStatusService,
     CreateUserService,
     EditUserService,
+    ListAvailableRolesService,
     ResetPasswordService,
     UserListingService,
+)
+from presentation.modules.user_management.application.commands.assign_user_roles import (
+    AssignUserRolesResultDTO,
 )
 from presentation.modules.user_management.application.commands.change_user_status import (
     ChangeUserActiveStatusResultDTO,
@@ -39,6 +44,9 @@ from presentation.modules.user_management.presentation.viewmodels.edit_user_view
 from presentation.modules.user_management.presentation.viewmodels.reset_password_view_model import (
     ResetPasswordViewModel,
 )
+from presentation.modules.user_management.presentation.viewmodels.user_roles_view_model import (
+    UserRolesViewModel,
+)
 
 
 class UserListViewModel(ViewModel):
@@ -47,6 +55,7 @@ class UserListViewModel(ViewModel):
     new_user_requested = Signal()
     edit_user_requested = Signal(object)
     reset_password_requested = Signal(object)
+    manage_roles_requested = Signal(object)
 
     def __init__(
         self,
@@ -55,6 +64,8 @@ class UserListViewModel(ViewModel):
         edit_user_service: EditUserService | None = None,
         status_service: ChangeUserActiveStatusService | None = None,
         reset_password_service: ResetPasswordService | None = None,
+        role_listing_service: ListAvailableRolesService | None = None,
+        role_assignment_service: AssignUserRolesService | None = None,
         actor_user_id: str = "",
     ) -> None:
         super().__init__()
@@ -63,6 +74,8 @@ class UserListViewModel(ViewModel):
         self._edit_user_service = edit_user_service
         self._status_service = status_service
         self._reset_password_service = reset_password_service
+        self._role_listing_service = role_listing_service
+        self._role_assignment_service = role_assignment_service
         self._actor_user_id = actor_user_id
         self._query = ListUsersQuery()
         self._result: PagedResult[UserListItemDTO] = PagedResult(
@@ -183,6 +196,18 @@ class UserListViewModel(ViewModel):
 
         self.reset_password_requested.emit(user)
 
+    def request_manage_roles(self, user: UserListItemDTO | None) -> None:
+        """Request opening the manage roles form."""
+        if (
+            self._is_loading
+            or user is None
+            or self._role_listing_service is None
+            or self._role_assignment_service is None
+        ):
+            return
+
+        self.manage_roles_requested.emit(user)
+
     def create_user_view_model(self) -> CreateUserViewModel:
         """Create the ViewModel used by the new user dialog."""
         if self._create_user_service is None:
@@ -207,6 +232,17 @@ class UserListViewModel(ViewModel):
             raise RuntimeError("Reset password service is not configured.")
         return ResetPasswordViewModel(self._actor_user_id, user, self._reset_password_service)
 
+    def user_roles_view_model(self, user: UserListItemDTO) -> UserRolesViewModel:
+        """Create the ViewModel used by the manage roles dialog."""
+        if self._role_listing_service is None or self._role_assignment_service is None:
+            raise RuntimeError("Role assignment services are not configured.")
+        return UserRolesViewModel(
+            self._actor_user_id,
+            user,
+            self._role_listing_service,
+            self._role_assignment_service,
+        )
+
     def handle_user_created(self, user: CreateUserResultDTO) -> None:
         """Refresh the current listing after a user is created."""
         self._error_message = f"Usuario criado: {user.username}"
@@ -229,6 +265,12 @@ class UserListViewModel(ViewModel):
     def handle_password_reset(self, user: ResetPasswordResultDTO) -> None:
         """Refresh the current listing after a user's password is reset."""
         self._error_message = f"Senha redefinida: {user.username}"
+        self.notify_property_changed("error_message")
+        self.refresh()
+
+    def handle_roles_updated(self, user: AssignUserRolesResultDTO) -> None:
+        """Refresh the current listing after a user's roles are updated."""
+        self._error_message = f"Perfis atualizados: {user.username}"
         self.notify_property_changed("error_message")
         self.refresh()
 

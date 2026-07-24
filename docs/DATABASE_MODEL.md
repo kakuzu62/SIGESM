@@ -108,6 +108,18 @@ conter apenas o hash Argon2id codificado produzido pelo servico de senha do
 dominio. Tokens de acesso, refresh e reset tambem nao devem ser persistidos em
 texto puro.
 
+### Baseline Identity
+
+Migration:
+
+```text
+migrations/versions/20260723_0000_create_identity_schema.py
+```
+
+A baseline cria o schema fisico inicial do Identity em banco vazio, antes das
+alteracoes incrementais posteriores. Ela existe para permitir `alembic upgrade
+head` em instalacoes novas sem depender de criacao manual de tabelas.
+
 ### STS-001B
 
 Migration:
@@ -119,3 +131,21 @@ migrations/versions/20260723_0001_add_identity_user_full_name.py
 A coluna `identity_users.full_name` e obrigatoria, possui limite de 120
 caracteres e e preenchida com `username` para usuarios existentes durante a
 migration.
+
+### STS-001F
+
+Migration:
+
+```text
+migrations/versions/20260723_0002_add_identity_role_assignment_fields.py
+```
+
+A tabela `identity_roles` passa a possuir:
+
+- `normalized_name`: nome canonico unico para politicas e buscas;
+- `active`: indica se o perfil pode ser atribuido.
+
+A associacao `identity_user_roles` continua sendo a relacao muitos-para-muitos
+entre usuarios e perfis. A protecao do ultimo Administrador ativo deve usar
+`normalized_name`, usuario ativo e associacao persistida, nunca username ou
+regra de interface.

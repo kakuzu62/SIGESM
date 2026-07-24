@@ -51,6 +51,7 @@ class IdentityMapper:
             entity_id=Identity.from_string(model.id),
             name=model.name,
             description=model.description,
+            active=model.active,
             permissions=tuple(
                 cls.permission_to_domain(permission) for permission in model.permissions
             ),
@@ -157,7 +158,9 @@ class IdentityMapper:
         model = RoleModel(
             id=str(entity.id),
             name=entity.name,
+            normalized_name=entity.normalized_name,
             description=entity.description,
+            active=entity.active,
             created_at=entity.created_at,
             updated_at=entity.updated_at,
         )

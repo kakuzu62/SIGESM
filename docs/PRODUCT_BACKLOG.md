@@ -18,6 +18,7 @@
 | Edicao de usuarios | Alta | Usuarios |
 | Ativacao e desativacao de usuarios | Alta | Usuarios |
 | Redefinicao de senha | Alta | Usuarios |
+| Atribuicao de perfis | Alta | Usuarios |
 | Perfis e permissoes | Alta | Usuarios |
 
 ## Organization

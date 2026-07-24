@@ -1,5 +1,20 @@
 # Changelog
 
+## STS-001F - Role Assignment
+
+- Implementada atribuicao e remocao de perfis existentes para usuarios.
+- Consolidado `Role` com `normalized_name` e `active`.
+- Criados `AssignUserRolesCommand`, `AssignUserRolesHandler`,
+  `AssignUserRolesResultDTO` e `AssignUserRolesService`.
+- Criados `ListAvailableRolesQuery`, `ListAvailableRolesHandler` e
+  `RoleListItemDTO`.
+- Criados Unit of Work em memoria e SQLAlchemy para perfis de usuario.
+- Adicionado `UserRolesViewModel` e `UserRolesDialog`.
+- Adicionada acao "Gerenciar Perfis" na listagem de usuarios.
+- Criada migration baseline `20260723_0000_create_identity_schema`.
+- Criada migration `20260723_0002_add_identity_role_assignment_fields`.
+- Registrada ADR do modelo formal de perfis.
+
 ## STS-001E - Password Reset
 
 - Implementada redefinicao de senha por administrador a partir da listagem de

@@ -39,3 +39,5 @@
 - Aplicar principio do menor privilegio.
 - Perfis devem agrupar permissoes por responsabilidade.
 - Operacoes criticas exigem permissao explicita.
+- O perfil Administrador deve ser identificado por dado formal de `Role`, nunca
+  por username, e-mail ou regra visual da interface.

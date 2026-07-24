@@ -8,7 +8,12 @@ from sqlalchemy.orm import Session, selectinload
 from domain.identity.entities import Role
 from domain.identity.repositories import IRoleRepository
 from infrastructure.persistence.sqlalchemy.identity.mappers import IdentityMapper
-from infrastructure.persistence.sqlalchemy.identity.models import PermissionModel, RoleModel
+from infrastructure.persistence.sqlalchemy.identity.models import (
+    PermissionModel,
+    RoleModel,
+    UserModel,
+)
+from infrastructure.persistence.sqlalchemy.identity.models.user_model import identity_user_roles
 from shared.kernel.identity import Identity
 
 
@@ -60,7 +65,7 @@ class SqlAlchemyRoleRepository(IRoleRepository):
         model = self._session.scalars(
             select(RoleModel)
             .options(selectinload(RoleModel.permissions))
-            .where(RoleModel.name == name.strip())
+            .where(RoleModel.normalized_name == Role.normalize_name(name))
         ).one_or_none()
         if model is None:
             return None
@@ -69,6 +74,40 @@ class SqlAlchemyRoleRepository(IRoleRepository):
     def exists(self, entity_id: Identity) -> bool:
         """Return whether a role exists."""
         return self._session.get(RoleModel, str(entity_id)) is not None
+
+    def get_by_ids(self, role_ids: Sequence[Identity]) -> tuple[Role, ...]:
+        """Return roles matching the provided identities."""
+        ids = [str(role_id) for role_id in role_ids]
+        if not ids:
+            return ()
+        models = self._session.scalars(
+            select(RoleModel)
+            .options(selectinload(RoleModel.permissions))
+            .where(RoleModel.id.in_(ids))
+            .order_by(RoleModel.name)
+        ).all()
+        return tuple(IdentityMapper.role_to_domain(model) for model in models)
+
+    def list_active(self) -> tuple[Role, ...]:
+        """Return active roles available for assignment."""
+        models = self._session.scalars(
+            select(RoleModel)
+            .options(selectinload(RoleModel.permissions))
+            .where(RoleModel.active.is_(True))
+            .order_by(RoleModel.name)
+        ).all()
+        return tuple(IdentityMapper.role_to_domain(model) for model in models)
+
+    def count_active_users_with_role(self, role_id: Identity) -> int:
+        """Return active user count assigned to the role."""
+        return self._session.execute(
+            select(func.count())
+            .select_from(identity_user_roles.join(UserModel))
+            .where(
+                identity_user_roles.c.role_id == str(role_id),
+                UserModel.active.is_(True),
+            )
+        ).scalar_one()
 
     def count(self) -> int:
         """Return role count."""

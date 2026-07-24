@@ -1,5 +1,48 @@
 # Relatorio de Implementacao - User Management
 
+## STS-001F - Atribuicao de Perfis aos Usuarios
+
+Implementada a gestao de perfis atribuidos a usuarios administrativos.
+
+Entregas principais:
+
+- `Role` consolidado com `normalized_name` e `active`;
+- `AssignUserRolesCommand`, `AssignUserRolesHandler`,
+  `AssignUserRolesResultDTO` e `AssignUserRolesService`;
+- `ListAvailableRolesQuery`, `ListAvailableRolesHandler` e `RoleListItemDTO`;
+- Unit of Work em memoria e SQLAlchemy para perfis;
+- `UserRolesViewModel` e `UserRolesDialog`;
+- acao "Gerenciar Perfis" na toolbar de usuarios;
+- seed idempotente dos perfis Administrador, Operador e Consulta no bootstrap
+  desktop local;
+- protecao do ultimo Administrador ativo baseada em Role formal;
+- migration baseline `20260723_0000_create_identity_schema`;
+- migration `20260723_0002_add_identity_role_assignment_fields`;
+- ADR `docs/architecture/decisions/ADR-001-role-model.md`.
+
+Fora de escopo preservado: permissoes granulares, CRUD completo de perfis,
+auditoria detalhada e autorizacao centralizada de telas.
+
+Quality Gate da STS-001F:
+
+- Black: aprovado, 502 arquivos verificados.
+- Ruff: aprovado.
+- MyPy strict: aprovado, 502 arquivos verificados.
+- PyTest: aprovado, 179 testes executados.
+- Alembic: `upgrade head` em banco vazio aprovado.
+- Alembic: downgrade da revision `20260723_0002` para `20260723_0001`
+  aprovado.
+- Alembic: novo `upgrade head` a partir de `20260723_0001` aprovado.
+
+Debitos registrados:
+
+- AR-001-01: realocar `user_management` para fora de `src/presentation/modules/`.
+- Controle otimista ausente: sem `version_id`; comportamento atual e
+  last-write-wins.
+- Execucao de UI ainda sincronona.
+- Invalidacao de sessoes ativas apos reset de senha.
+- Autorizacao granular pendente para STS-001G.
+
 ## STS-001E - Redefinicao de Senha
 
 Implementada a redefinicao real de senha por administrador no modulo
@@ -136,8 +179,8 @@ Debitos registrados:
 
 - Epico: Administracao.
 - Release: 2.1 - User Management.
-- STS: 001A - Listagem; 001B - Cadastro; 001C - Edicao; 001D - Status; 001E - Senha.
-- Branch: `codex/sts-001e-password-reset`.
+- STS: 001A - Listagem; 001B - Cadastro; 001C - Edicao; 001D - Status; 001E - Senha; 001F - Perfis.
+- Branch: `codex/sts-001f-role-assignment`.
 
 ## Objetivo
 

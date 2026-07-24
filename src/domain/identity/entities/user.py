@@ -141,6 +141,17 @@ class User(AggregateRoot[Identity]):
         self._roles = tuple(item for item in self._roles if item != role)
         self._touch()
 
+    def set_roles(self, roles: tuple[Role, ...]) -> None:
+        """Replace assigned roles, preserving uniqueness by identity."""
+        unique_roles: dict[Identity, Role] = {}
+        for role in roles:
+            unique_roles[role.id] = role
+        new_roles = tuple(unique_roles.values())
+        if tuple(role.id for role in self._roles) == tuple(role.id for role in new_roles):
+            return
+        self._roles = new_roles
+        self._touch()
+
     def update_profile(self, full_name: str, username: Username, email: Email) -> None:
         """Update editable profile fields while preserving identity and credentials."""
         normalized_full_name = self._normalize_full_name(full_name)

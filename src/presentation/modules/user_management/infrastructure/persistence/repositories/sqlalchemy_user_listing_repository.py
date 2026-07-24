@@ -62,6 +62,7 @@ class SqlAlchemyUserListingRepository(IUserListingRepository):
                     profiles=tuple(role.name for role in model.roles),
                     last_access_at=None,
                     created_at=model.created_at,
+                    role_ids=tuple(role.id for role in model.roles),
                 )
                 for model in models
             ),

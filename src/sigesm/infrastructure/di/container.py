@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from functools import cached_property
 
 from application.identity.commands import AuthenticateUserHandler
-from domain.identity.entities import User
+from domain.identity.entities import Role, User
 from domain.identity.policies import LoginAttemptPolicy
 from domain.identity.services import AuthenticationService, PasswordService
 from domain.identity.value_objects import Email, Username
@@ -13,12 +13,15 @@ from infrastructure.identity import (
     InMemoryAuthenticationSessionRepository,
     InMemoryPasswordResetRequestRepository,
     InMemoryRefreshSessionRepository,
+    InMemoryRoleRepository,
     InMemoryUserRepository,
 )
 from presentation.modules.user_management.application import (
+    AssignUserRolesService,
     ChangeUserActiveStatusService,
     CreateUserService,
     EditUserService,
+    ListAvailableRolesService,
     ResetPasswordService,
     UserListingService,
 )
@@ -26,6 +29,7 @@ from presentation.modules.user_management.infrastructure.repositories import (
     InMemoryUserCreationUnitOfWorkFactory,
     InMemoryResetPasswordUnitOfWorkFactory,
     InMemoryUserListingRepository,
+    InMemoryUserRolesUnitOfWorkFactory,
     InMemoryUserStatusUnitOfWorkFactory,
     InMemoryUserUpdateUnitOfWorkFactory,
 )
@@ -53,15 +57,34 @@ class ApplicationContainer:
     def identity_users(self) -> InMemoryUserRepository:
         """Return shared local users for desktop bootstrap."""
         users = InMemoryUserRepository()
-        users.add(
-            User.create(
-                Username("admin"),
-                Email("admin@sigesm.local"),
-                self.password_service.hash_password("Admin#123"),
-                full_name="Administrador do Sistema",
-            )
+        admin = User.create(
+            Username("admin"),
+            Email("admin@sigesm.local"),
+            self.password_service.hash_password("Admin#123"),
+            full_name="Administrador do Sistema",
         )
+        admin_role = self.identity_roles.get_by_name("Administrador")
+        if admin_role is not None:
+            admin.assign_role(admin_role)
+        users.add(admin)
         return users
+
+    @cached_property
+    def identity_roles(self) -> InMemoryRoleRepository:
+        """Return seeded local roles for desktop bootstrap."""
+        roles = InMemoryRoleRepository()
+        for name in ("Administrador", "Operador", "Consulta"):
+            if roles.get_by_name(name) is None:
+                roles.add(Role.create(name))
+        return roles
+
+    @cached_property
+    def identity_roles_with_users(self) -> InMemoryRoleRepository:
+        """Return local roles connected to users for active administrator checks."""
+        roles = InMemoryRoleRepository(self.identity_users)
+        for role in self.identity_roles.list():
+            roles.add(role)
+        return roles
 
     def authentication_service(self) -> AuthenticationService:
         """Build the desktop authentication service."""
@@ -105,4 +128,17 @@ class ApplicationContainer:
         return ResetPasswordService(
             InMemoryResetPasswordUnitOfWorkFactory(self.identity_users),
             self.password_service,
+        )
+
+    def list_available_roles_service(self) -> ListAvailableRolesService:
+        """Return the available roles application facade."""
+        return ListAvailableRolesService(self.identity_roles_with_users)
+
+    def assign_user_roles_service(self) -> AssignUserRolesService:
+        """Return the user role assignment application facade."""
+        return AssignUserRolesService(
+            InMemoryUserRolesUnitOfWorkFactory(
+                self.identity_users,
+                self.identity_roles_with_users,
+            )
         )

@@ -56,6 +56,8 @@ class DesktopApplication:
             user_editing=self._container.edit_user_service(),
             user_status=self._container.change_user_status_service(),
             password_reset=self._container.reset_password_service(),
+            role_listing=self._container.list_available_roles_service(),
+            role_assignment=self._container.assign_user_roles_service(),
         )
         context.themes.apply(qt_app, ThemeMode.DARK)
         self._show_splash_message(qt_app, splash, "Carregando autenticacao...")

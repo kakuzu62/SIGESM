@@ -12,6 +12,9 @@ from presentation.modules.user_management.presentation.viewmodels.edit_user_view
 from presentation.modules.user_management.presentation.viewmodels.reset_password_view_model import (
     ResetPasswordViewModel,
 )
+from presentation.modules.user_management.presentation.viewmodels.user_roles_view_model import (
+    UserRolesViewModel,
+)
 from presentation.modules.user_management.presentation.viewmodels.user_list_view_model import (
     UserListViewModel,
 )
@@ -21,5 +24,6 @@ __all__ = [
     "CreateUserViewModel",
     "EditUserViewModel",
     "ResetPasswordViewModel",
+    "UserRolesViewModel",
     "UserListViewModel",
 ]

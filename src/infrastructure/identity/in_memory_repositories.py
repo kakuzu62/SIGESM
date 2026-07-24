@@ -7,6 +7,7 @@ from domain.identity.entities import (
     AuthenticationSession,
     PasswordResetRequest,
     RefreshSession,
+    Role,
     User,
 )
 from domain.identity.repositories import (
@@ -14,6 +15,7 @@ from domain.identity.repositories import (
     IAuthenticationSessionRepository,
     IPasswordResetRequestRepository,
     IRefreshSessionRepository,
+    IRoleRepository,
     IUserRepository,
 )
 from domain.identity.value_objects import Email, Username
@@ -57,6 +59,62 @@ class InMemoryUserRepository(IUserRepository):
 
     def first(self) -> User | None:
         return next(iter(self._items.values()), None)
+
+
+class InMemoryRoleRepository(IRoleRepository):
+    """In-memory role repository for local desktop bootstrap."""
+
+    def __init__(self, users: IUserRepository | None = None) -> None:
+        self._items: dict[Identity, Role] = {}
+        self._users = users
+
+    def add(self, entity: Role) -> Role:
+        self._items[entity.id] = entity
+        return entity
+
+    def update(self, entity: Role) -> Role:
+        self._items[entity.id] = entity
+        return entity
+
+    def delete(self, entity: Role) -> None:
+        self._items.pop(entity.id, None)
+
+    def get_by_id(self, entity_id: Identity) -> Role | None:
+        return self._items.get(entity_id)
+
+    def get_by_name(self, name: str) -> Role | None:
+        normalized = Role.normalize_name(name)
+        return next(
+            (role for role in self._items.values() if role.normalized_name == normalized),
+            None,
+        )
+
+    def get_by_ids(self, role_ids: Sequence[Identity]) -> tuple[Role, ...]:
+        return tuple(role for role_id in role_ids if (role := self._items.get(role_id)) is not None)
+
+    def list_active(self) -> tuple[Role, ...]:
+        return tuple(role for role in self.list() if role.active)
+
+    def count_active_users_with_role(self, role_id: Identity) -> int:
+        if self._users is None:
+            return 0
+        return sum(
+            1
+            for user in self._users.list()
+            if user.active and any(role.id == role_id for role in user.roles)
+        )
+
+    def exists(self, entity_id: Identity) -> bool:
+        return entity_id in self._items
+
+    def count(self) -> int:
+        return len(self._items)
+
+    def list(self) -> Sequence[Role]:
+        return tuple(sorted(self._items.values(), key=lambda role: role.name.lower()))
+
+    def first(self) -> Role | None:
+        return next(iter(self.list()), None)
 
 
 class InMemoryAuthenticationSessionRepository(IAuthenticationSessionRepository):

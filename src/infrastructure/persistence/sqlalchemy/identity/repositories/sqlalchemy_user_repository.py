@@ -26,7 +26,24 @@ class SqlAlchemyUserRepository(IUserRepository):
 
     def update(self, entity: User) -> User:
         """Update a user."""
-        self._session.merge(self._to_model(entity))
+        model = self._session.get(UserModel, str(entity.id))
+        if model is None:
+            self._session.merge(self._to_model(entity))
+            return entity
+
+        model.full_name = entity.full_name
+        model.username = entity.username.value
+        model.email = entity.email.value
+        model.password_hash = entity.password_hash.value
+        model.active = entity.active
+        model.failed_login_attempts = entity.failed_login_attempts
+        model.locked_until = entity.locked_until
+        model.created_at = entity.created_at
+        model.updated_at = entity.updated_at
+        model.roles = [
+            self._session.get(RoleModel, str(role.id)) or IdentityMapper.role_to_model(role)
+            for role in entity.roles
+        ]
         return entity
 
     def delete(self, entity: User) -> None:

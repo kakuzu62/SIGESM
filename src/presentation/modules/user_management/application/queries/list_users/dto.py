@@ -16,3 +16,4 @@ class UserListItemDTO:
     profiles: tuple[str, ...]
     last_access_at: datetime | None
     created_at: datetime
+    role_ids: tuple[str, ...] = ()

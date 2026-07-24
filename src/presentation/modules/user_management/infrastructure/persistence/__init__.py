@@ -12,6 +12,10 @@ from presentation.modules.user_management.infrastructure.persistence.sqlalchemy_
     SqlAlchemyUserStatusUnitOfWork,
     SqlAlchemyUserStatusUnitOfWorkFactory,
 )
+from presentation.modules.user_management.infrastructure.persistence.sqlalchemy_user_roles_unit_of_work import (
+    SqlAlchemyUserRolesUnitOfWork,
+    SqlAlchemyUserRolesUnitOfWorkFactory,
+)
 from presentation.modules.user_management.infrastructure.persistence.sqlalchemy_user_update_unit_of_work import (
     SqlAlchemyUserUpdateUnitOfWork,
     SqlAlchemyUserUpdateUnitOfWorkFactory,
@@ -24,6 +28,8 @@ __all__ = [
     "SqlAlchemyResetPasswordUnitOfWorkFactory",
     "SqlAlchemyUserStatusUnitOfWork",
     "SqlAlchemyUserStatusUnitOfWorkFactory",
+    "SqlAlchemyUserRolesUnitOfWork",
+    "SqlAlchemyUserRolesUnitOfWorkFactory",
     "SqlAlchemyUserUpdateUnitOfWork",
     "SqlAlchemyUserUpdateUnitOfWorkFactory",
 ]

@@ -15,6 +15,10 @@ from presentation.modules.user_management.infrastructure.repositories.in_memory_
     InMemoryUserStatusUnitOfWork,
     InMemoryUserStatusUnitOfWorkFactory,
 )
+from presentation.modules.user_management.infrastructure.repositories.in_memory_user_roles_unit_of_work import (
+    InMemoryUserRolesUnitOfWork,
+    InMemoryUserRolesUnitOfWorkFactory,
+)
 from presentation.modules.user_management.infrastructure.repositories.in_memory_user_update_unit_of_work import (
     InMemoryUserUpdateUnitOfWork,
     InMemoryUserUpdateUnitOfWorkFactory,
@@ -28,6 +32,8 @@ __all__ = [
     "InMemoryUserListingRepository",
     "InMemoryUserStatusUnitOfWork",
     "InMemoryUserStatusUnitOfWorkFactory",
+    "InMemoryUserRolesUnitOfWork",
+    "InMemoryUserRolesUnitOfWorkFactory",
     "InMemoryUserUpdateUnitOfWork",
     "InMemoryUserUpdateUnitOfWorkFactory",
 ]

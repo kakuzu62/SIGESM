@@ -167,3 +167,28 @@ UserListView
 - Sucesso limpa campos sensiveis, fecha o dialogo e atualiza a listagem.
 - Cancelamento limpa os campos e nao chama Application.
 - Invalidacao de sessoes ativas fica pendente ate definicao formal de politica.
+
+## STS-001F - Atribuicao de Perfis aos Usuarios
+
+Fluxo:
+
+```text
+UserListView
+  -> UserRolesDialog
+  -> UserRolesViewModel
+  -> AssignUserRolesService
+  -> AssignUserRolesCommand
+  -> AssignUserRolesHandler
+  -> IUserRepository
+  -> IRoleRepository
+  -> UserRolesUnitOfWork
+```
+
+## Politica de Perfis
+
+- Perfis sao dados formais do Identity Context.
+- Perfis iniciais locais: Administrador, Operador e Consulta.
+- Perfis inativos nao podem ser atribuidos.
+- O ultimo Administrador ativo e protegido pela camada Application.
+- A listagem exibe o resumo dos perfis atribuidos.
+- Permissoes granulares permanecem para STS-001G.

@@ -11,7 +11,15 @@ from shared.kernel.identity import Identity
 class Role(Entity[Identity]):
     """Role entity grouping permissions for a user profile."""
 
-    __slots__ = ("_name", "_description", "_permissions", "_created_at", "_updated_at")
+    __slots__ = (
+        "_name",
+        "_normalized_name",
+        "_description",
+        "_active",
+        "_permissions",
+        "_created_at",
+        "_updated_at",
+    )
 
     def __init__(
         self,
@@ -21,6 +29,7 @@ class Role(Entity[Identity]):
         permissions: tuple[Permission, ...],
         created_at: datetime,
         updated_at: datetime,
+        active: bool = True,
     ) -> None:
         super().__init__(entity_id)
         normalized_name = name.strip()
@@ -28,7 +37,9 @@ class Role(Entity[Identity]):
             raise IdentityDomainException("Role name is required.")
 
         self._name = normalized_name
+        self._normalized_name = self.normalize_name(normalized_name)
         self._description = description.strip()
+        self._active = active
         self._permissions = permissions
         self._created_at = created_at
         self._updated_at = updated_at
@@ -45,9 +56,19 @@ class Role(Entity[Identity]):
         return self._name
 
     @property
+    def normalized_name(self) -> str:
+        """Return normalized role name."""
+        return self._normalized_name
+
+    @property
     def description(self) -> str:
         """Return role description."""
         return self._description
+
+    @property
+    def active(self) -> bool:
+        """Return whether role can be assigned."""
+        return self._active
 
     @property
     def permissions(self) -> tuple[Permission, ...]:
@@ -76,6 +97,18 @@ class Role(Entity[Identity]):
         """Remove a permission from the role."""
         self._permissions = tuple(item for item in self._permissions if item != permission)
         self._touch()
+
+    def deactivate(self) -> None:
+        """Deactivate the role for future assignments."""
+        if not self._active:
+            return
+        self._active = False
+        self._touch()
+
+    @staticmethod
+    def normalize_name(name: str) -> str:
+        """Return canonical name used for uniqueness and policies."""
+        return " ".join(name.strip().upper().split())
 
     def _touch(self) -> None:
         self._updated_at = datetime.now(UTC)

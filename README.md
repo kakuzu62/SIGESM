@@ -157,6 +157,13 @@ validacao pela politica existente, hashing exclusivo pelo `PasswordService` e
 DTOs seguros sem senha ou hash. A senha antiga passa a ser rejeitada apos o
 sucesso e a nova senha autentica normalmente.
 
+## STS-001F - Atribuicao de Perfis
+
+A STS-001F adiciona gestao de perfis atribuidos a usuarios, reutilizando `Role`
+do Identity Context. O sistema passa a proteger o ultimo Administrador ativo por
+dados formais de perfil, sem usar username ou regra de interface. Permissoes
+granulares ficam reservadas para a STS-001G.
+
 O fluxo segue MVVM e CQRS:
 
 - `UserListView` conversa apenas com `UserListViewModel`.

@@ -1,7 +1,7 @@
 """Add full name to identity users.
 
 Revision ID: 20260723_0001
-Revises:
+Revises: 20260723_0000
 Create Date: 2026-07-23
 """
 
@@ -13,7 +13,7 @@ from alembic import op
 import sqlalchemy as sa
 
 revision: str = "20260723_0001"
-down_revision: str | None = None
+down_revision: str | None = "20260723_0000"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 

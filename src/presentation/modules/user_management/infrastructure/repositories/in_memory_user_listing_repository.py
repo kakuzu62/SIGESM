@@ -82,4 +82,5 @@ class InMemoryUserListingRepository(IUserListingRepository):
             profiles=tuple(role.name for role in user.roles),
             last_access_at=None,
             created_at=user.created_at,
+            role_ids=tuple(str(role.id) for role in user.roles),
         )

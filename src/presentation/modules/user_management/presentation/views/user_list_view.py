@@ -8,6 +8,7 @@ from presentation.modules.user_management.application.queries.list_users import 
 from presentation.modules.user_management.presentation.dialogs import (
     ResetPasswordDialog,
     UserFormDialog,
+    UserRolesDialog,
 )
 from presentation.modules.user_management.presentation.models import UserTableModel
 from presentation.modules.user_management.presentation.viewmodels import (
@@ -33,6 +34,7 @@ class UserListView(QWidget):
             self._view_model.refresh,
             self._request_status_change_selected,
             self._request_reset_password_selected,
+            self._request_manage_roles_selected,
         )
         self._pagination = PaginationWidget(self._view_model.change_page)
         self._build()
@@ -41,6 +43,7 @@ class UserListView(QWidget):
         self._view_model.new_user_requested.connect(self._open_new_dialog)
         self._view_model.edit_user_requested.connect(self._open_edit_dialog)
         self._view_model.reset_password_requested.connect(self._open_reset_password_dialog)
+        self._view_model.manage_roles_requested.connect(self._open_user_roles_dialog)
         self._status_view_model.confirmation_requested.connect(self._confirm_status_change)
         self._status_view_model.status_changed.connect(self._view_model.handle_user_status_changed)
         self._status_view_model.status_change_failed.connect(self._show_status_error)
@@ -76,6 +79,9 @@ class UserListView(QWidget):
 
     def _request_reset_password_selected(self) -> None:
         self._view_model.request_reset_password(self._table_model.item_at(self._selected_user()))
+
+    def _request_manage_roles_selected(self) -> None:
+        self._view_model.request_manage_roles(self._table_model.item_at(self._selected_user()))
 
     def _sort_by_column(self, column: int) -> None:
         self._view_model.sort(self._table_model.sort_field(column))
@@ -132,6 +138,7 @@ class UserListView(QWidget):
         enabled = self._status_view_model.can_change_status and not self._view_model.is_loading
         self._toolbar.set_status_action(label, enabled)
         self._toolbar.set_reset_password_action(enabled)
+        self._toolbar.set_roles_action(enabled)
 
     def _confirm_status_change(self, message: str) -> None:
         answer = QMessageBox.question(
@@ -154,3 +161,9 @@ class UserListView(QWidget):
             reset_view_model = self._view_model.reset_password_view_model(user)
             reset_view_model.password_reset.connect(self._view_model.handle_password_reset)
             ResetPasswordDialog(reset_view_model).exec()
+
+    def _open_user_roles_dialog(self, user: object) -> None:
+        if isinstance(user, UserListItemDTO):
+            roles_view_model = self._view_model.user_roles_view_model(user)
+            roles_view_model.roles_updated.connect(self._view_model.handle_roles_updated)
+            UserRolesDialog(roles_view_model).exec()
